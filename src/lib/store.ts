@@ -124,3 +124,17 @@ export function openStreamWindow() {
   const url = `${location.href.split('#')[0]}#/stream`;
   window.open(url, 'bp-stream', 'width=1280,height=720');
 }
+
+/** Clears every draw and the stream state, then reloads on the dashboard. */
+export function resetDemo() {
+  try {
+    localStorage.removeItem(DRAWS_KEY);
+    localStorage.removeItem(STREAM_KEY);
+  } catch {
+    /* storage unavailable: nothing persisted to clear */
+  }
+  memoryDraws = [];
+  publishStream({ kind: 'idle' });
+  location.hash = '#/';
+  location.reload();
+}

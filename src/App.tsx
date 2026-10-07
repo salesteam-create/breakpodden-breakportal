@@ -1,4 +1,5 @@
 import { useRoute } from './lib/router.ts';
+import { resetDemo } from './lib/store.ts';
 import logo from './assets/logo-mark.svg';
 import Dashboard from './pages/Dashboard.tsx';
 import RandomBreak from './pages/RandomBreak.tsx';
@@ -44,6 +45,15 @@ export default function App() {
         </nav>
         <div className="topbar-right">
           <span className="pill"><span className="dot" /> Shopify connected · breakpodden.com</span>
+          <button
+            className="btn btn-sm btn-ghost"
+            title="Clear all draws and start the demo from scratch"
+            onClick={() => {
+              if (confirm('Reset the demo? All draws and proofs on this device are cleared.')) resetDemo();
+            }}
+          >
+            ↺ Reset demo
+          </button>
           <span className="avatar" title="Host">BP</span>
         </div>
       </header>
