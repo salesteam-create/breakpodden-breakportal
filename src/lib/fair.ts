@@ -18,6 +18,10 @@ export interface DrawInputs {
   left: string[];
   /** Column that gets randomized: teams, filler entries, wheel entries or ducks. */
   right: string[];
+  /** Fixed number of shuffle rounds set by the host instead of a dice roll. */
+  shuffles?: number;
+  /** Filler draw: winners pick their team in winning order instead of being paired by draw. */
+  mode?: 'choose';
 }
 
 export interface DrawOutcome {
@@ -35,8 +39,17 @@ export function newSeed(): string {
   return toHex(bytes);
 }
 
+// Optional settings are only part of the fingerprint when used, so they are locked by the commitment too.
 export const inputsHash = (inputs: DrawInputs) =>
-  sha256Hex(JSON.stringify({ kind: inputs.kind, left: inputs.left, right: inputs.right }));
+  sha256Hex(
+    JSON.stringify({
+      kind: inputs.kind,
+      left: inputs.left,
+      right: inputs.right,
+      ...(inputs.shuffles ? { shuffles: inputs.shuffles } : {}),
+      ...(inputs.mode ? { mode: inputs.mode } : {}),
+    }),
+  );
 
 export const commitmentFor = (seed: string, inputs: DrawInputs) =>
   sha256Hex(`${seed}|${inputsHash(inputs)}`);
@@ -81,12 +94,13 @@ export function rollDice(seed: string): [number, number] {
   return [rng.int(6) + 1, rng.int(6) + 1];
 }
 
-/** Recomputes a team or filler draw: dice total = number of shuffle rounds. */
+/** Recomputes a team or filler draw: dice total (or the host's fixed count) = number of shuffle rounds. */
 export function runShuffleDraw(seed: string, inputs: DrawInputs): DrawOutcome {
-  const dice = rollDice(seed);
+  const dice = inputs.shuffles ? null : rollDice(seed);
+  const total = dice ? dice[0] + dice[1] : inputs.shuffles!;
   const rounds: string[][] = [];
   let order = inputs.right.slice();
-  for (let r = 1; r <= dice[0] + dice[1]; r++) {
+  for (let r = 1; r <= total; r++) {
     order = shuffle(order, seed, `round-${r}`);
     rounds.push(order);
   }

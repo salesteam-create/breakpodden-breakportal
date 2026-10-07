@@ -77,7 +77,7 @@ export default function Dashboard() {
                 <tr key={d.id}>
                   <td><b>{d.title}</b></td>
                   <td className="mono dim">{d.commitment.slice(0, 16)}…</td>
-                  <td>{d.revealed ? <span className="chip chip-good">Verifiable</span> : <span className="chip chip-gold">Sealed</span>}</td>
+                  <td>{d.voided ? <span className="chip chip-void">Voided</span> : d.revealed ? <span className="chip chip-good">Verifiable</span> : <span className="chip chip-gold">Sealed</span>}</td>
                   <td style={{ textAlign: 'right' }}><a className="btn btn-sm" href={`#/proof/${d.id}`}>Proof</a></td>
                 </tr>
               ))}

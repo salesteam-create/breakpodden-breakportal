@@ -129,6 +129,8 @@ const PYT_403: [string, number, string | null][] = [
   ['Wales/Northern Ireland', 49, 'pakkeprinsen'],
 ];
 
+CHECKLISTS['Futera World Unique 2025/26 Display Boks'] = PYT_403.map(([team]) => team);
+
 export const initialPytSlots = (): Slot[] =>
   PYT_403.map(([team, price, owner]) => ({ team, price, owner }));
 

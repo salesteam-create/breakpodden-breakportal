@@ -44,3 +44,14 @@ test('wheel removes winners, race keeps every duck', () => {
   assert.equal(new Set(w.map((x) => x.index)).size, 3);
   assert.deepEqual([...runRace('s', ['x', 'y', 'z'])].sort(), ['x', 'y', 'z']);
 });
+
+test('fixed shuffle count skips dice and is locked by the commitment', () => {
+  const base = { kind: 'filler' as const, left: ['t1'], right: ['a', 'b', 'c'] };
+  const fixed = runShuffleDraw('s', { ...base, shuffles: 4 });
+  assert.equal(fixed.dice, null);
+  assert.equal(fixed.rounds.length, 4);
+  assert.notEqual(commitmentFor('s', base), commitmentFor('s', { ...base, shuffles: 4 }));
+  assert.notEqual(commitmentFor('s', base), commitmentFor('s', { ...base, mode: 'choose' }));
+  // Draws without the optional settings keep their original fingerprint.
+  assert.equal(commitmentFor('s', base), commitmentFor('s', { ...base, shuffles: undefined, mode: undefined }));
+});

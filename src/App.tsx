@@ -7,12 +7,14 @@ import PytBreak from './pages/PytBreak.tsx';
 import WheelPage from './pages/WheelPage.tsx';
 import DuckRacePage from './pages/DuckRacePage.tsx';
 import ProofPage from './pages/ProofPage.tsx';
+import ChecklistsPage from './pages/ChecklistsPage.tsx';
 import StreamView from './pages/StreamView.tsx';
 
 const NAV = [
   { href: '#/', label: 'Breaks', match: ['', 'break'] },
   { href: '#/wheel', label: 'Wheel of fortune', match: ['wheel'] },
   { href: '#/duck', label: 'Duck race', match: ['duck'] },
+  { href: '#/checklists', label: 'Checklists', match: ['checklists'] },
   { href: '#/proofs', label: 'Fairness proofs', match: ['proofs', 'proof'] },
 ];
 
@@ -27,6 +29,7 @@ export default function App() {
   else if (section === 'wheel') page = <WheelPage />;
   else if (section === 'duck') page = <DuckRacePage />;
   else if (section === 'proofs' || section === 'proof') page = <ProofPage id={id} />;
+  else if (section === 'checklists') page = <ChecklistsPage />;
   else page = <Dashboard />;
 
   return (

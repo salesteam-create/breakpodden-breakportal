@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import type { DrawInputs } from './fair.ts';
+import { CHECKLISTS } from './data.ts';
 
 export interface DrawRecord {
   id: string;
@@ -16,11 +17,18 @@ export interface DrawRecord {
   spins?: number;
   /** Published result, compared against the recomputation on the proof page. */
   result?: string[];
+  /** Set when the host voids the draw; the record stays public with its reason. */
+  voided?: { reason: string; at: number };
+  /** ID of the voided draw this one replaces. */
+  replaces?: string;
+  /** Filler draw in "winners choose" mode: team picked by each winner, in winning order. */
+  picks?: { entry: string; team: string }[];
   log: { at: number; text: string }[];
 }
 
 const DRAWS_KEY = 'bp-draws';
 const STREAM_KEY = 'bp-stream';
+const CHECKLISTS_KEY = 'bp-checklists';
 
 const read = <T,>(key: string, fallback: T): T => {
   try {
@@ -50,6 +58,11 @@ export function saveDraw(d: DrawRecord) {
 }
 
 export const newDrawId = () => `D-${Date.now().toString(36).toUpperCase().slice(-6)}`;
+
+// ---- Box checklist library ------------------------------------------------
+
+export const getChecklists = (): Record<string, string[]> => read(CHECKLISTS_KEY, CHECKLISTS);
+export const saveChecklists = (c: Record<string, string[]>) => write(CHECKLISTS_KEY, c);
 
 // ---- Stream channel -------------------------------------------------------
 
@@ -130,6 +143,7 @@ export function resetDemo() {
   try {
     localStorage.removeItem(DRAWS_KEY);
     localStorage.removeItem(STREAM_KEY);
+    localStorage.removeItem(CHECKLISTS_KEY);
   } catch {
     /* storage unavailable: nothing persisted to clear */
   }

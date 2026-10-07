@@ -45,10 +45,14 @@ function ProofDetail({ d }: { d: DrawRecord }) {
 
   const re = recompute(d, inputs);
   const commitOk = commitmentFor(d.seed, inputs) === d.commitment;
-  const resultOk = JSON.stringify(re.final) === JSON.stringify(d.result ?? []);
+  // A draw voided before its reveal has no published result to compare against.
+  const hasResult = d.result !== undefined;
+  const resultOk = !hasResult || JSON.stringify(re.final) === JSON.stringify(d.result);
+  const choose = inputs.mode === 'choose';
   const isShuffle = inputs.kind === 'team' || inputs.kind === 'filler';
   const pairs =
     inputs.kind === 'team' ? inputs.left.map((l, i) => [l, re.final[i]])
+    : inputs.kind === 'filler' && choose ? inputs.left.map((_, i) => [`Pick #${i + 1}`, re.final[i]])
     : inputs.kind === 'filler' ? inputs.left.map((l, i) => [l, re.final[i]])
     : re.final.map((w, i) => [`${i + 1}`, w]);
 
@@ -61,14 +65,37 @@ function ProofDetail({ d }: { d: DrawRecord }) {
               <div className="eyebrow">{KIND_LABEL[d.inputs.kind]} · {d.id}</div>
               <h2 style={{ marginTop: 6 }}>{d.title}</h2>
             </div>
-            {commitOk && resultOk ? <span className="chip chip-good">Verified fair</span> : <span className="chip" style={{ color: '#ff8a8a' }}>Verification failed</span>}
+            <div className="row">
+              {d.voided && <span className="chip chip-void">Voided</span>}
+              {commitOk && resultOk ? <span className="chip chip-good">Verified fair</span> : <span className="chip" style={{ color: '#ff8a8a' }}>Verification failed</span>}
+            </div>
           </div>
+          {d.voided && (
+            <div className="card-pad" style={{ paddingBottom: 0 }}>
+              <div className="warn-box">
+                Voided by the host at {new Date(d.voided.at).toLocaleTimeString('nb-NO')}: "{d.voided.reason}". The seed is still published so
+                anyone can confirm the voided draw was genuine.
+              </div>
+            </div>
+          )}
+          {d.replaces && (
+            <div className="card-pad" style={{ paddingBottom: 0 }}>
+              <span className="muted" style={{ fontSize: 13.5 }}>This draw replaces voided draw <a className="gold" href={`#/proof/${d.replaces}`}>{d.replaces}</a>.</span>
+            </div>
+          )}
           <div className="card-pad" style={{ paddingTop: 4 }}>
             <Check ok={commitOk} title="Commitment matches the seed and the locked lists" detail={`SHA-256(seed | inputs) = ${commitmentFor(d.seed, inputs).slice(0, 32)}…`} />
             {isShuffle && re.dice && (
               <Check ok title={`Dice recomputed: ${re.dice[0]} + ${re.dice[1]} = ${re.rounds.length} shuffles`} detail={`Derived from SHA-256(seed:dice:0)`} />
             )}
-            <Check ok={resultOk} title="Result recomputed from the seed matches the published result" detail={`Result fingerprint ${orderHash(re.final)}`} />
+            {isShuffle && !re.dice && (
+              <Check ok title={`Fixed shuffle count: ${re.rounds.length}`} detail="Set by the host and locked into the commitment before the draw" />
+            )}
+            {hasResult ? (
+              <Check ok={resultOk} title="Result recomputed from the seed matches the published result" detail={`Result fingerprint ${orderHash(re.final)}`} />
+            ) : (
+              <div className="check"><span className="ic">–</span><div><div style={{ fontWeight: 600 }}>No result was published</div><div className="mono dim">Voided before the reveal</div></div><span className="chip">n/a</span></div>
+            )}
           </div>
         </div>
 
@@ -79,7 +106,7 @@ function ProofDetail({ d }: { d: DrawRecord }) {
               <thead>
                 <tr>
                   <th>{isShuffle ? '#' : 'Place'}</th>
-                  {isShuffle && <th>{inputs.kind === 'team' ? 'Buyer' : 'Open team'}</th>}
+                  {isShuffle && <th>{inputs.kind === 'team' ? 'Buyer' : choose ? 'Pick order' : 'Open team'}</th>}
                   <th>{inputs.kind === 'team' ? 'Team' : inputs.kind === 'filler' ? 'Winning entry' : inputs.kind === 'duck' ? 'Duck' : 'Winner'}</th>
                 </tr>
               </thead>
@@ -95,6 +122,19 @@ function ProofDetail({ d }: { d: DrawRecord }) {
             </table>
           </div>
         </div>
+
+        {d.picks && d.picks.length > 0 && (
+          <div className="card">
+            <div className="card-head"><h3>Teams chosen by the winners</h3><span className="dim mono">in winning order</span></div>
+            <table className="plain">
+              <tbody>
+                {d.picks.map((p, i) => (
+                  <tr key={i}><td className="mono dim">{i + 1}</td><td>{p.entry}</td><td className="gold">{p.team}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         {isShuffle && (
           <div className="card">
@@ -185,7 +225,9 @@ export default function ProofPage({ id }: { id?: string }) {
                   <td><b>{x.title}</b><div className="mono dim">{x.id}</div></td>
                   <td className="muted">{KIND_LABEL[x.inputs.kind]}</td>
                   <td className="muted">{new Date(x.createdAt).toLocaleString('nb-NO')}</td>
-                  <td>{x.revealed ? <span className="chip chip-good">Verifiable</span> : <span className="chip chip-gold">Sealed</span>}</td>
+                  <td>
+                    {x.voided ? <span className="chip chip-void">Voided</span> : x.revealed ? <span className="chip chip-good">Verifiable</span> : <span className="chip chip-gold">Sealed</span>}
+                  </td>
                   <td><a className="btn btn-sm" href={`#/proof/${x.id}`}>Open</a></td>
                 </tr>
               ))}

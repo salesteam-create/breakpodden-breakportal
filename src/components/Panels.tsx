@@ -38,8 +38,17 @@ export function FairnessPanel({ record, revealed }: { record: DrawRecord | null;
           <>
             <div className="kv">
               <label>Draw ID</label>
-              <div className="val">{record.id}</div>
+              <div className="val">
+                {record.id}
+                {record.replaces && <span className="dim"> · replaces voided {record.replaces}</span>}
+              </div>
             </div>
+            {record.inputs.shuffles && (
+              <div className="kv">
+                <label>Shuffle count</label>
+                <div className="val">{record.inputs.shuffles}, set by host and locked at seal</div>
+              </div>
+            )}
             <div className="kv">
               <label>Commitment (shown before roll)</label>
               <div className="val gold">{record.commitment}</div>
@@ -61,6 +70,24 @@ export function FairnessPanel({ record, revealed }: { record: DrawRecord | null;
             )}
           </>
         )}
+      </div>
+    </div>
+  );
+}
+
+export function VoidedPanel({ voided }: { voided: DrawRecord[] }) {
+  if (voided.length === 0) return null;
+  return (
+    <div className="card">
+      <div className="card-head"><h3>Voided draws</h3><span className="chip chip-void">{voided.length}</span></div>
+      <div className="card-pad" style={{ paddingTop: 6, paddingBottom: 6 }}>
+        {voided.map((v) => (
+          <div key={v.id} className="kv">
+            <label>{v.id} · {new Date(v.voided!.at).toLocaleTimeString('nb-NO')}</label>
+            <div style={{ fontSize: 13.5 }}>"{v.voided!.reason}"</div>
+            <a className="muted" style={{ fontSize: 12.5 }} href={`#/proof/${v.id}`}>Public record →</a>
+          </div>
+        ))}
       </div>
     </div>
   );

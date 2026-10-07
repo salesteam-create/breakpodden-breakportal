@@ -56,10 +56,13 @@ export default function StreamView() {
         </div>
         <div className="stack" style={{ gap: 28, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
           {s.phase === 'ready' && <h2 style={{ fontSize: 40, color: 'var(--muted)' }}>Preparing the draw</h2>}
-          {s.phase !== 'ready' && (
+          {s.phase !== 'ready' && (s.dice || s.totalRounds === 0) && (
             <div style={{ transform: 'scale(1.9)', margin: '40px 0' }}>
               <Dice values={s.dice} rollId={rollId} showTotal={s.phase !== 'sealed' && s.phase !== 'rolling'} />
             </div>
+          )}
+          {s.phase !== 'ready' && !s.dice && s.totalRounds > 0 && (
+            <div className="dice-total" style={{ fontSize: 96 }}>{s.totalRounds}<small style={{ fontSize: 20 }}>shuffles set by host</small></div>
           )}
           {s.phase === 'sealed' && <h2 style={{ fontSize: 40 }}>Draw sealed. Rolling next</h2>}
           {(s.phase === 'shuffling' || s.phase === 'rolling') && s.totalRounds > 0 && (
