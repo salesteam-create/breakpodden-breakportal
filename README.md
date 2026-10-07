@@ -2,6 +2,8 @@
 
 Interactive prototype of the Breakpodden Break Portal: a provably fair randomizer for live card breaks.
 
+Live demo: https://salesteam-create.github.io/breakpodden-breakportal/ (deployed from `main` by `.github/workflows/pages.yml`).
+
 ## Run
 
 ```bash
