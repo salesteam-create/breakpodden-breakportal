@@ -84,7 +84,7 @@ export default function StreamView() {
     body = (
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 560px', gap: 40, alignItems: 'center', flex: 1 }}>
         <div style={{ display: 'grid', placeItems: 'center' }}>
-          <Wheel entries={s.entries} rotation={s.rotation} size={700} />
+          <Wheel entries={s.entries} rotation={s.rotation} size={720} spinning={s.spinning} />
         </div>
         <div>
           {s.winner ? (

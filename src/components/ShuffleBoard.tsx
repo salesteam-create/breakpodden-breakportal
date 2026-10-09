@@ -52,7 +52,7 @@ export default function ShuffleBoard({
         ))}
         {winTop !== undefined && (
           <div className="cut-line" style={{ top: winTop * step - gap / 2 }}>
-            <span style={{ fontSize: 11 * scale, left: 58, right: 'auto', top: 6 }}>Top {winTop} win a slot ↑</span>
+            <span style={{ fontSize: 11 * scale, left: 58, right: 'auto', top: 6 }}>Top {winTop} win a spot ↑</span>
           </div>
         )}
       </div>

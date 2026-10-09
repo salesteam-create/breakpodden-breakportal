@@ -1,177 +1,127 @@
-import { useEffect, useState } from 'react';
 import { BREAKS, kr } from '../lib/data.ts';
-import { listDraws } from '../lib/store.ts';
-import cardGoldAuto from '../assets/card-gold-auto.webp';
-import cardDowman from '../assets/card-dowman.webp';
-import boxChrome from '../assets/box-chrome.webp';
-import boxFutera from '../assets/box-futera.webp';
-import { DuckIcon } from '../components/DuckRace.tsx';
+import { listDraws, openStreamWindow } from '../lib/store.ts';
+import { WORKSPACE } from '../lib/workspace.ts';
+import Showcase from '../components/Showcase.tsx';
+
+const SOLD: Record<string, [number, number]> = { '394': [18, 18], '403': [33, 43] };
 
 const TOOLS = [
-  { href: '#/break/394', n: '01', title: 'Team randomizer', text: 'Dice roll, visible shuffle rounds and a card reveal. Replaces Excel and random.org.', cta: 'Run break #394', art: cardGoldAuto },
-  { href: '#/break/403', n: '02', title: 'Filler draw', text: 'Sell the unsold top teams as cheap entries. The top N after the shuffle win.', cta: 'Open break #403', art: boxFutera },
-  { href: '#/wheel', n: '03', title: 'Wheel of fortune', text: 'One segment per purchase. More spots bought, more chances to win.', cta: 'Spin the wheel', art: cardDowman },
-  { href: '#/duck', n: '04', title: 'Duck race', text: 'Up to 50 ducks, a set race length, one sealed winner.', cta: 'Start a race' },
+  { href: '#/break/394', title: 'Team draw', text: 'Dice, visible shuffle rounds, card reveal', icon: 'dice' },
+  { href: '#/break/403', title: 'Filler draw', text: 'Cheap entries compete for open spots', icon: 'ticket' },
+  { href: '#/wheel', title: 'Wheel of fortune', text: 'One segment per purchase', icon: 'wheel' },
+  { href: '#/duck', title: 'Duck race', text: 'Up to 50 ducks, sealed finish', icon: 'duck' },
 ];
 
-const STRIP = ['Live breaks', 'Provably fair', 'Big hits', 'Sealed draws', 'Rare cards', 'Card hotel'];
+function ToolIcon({ name }: { name: string }) {
+  const common = { width: 26, height: 26, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
+  if (name === 'dice') return <svg {...common}><rect x="3" y="3" width="18" height="18" rx="4" /><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor" /><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor" /><circle cx="12" cy="12" r="1.2" fill="currentColor" /></svg>;
+  if (name === 'ticket') return <svg {...common}><path d="M3 8a2 2 0 0 0 0 4v4h18v-4a2 2 0 0 1 0-4V4H3z" transform="translate(0 2)" /><path d="M14 6v12" strokeDasharray="2 2" /></svg>;
+  if (name === 'wheel') return <svg {...common}><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="2" /><path d="M12 3v7M12 14v7M3 12h7M14 12h7M5.6 5.6l5 5M13.4 13.4l5 5M18.4 5.6l-5 5M10.6 13.4l-5 5" /></svg>;
+  return <svg {...common}><path d="M4 14q-1-4 2-3 1 4 5 4h5q3 0 3 3-2 3-8 3-6 0-7-7z" /><circle cx="15" cy="8" r="3.5" /><path d="M18.5 7.5H21l-2.5 1.5" /></svg>;
+}
 
-/** Time left until tonight's first break at 20:00 (or tomorrow's, once it has passed). */
-function useCountdown() {
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => {
-    const t = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
-  }, []);
-  const target = new Date(now);
-  target.setHours(20, 0, 0, 0);
-  if (target.getTime() <= now) target.setDate(target.getDate() + 1);
-  const s = Math.floor((target.getTime() - now) / 1000);
-  return [Math.floor(s / 86400), Math.floor(s / 3600) % 24, Math.floor(s / 60) % 60, s % 60].map((n) => String(n).padStart(2, '0'));
+function greeting() {
+  const h = new Date().getHours();
+  return h < 5 ? 'Good evening' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
 }
 
 export default function Dashboard() {
-  const draws = listDraws().slice(0, 5);
-  const [dd, hh, mm, ss] = useCountdown();
+  const draws = listDraws();
+  const recent = draws.slice(0, 5);
+  const sealed = draws.filter((d) => !d.revealed).length;
+  const verified = draws.filter((d) => d.revealed && !d.voided).length;
+  const spots = Object.values(SOLD).reduce((a, [s]) => a + s, 0);
 
   return (
-    <>
-      <section className="hero bleed theme-dark">
-        <div className="hero-copy">
-          <span className="eyebrow">Breakpodden · Break portal</span>
-          <h1>Every draw. One portal. Provably fair.</h1>
-          <p>Import buyers from Shopify, load the box checklist, roll and shuffle on stream, and give every viewer a proof they can check themselves.</p>
-          <div className="hero-actions">
-            <a className="btn btn-gold" href="#/break/394">Run the next break</a>
-            <a className="btn" href="#/proofs">Fairness proofs</a>
+    <div className="home">
+      <section className="home-top">
+        <div className="welcome card">
+          <div className="welcome-head">
+            <span className="eyebrow">Workspace · {WORKSPACE.name}</span>
+            <h1>{greeting()}</h1>
+            <p className="muted">{BREAKS.length} breaks are ready to draw. Every draw is sealed before the roll and verifiable afterwards.</p>
           </div>
-          <div className="hero-stats">
-            <div className="stat"><b>2</b><span>Breaks tonight</span></div>
-            <div className="stat"><b>61</b><span>Spots to draw</span></div>
-            <div className="stat"><b>{listDraws().length}</b><span>Draws with proof</span></div>
+          <div className="kpis">
+            <div className="kpi"><b>{BREAKS.length}</b><span>Breaks ready</span></div>
+            <div className="kpi"><b>{spots}</b><span>Spots to draw</span></div>
+            <div className="kpi"><b>{sealed}</b><span>Sealed now</span></div>
+            <div className="kpi"><b>{verified}</b><span>Verified proofs</span></div>
+          </div>
+          <div className="quick">
+            {TOOLS.map((t) => (
+              <a key={t.title} href={t.href} className="quick-tile">
+                <span className="qi"><ToolIcon name={t.icon} /></span>
+                <span className="qt"><b>{t.title}</b><span>{t.text}</span></span>
+                <span className="go">→</span>
+              </a>
+            ))}
           </div>
         </div>
-        <div className="hero-visual" aria-hidden="true">
-          <img className="fan fan-1" src={cardDowman} alt="" />
-          <img className="fan fan-2" src={cardGoldAuto} alt="" />
-          <img className="fan fan-3" src={boxChrome} alt="" />
-          <div className="countdown">
-            <div className="countdown-head">
-              <span className="t">Neste break</span>
-              <span className="s">Tonight · 20:00</span>
+
+        <div className="preview card theme-dark">
+          <div className="preview-head">
+            <span className="row" style={{ gap: 8 }}><span className="live-dot" /> <b>Stream preview</b></span>
+            <button className="btn btn-sm" onClick={openStreamWindow}>⧉ Open stream view</button>
+          </div>
+          <Showcase />
+        </div>
+      </section>
+
+      <section className="home-main">
+        <div className="card">
+          <div className="card-head">
+            <h3>Breaks</h3>
+            <span className="pill"><span className="dot" /> Synced from Shopify</span>
+          </div>
+          <div className="queue">
+            {BREAKS.map((b) => {
+              const [sold, of] = SOLD[b.id] ?? [0, b.spots];
+              const ready = sold === of;
+              return (
+                <a key={b.id} href={`#/break/${b.id}`} className="queue-row">
+                  <span className="q-thumb"><img src={b.image} alt="" /></span>
+                  <span className="q-title">
+                    <span className="overline">Break #{b.number} · {b.format === 'random' ? 'Random team' : 'Pick your team'}</span>
+                    <b>{b.title}</b>
+                    <span className="muted">{b.format === 'random' ? `${b.spots} spots · ${kr(b.slotPrice!)}` : `${b.spots} teams and splits`} · box {kr(b.boxPrice)}</span>
+                  </span>
+                  <span className="q-progress">
+                    <span className="row" style={{ justifyContent: 'space-between' }}><span className="muted">Sold</span><b>{sold}/{of}</b></span>
+                    <span className="progress"><span style={{ width: `${(sold / of) * 100}%` }} /></span>
+                  </span>
+                  <span className="q-status">
+                    <span className={`chip ${ready ? 'chip-good' : 'chip-gold'}`}>{ready ? 'Ready to draw' : 'Fillers open'}</span>
+                    <span className="dim" style={{ fontSize: 12.5 }}>{b.startsAt}</span>
+                  </span>
+                  <span className={`btn btn-sm ${ready ? 'btn-gold' : ''}`}>{ready ? 'Run draw' : 'Open board'}</span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-head">
+            <h3>Recent proofs</h3>
+            <a href="#/proofs" className="btn btn-sm btn-ghost">All proofs →</a>
+          </div>
+          {recent.length === 0 ? (
+            <div className="empty" style={{ padding: '40px 20px' }}>
+              No draws yet. Run a team draw and its public proof appears here.
             </div>
-            <div className="clock">
-              {[
-                [dd, 'Days'], [hh, 'Hours'], [mm, 'Minutes'], [ss, 'Seconds'],
-              ].map(([v, l], i) => (
-                <div key={l} className="row" style={{ gap: 6 }}>
-                  {i > 0 && <span className="sep"><i /><i /></span>}
-                  <div className="unit"><b>{v}</b><span>{l}</span></div>
-                </div>
+          ) : (
+            <div className="activity">
+              {recent.map((d) => (
+                <a key={d.id} href={`#/proof/${d.id}`} className="activity-row">
+                  <span className={`a-dot ${d.voided ? 'void' : d.revealed ? 'ok' : 'sealed'}`} />
+                  <span className="a-text"><b>{d.title}</b><span className="mono dim">{d.id} · {d.commitment.slice(0, 12)}…</span></span>
+                  {d.voided ? <span className="chip chip-void">Voided</span> : d.revealed ? <span className="chip chip-good">Verified</span> : <span className="chip chip-gold">Sealed</span>}
+                </a>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <h2>Tonight's breaks</h2>
-          <span className="btn btn-black btn-sm" style={{ cursor: 'default' }}><span className="dot" /> Synced from Shopify</span>
-        </div>
-        <div className="product-grid">
-          {BREAKS.map((b) => (
-            <a key={b.id} href={`#/break/${b.id}`} className="product">
-              <div className="product-img">
-                <img src={b.image} alt="" />
-                {b.format === 'random' && <span className="ribbon">Sold out</span>}
-              </div>
-              <div className="product-meta">
-                <span className="overline">Break #{b.number} · {b.format === 'random' ? 'Random team' : 'Pick your team'}</span>
-                <span className="title">{b.title}</span>
-                <span className="price">
-                  {b.format === 'random' ? `${b.spots} spots · ${kr(b.slotPrice!)}` : `${b.spots} teams and splits · from 39 kr`}
-                </span>
-                <span className="status">
-                  <span className="dot" style={{ background: b.format === 'random' ? 'var(--good)' : 'var(--warn)' }} />
-                  {b.status} · {b.startsAt}
-                </span>
-              </div>
-            </a>
-          ))}
-          <a href="#/break/394" className="feature-tile theme-dark">
-            <img src={boxChrome} alt="" />
-            <div className="stack" style={{ gap: 20 }}>
-              <span className="eyebrow">Live break</span>
-              <h2>The box is sealed. The spots are open.</h2>
-            </div>
-            <div className="next">
-              <span className="label-gold">Neste break</span>
-              <b>Break #394</b>
-              <span>2025-26 Topps Bundesliga Gold · Tonight 20:00</span>
-            </div>
-            <span className="btn btn-gold" style={{ alignSelf: 'flex-start' }}>Start the draw</span>
-          </a>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="section-head">
-          <div className="stack" style={{ gap: 10 }}>
-            <span className="eyebrow">How it works</span>
-            <h2>Every randomizer, one place</h2>
-          </div>
-        </div>
-        <div className="tool-grid">
-          {TOOLS.map((t) => (
-            <a key={t.title} href={t.href} className="tool-tile theme-dark">
-              {t.art ? <img className="tool-art" src={t.art} alt="" /> : <span className="tool-glyph" aria-hidden="true"><DuckIcon size={150} gold /></span>}
-              <div>
-                <span className="eyebrow">{t.n}</span>
-                <h2 style={{ marginTop: 18 }}>{t.title}</h2>
-                <p>{t.text}</p>
-              </div>
-              <span className="btn btn-gold">{t.cta}</span>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <div className="strip bleed" aria-hidden="true">
-        <div className="strip-track">
-          {[0, 1].flatMap((k) => STRIP.map((w, i) => (
-            <span key={`${k}-${w}`} className="row" style={{ gap: 28 }}>
-              <span className={i % 2 ? 'outline' : ''}>{w}</span>
-              <i className="star gold" />
-            </span>
-          )))}
-        </div>
-      </div>
-
-      <section>
-        <div className="section-head">
-          <h2>Recent proofs</h2>
-          <a href="#/proofs" className="btn btn-black btn-sm">All proofs</a>
-        </div>
-        <div className="card">
-          {draws.length === 0 ? (
-            <div className="empty">No draws yet. Start with break #394 to see the full flow.</div>
-          ) : (
-            <table className="plain">
-              <tbody>
-                {draws.map((d) => (
-                  <tr key={d.id}>
-                    <td><b>{d.title}</b></td>
-                    <td className="mono dim">{d.commitment.slice(0, 16)}…</td>
-                    <td>{d.voided ? <span className="chip chip-void">Voided</span> : d.revealed ? <span className="chip chip-good">Verifiable</span> : <span className="chip chip-gold">Sealed</span>}</td>
-                    <td style={{ textAlign: 'right' }}><a className="btn btn-sm" href={`#/proof/${d.id}`}>Proof</a></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           )}
         </div>
       </section>
-    </>
+    </div>
   );
 }

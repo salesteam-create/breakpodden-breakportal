@@ -7,7 +7,7 @@ import { FairnessPanel, LogPanel, RevealGrid, Steps, VoidedPanel } from '../comp
 import { RollProgress, ShuffleModeControl, VoidButton } from '../components/DrawControls.tsx';
 
 const brk = BREAKS.find((b) => b.id === '403')!;
-const STEPS = ['Open slots', 'Seal draw', 'Roll and shuffle', 'Reveal winners', 'Assign teams'];
+const STEPS = ['Open spots', 'Seal draw', 'Roll and shuffle', 'Reveal winners', 'Assign teams'];
 type Assign = 'draw' | 'choose';
 
 export default function PytBreak() {

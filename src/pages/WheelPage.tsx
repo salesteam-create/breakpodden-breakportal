@@ -107,7 +107,7 @@ export default function WheelPage() {
         <div>
           <div className="eyebrow">Giveaway</div>
           <h1 style={{ marginTop: 6 }}>Wheel of fortune</h1>
-          <p className="muted" style={{ margin: '8px 0 0' }}>One segment per purchase tonight. Buy three spots, get three chances.</p>
+          <p className="muted" style={{ margin: '8px 0 0' }}>One segment per purchase. Three spots bought means three entries on the wheel.</p>
         </div>
         <button className="btn" onClick={openStreamWindow}>⧉ Pop out stream view</button>
       </div>
@@ -140,7 +140,13 @@ export default function WheelPage() {
               </>
             )}
           </div>
-          <Wheel entries={remaining.map((e) => e.name)} rotation={rotation} instant={instant} />
+          <Wheel
+            entries={remaining.map((e) => e.name)}
+            rotation={rotation}
+            instant={instant}
+            spinning={spinning}
+            winner={latest ? remaining.findIndex((e) => e.index === latest.index) : null}
+          />
           {latest && !spinning && (
             <div style={{ padding: '0 20px 20px' }}>
               <div className="winner-banner">

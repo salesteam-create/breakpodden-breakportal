@@ -3,7 +3,7 @@ import { useState } from 'react';
 export type Theme = 'light' | 'dark';
 const KEY = 'bp-theme';
 
-/** Theme set by the inline script in index.html (saved choice, else the system setting). */
+/** Theme set by the inline script in index.html (saved choice, else dark). */
 const current = (): Theme => (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
 
 export function useTheme() {
