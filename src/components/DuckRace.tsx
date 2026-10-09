@@ -22,9 +22,9 @@ export function duckProgress(rank: number, total: number, elapsed: number, durat
 export function DuckIcon({ size, gold }: { size: number; gold?: boolean }) {
   return (
     <svg width={size * 1.25} height={size} viewBox="0 0 50 40">
-      <ellipse cx="22" cy="27" rx="18" ry="10" fill={gold ? '#e8c66e' : '#f3d34a'} />
-      <path d="M6 24 Q2 18 8 20" fill={gold ? '#e8c66e' : '#f3d34a'} />
-      <circle cx="34" cy="15" r="9" fill={gold ? '#e8c66e' : '#f3d34a'} />
+      <ellipse cx="22" cy="27" rx="18" ry="10" fill={gold ? '#d9b654' : '#f3d34a'} />
+      <path d="M6 24 Q2 18 8 20" fill={gold ? '#d9b654' : '#f3d34a'} />
+      <circle cx="34" cy="15" r="9" fill={gold ? '#d9b654' : '#f3d34a'} />
       <path d="M42 14 L50 17 L42 19 Z" fill="#f08a24" />
       <circle cx="36" cy="12.5" r="1.8" fill="#111" />
       <path d="M14 26 Q22 31 28 25" stroke="#c9a400" strokeWidth="2" fill="none" />

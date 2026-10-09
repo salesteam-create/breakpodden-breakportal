@@ -1,8 +1,9 @@
 // Wheel of fortune: one segment per entry, so more purchases mean a bigger share.
 // The landing segment is decided by the seeded draw; the spin only animates it.
 
-const COLORS = ['#c9a24a', '#1d1d22', '#8f7128', '#2b2b32', '#e0bd63', '#141418'];
-const INK = ['#141006', '#f5f1e8', '#f5f1e8', '#f5f1e8', '#141006', '#e8c66e'];
+// Breakpodden palette: gold, black, cream, navy, light gold, near-black.
+const COLORS = ['#b08d2f', '#111111', '#e5dec9', '#1d243d', '#d9b654', '#000000'];
+const INK = ['#ffffff', '#ffffff', '#1d243d', '#ffffff', '#111111', '#d9b654'];
 
 const pt = (cx: number, cy: number, r: number, deg: number) => {
   const a = (deg * Math.PI) / 180;
@@ -26,7 +27,7 @@ export default function Wheel({ entries, rotation, size = 520, instant }: { entr
         viewBox={`0 0 ${size} ${size}`}
         style={{ transform: `rotate(${rotation}deg)`, maxWidth: '100%', height: 'auto' }}
       >
-        <circle cx={c} cy={c} r={c - 2} fill="#0c0c0e" stroke="#c9a24a" strokeWidth="4" />
+        <circle cx={c} cy={c} r={c - 2} fill="#000" stroke="#b08d2f" strokeWidth="6" />
         {entries.map((name, i) => {
           const a0 = i * seg;
           const a1 = a0 + seg;
@@ -39,7 +40,7 @@ export default function Wheel({ entries, rotation, size = 520, instant }: { entr
               <path
                 d={n === 1 ? `M${c} ${c - r}A${r} ${r} 0 1 1 ${c - 0.01} ${c - r}Z` : `M${c} ${c}L${x0} ${y0}A${r} ${r} 0 ${seg > 180 ? 1 : 0} 1 ${x1} ${y1}Z`}
                 fill={COLORS[k]}
-                stroke="#0c0c0e"
+                stroke="#000"
                 strokeWidth="1"
               />
               <text
@@ -57,8 +58,8 @@ export default function Wheel({ entries, rotation, size = 520, instant }: { entr
             </g>
           );
         })}
-        <circle cx={c} cy={c} r={size * 0.09} fill="#0c0c0e" stroke="#c9a24a" strokeWidth="3" />
-        <text x={c} y={c + 1} textAnchor="middle" dominantBaseline="middle" fill="#e8c66e" fontFamily="Oswald, sans-serif" fontSize={size * 0.045} fontWeight="600">
+        <circle cx={c} cy={c} r={size * 0.09} fill="#000" stroke="#b08d2f" strokeWidth="3" />
+        <text x={c} y={c + 1} textAnchor="middle" dominantBaseline="middle" fill="#d9b654" fontFamily="Outfit, sans-serif" fontSize={size * 0.045} fontWeight="600">
           SPIN
         </text>
       </svg>

@@ -2,8 +2,8 @@
 // Break titles, team checklists and prices come from breakpodden.com (October 2026).
 // Buyer names are invented usernames: no real customer data is used.
 
-import bundesligaImg from '../assets/box-bundesliga.jpg';
-import futeraImg from '../assets/box-futera.png';
+import bundesligaImg from '../assets/box-bundesliga.webp';
+import futeraImg from '../assets/box-futera.webp';
 
 export interface Slot {
   team: string;
