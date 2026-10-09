@@ -1,5 +1,6 @@
 import { useRoute } from './lib/router.ts';
 import { resetDemo } from './lib/store.ts';
+import { useTheme } from './lib/theme.ts';
 import logo from './assets/logo-full.svg';
 import Dashboard from './pages/Dashboard.tsx';
 import RandomBreak from './pages/RandomBreak.tsx';
@@ -22,6 +23,7 @@ const NAV = [
 
 export default function App() {
   const [section = '', id] = useRoute();
+  const { theme, toggle } = useTheme();
 
   if (section === 'stream') return <StreamView />;
 
@@ -57,6 +59,24 @@ export default function App() {
         </nav>
         <div className="topbar-right">
           <span className="pill"><span className="dot" /> Shopify connected · breakpodden.com</span>
+          <button
+            className="theme-toggle"
+            role="switch"
+            aria-checked={theme === 'dark'}
+            aria-label="Dark mode"
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            onClick={toggle}
+          >
+            <svg className="ico sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+            <svg className="ico moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+            <span className="knob">
+              {theme === 'dark' ? (
+                <svg viewBox="0 0 24 24" fill="#fff"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" /></svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" /></svg>
+              )}
+            </span>
+          </button>
           <button
             className="btn btn-sm btn-ghost"
             title="Clear all draws and start the demo from scratch"
