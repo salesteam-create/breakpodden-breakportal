@@ -877,3 +877,9 @@ input[type=text], input[type=number], textarea, select,
   .t-title { max-width: 220px; }
   .t-title b { display: block; overflow: hidden; text-overflow: ellipsis; }
 }
+
+/* Team tiles: names wrap inside the card, prices never split. */
+.tile { min-width: 0; }
+.tile .t { overflow-wrap: anywhere; hyphens: auto; }
+.tile .o > span:last-child { white-space: nowrap; flex: none; }
+.tile .o > span:first-child { flex: 1 1 auto; }

@@ -12,6 +12,8 @@ import Icon from '../components/Icons.tsx';
 const brk = BREAKS.find((b) => b.id === '403')!;
 const STEPS = ['Open spots', 'Seal draw', 'Roll and shuffle', 'Reveal winners', 'Assign teams'];
 type Assign = 'draw' | 'choose';
+/** Lets long names like "Czechia/Slovakia/Serbia" wrap after each slash. */
+const breakable = (name: string) => name.replace(/\//g, '/\u200b');
 type TileKind = 'sold' | 'open' | 'filler';
 const kindOf = (s: Slot): TileKind => (!s.owner ? 'open' : s.viaFiller ? 'filler' : 'sold');
 const LEGEND: { kind: TileKind; label: string }[] = [
@@ -145,7 +147,7 @@ export default function PytBreak() {
             <div className="team-grid">
               {slots.filter((s) => !show || kindOf(s) === show).map((s) => (
                 <div key={s.team} className={`tile${s.owner ? (s.viaFiller ? ' filled' : '') : ' open'}`}>
-                  <span className="t">{s.team}</span>
+                  <span className="t">{breakable(s.team)}</span>
                   <span className="o">
                     <span>{s.owner ? (s.viaFiller ? <><Icon name="trophy" size={12} /> {s.owner}</> : s.owner) : 'Open'}</span>
                     <span>{kr(s.price)}</span>
@@ -253,7 +255,7 @@ export default function PytBreak() {
                   <div className="pick-grid">
                     {openTeams.map((t) => (
                       <button key={t} className={`tile open pick-tile${takenTeams.has(t) ? ' taken' : ''}`} disabled={takenTeams.has(t)} onClick={() => pick(t)}>
-                        <span className="t">{t}</span>
+                        <span className="t">{breakable(t)}</span>
                         <span className="o"><span>{takenTeams.has(t) ? entryBuyer(picks.find((p) => p.team === t)!.entry) : 'Pick'}</span><span>{kr(priceOf(t))}</span></span>
                       </button>
                     ))}
