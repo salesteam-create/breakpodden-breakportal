@@ -417,8 +417,14 @@ p { margin: 0; }
 .round-meter span.on { background: var(--accent-strong); }
 
 /* ---------- Pick-your-team board ---------- */
-.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; font-weight: 600; color: var(--muted); }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 12px; font-weight: 600; color: var(--muted); }
+.legend button { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: inherit; font: inherit; cursor: pointer; transition: background .2s, border-color .2s, color .2s; }
+.legend button:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
+.legend button.on { background: var(--accent-soft); border-color: var(--accent-line); color: var(--text); }
+.legend button:disabled { opacity: .45; cursor: default; }
+.legend button em { font-style: normal; font-size: 11px; color: var(--dim); font-variant-numeric: tabular-nums; }
+.legend button.on em { color: var(--accent-strong); }
+.legend .lg-clear { color: var(--accent-strong); }
 .legend i { width: 12px; height: 12px; border-radius: 4px; }
 .lg-sold { background: var(--surface-3); }
 .lg-open { border: 1.5px dashed var(--accent-strong); }
@@ -644,7 +650,8 @@ table.plain .gold { font-weight: 600; }
   table.plain td, table.plain th { padding: 10px 12px; }
   .team-row { grid-template-columns: 24px 1fr; }
   .team-row > div { grid-column: 2; }
-  .legend, .hide-sm { display: none; }
+  .hide-sm { display: none; }
+  .card-head { flex-wrap: wrap; }
   .app-footer { flex-direction: column; gap: 2px; }
 }
 @media (prefers-reduced-motion: reduce) {

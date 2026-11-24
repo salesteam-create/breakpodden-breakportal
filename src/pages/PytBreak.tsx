@@ -12,10 +12,18 @@ import Icon from '../components/Icons.tsx';
 const brk = BREAKS.find((b) => b.id === '403')!;
 const STEPS = ['Open spots', 'Seal draw', 'Roll and shuffle', 'Reveal winners', 'Assign teams'];
 type Assign = 'draw' | 'choose';
+type TileKind = 'sold' | 'open' | 'filler';
+const kindOf = (s: Slot): TileKind => (!s.owner ? 'open' : s.viaFiller ? 'filler' : 'sold');
+const LEGEND: { kind: TileKind; label: string }[] = [
+  { kind: 'sold', label: 'Sold' },
+  { kind: 'open', label: 'Open' },
+  { kind: 'filler', label: 'Won via filler' },
+];
 
 export default function PytBreak() {
   const [slots, setSlots] = useState<Slot[]>(initialPytSlots);
   const [mode, setMode] = useState<'board' | 'filler'>('board');
+  const [show, setShow] = useState<TileKind | null>(null);
   const [assign, setAssign] = useState<Assign>('draw');
   const [fixed, setFixed] = useState<number | undefined>(undefined);
   const [picks, setPicks] = useState<{ entry: string; team: string }[]>([]);
@@ -115,14 +123,27 @@ export default function PytBreak() {
                 <h3>Team board</h3>
                 <span className="muted sm">Prices and splits from breakpodden.com</span>
               </div>
-              <div className="legend">
-                <span><i className="lg-sold" /> Sold</span>
-                <span><i className="lg-open" /> Open</span>
-                <span><i className="lg-filler" /> Won via filler</span>
+              <div className="legend" role="group" aria-label="Filter teams">
+                {LEGEND.map((l) => {
+                  const n = slots.filter((x) => kindOf(x) === l.kind).length;
+                  return (
+                    <button
+                      key={l.kind}
+                      className={show === l.kind ? 'on' : ''}
+                      aria-pressed={show === l.kind}
+                      disabled={n === 0}
+                      title={n === 0 ? `No teams ${l.label.toLowerCase()} yet` : `Show only ${l.label.toLowerCase()} teams`}
+                      onClick={() => setShow(show === l.kind ? null : l.kind)}
+                    >
+                      <i className={`lg-${l.kind}`} /> {l.label} <em>{n}</em>
+                    </button>
+                  );
+                })}
+                {show && <button className="lg-clear" onClick={() => setShow(null)}>Show all</button>}
               </div>
             </div>
             <div className="team-grid">
-              {slots.map((s) => (
+              {slots.filter((s) => !show || kindOf(s) === show).map((s) => (
                 <div key={s.team} className={`tile${s.owner ? (s.viaFiller ? ' filled' : '') : ' open'}`}>
                   <span className="t">{s.team}</span>
                   <span className="o">
