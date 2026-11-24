@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import Dice from './Dice.tsx';
 import type { Phase } from '../lib/useShuffleDraw.ts';
+import Icon from './Icons.tsx';
 
 /** Host choice before sealing: roll the dice, or a fixed number of shuffles. */
 export function ShuffleModeControl({ value, onChange }: { value: number | undefined; onChange: (v: number | undefined) => void }) {
   return (
     <div className="seg" role="group" aria-label="Shuffle count">
-      <button className={value === undefined ? 'on' : ''} onClick={() => onChange(undefined)}>🎲 Dice</button>
-      <button className={value !== undefined ? 'on' : ''} onClick={() => onChange(value ?? 7)}>Fixed</button>
+      <button className={value === undefined ? 'on' : ''} onClick={() => onChange(undefined)}><Icon name="dice" size={14} /> Dice</button>
+      <button className={value !== undefined ? 'on' : ''} onClick={() => onChange(value ?? 7)}><Icon name="shuffle" size={14} /> Fixed</button>
       {value !== undefined && (
         <input
           type="number"
@@ -55,7 +56,7 @@ export function VoidButton({ onVoid, disabled }: { onVoid: (reason: string) => v
   if (!open)
     return (
       <button className="btn btn-sm btn-ghost" disabled={disabled} onClick={() => setOpen(true)} title="Void this draw and run it again">
-        ⟲ Void and re-draw
+        <Icon name="reset" size={15} /> Void and re-draw
       </button>
     );
   return (
@@ -71,7 +72,7 @@ export function VoidButton({ onVoid, disabled }: { onVoid: (reason: string) => v
           if (e.key === 'Escape') setOpen(false);
         }}
       />
-      <button className="btn btn-sm" disabled={!reason.trim()} onClick={() => onVoid(reason.trim())}>Void draw</button>
+      <button className="btn btn-sm btn-danger" disabled={!reason.trim()} onClick={() => onVoid(reason.trim())}>Void draw</button>
       <button className="btn btn-sm btn-ghost" onClick={() => setOpen(false)}>Cancel</button>
     </div>
   );

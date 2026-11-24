@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { inputsHash } from '../lib/fair.ts';
 import type { DrawRecord } from '../lib/store.ts';
 import markLogo from '../assets/logo-mark.svg';
+import Icon from './Icons.tsx';
 
 export function Steps({ labels, current }: { labels: string[]; current: number }) {
   return (
     <div className="steps">
       {labels.map((l, i) => (
         <div key={l} className={`step${i < current ? ' done' : i === current ? ' now' : ''}`}>
-          <i>{i < current ? '✓' : i + 1}</i>
+          <i>{i < current ? <Icon name="check" size={13} strokeWidth={2.4} /> : i + 1}</i>
           {l}
         </div>
       ))}
@@ -20,7 +21,7 @@ export function FairnessPanel({ record, revealed }: { record: DrawRecord | null;
   return (
     <div className="card">
       <div className="card-head">
-        <h3>Fairness</h3>
+        <h3 className="row"><Icon name="shield" size={17} className="gold" /> Fairness</h3>
         {record ? (
           revealed ? <span className="chip chip-good">Verifiable</span> : <span className="chip chip-gold">Sealed</span>
         ) : (
@@ -60,12 +61,12 @@ export function FairnessPanel({ record, revealed }: { record: DrawRecord | null;
             <div className="kv">
               <label>Secret seed</label>
               <div className="val">
-                {revealed ? record.seed : <span className="lock">🔒 Revealed after the results are locked</span>}
+                {revealed ? record.seed : <span className="lock"><Icon name="lock" size={14} /> Revealed after the results are locked</span>}
               </div>
             </div>
             {revealed && (
               <div style={{ padding: '12px 0' }}>
-                <a className="btn btn-sm" href={`#/proof/${record.id}`}>Open public proof page →</a>
+                <a className="btn btn-sm btn-soft btn-block" href={`#/proof/${record.id}`}>Open public proof page <Icon name="arrow" size={14} /></a>
               </div>
             )}
           </>
@@ -85,7 +86,7 @@ export function VoidedPanel({ voided }: { voided: DrawRecord[] }) {
           <div key={v.id} className="kv">
             <label>{v.id} · {new Date(v.voided!.at).toLocaleTimeString('nb-NO')}</label>
             <div style={{ fontSize: 13.5 }}>"{v.voided!.reason}"</div>
-            <a className="muted" style={{ fontSize: 12.5 }} href={`#/proof/${v.id}`}>Public record →</a>
+            <a className="link sm" href={`#/proof/${v.id}`}>Public record <Icon name="arrow" size={13} /></a>
           </div>
         ))}
       </div>

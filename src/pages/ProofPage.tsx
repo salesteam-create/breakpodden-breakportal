@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { commitmentFor, inputsHash, orderHash, runRace, runShuffleDraw, runWheel, type DrawInputs } from '../lib/fair.ts';
 import { getDraw, listDraws, type DrawRecord } from '../lib/store.ts';
+import Icon from '../components/Icons.tsx';
+import Hero from '../components/Hero.tsx';
 
 const KIND_LABEL: Record<string, string> = { team: 'Team draw', filler: 'Filler draw', wheel: 'Wheel of fortune', duck: 'Duck race' };
 
@@ -13,7 +15,7 @@ function recompute(d: DrawRecord, inputs: DrawInputs) {
 function Check({ ok, title, detail }: { ok: boolean; title: string; detail: string }) {
   return (
     <div className={`check ${ok ? 'ok' : 'bad'}`}>
-      <span className="ic">{ok ? '✓' : '✕'}</span>
+      <span className="ic"><Icon name={ok ? 'check' : 'x'} size={14} /></span>
       <div>
         <div style={{ fontWeight: 600 }}>{title}</div>
         <div className="mono dim" style={{ wordBreak: 'break-all' }}>{detail}</div>
@@ -67,7 +69,7 @@ function ProofDetail({ d }: { d: DrawRecord }) {
             </div>
             <div className="row">
               {d.voided && <span className="chip chip-void">Voided</span>}
-              {commitOk && resultOk ? <span className="chip chip-good">Verified fair</span> : <span className="chip" style={{ color: '#ff8a8a' }}>Verification failed</span>}
+              {commitOk && resultOk ? <span className="chip chip-good"><Icon name="shield" size={13} /> Verified fair</span> : <span className="chip chip-void"><Icon name="x" size={13} /> Verification failed</span>}
             </div>
           </div>
           {d.voided && (
@@ -173,11 +175,11 @@ duck race  = label "race"`}</div>
             The commitment is shown on stream before the dice roll. Because SHA-256 cannot be reversed, nobody can know or
             change the outcome after that point.
           </p>
-          <button className={`btn btn-sm${tampered ? ' btn-gold' : ''}`} onClick={() => setTampered(!tampered)}>
+          <button className={`btn btn-sm btn-block${tampered ? ' btn-primary' : ''}`} onClick={() => setTampered(!tampered)}>
             {tampered ? 'Undo tamper test' : 'Tamper test: swap two names'}
           </button>
           <button
-            className="btn btn-sm"
+            className="btn btn-sm btn-block"
             onClick={() => {
               const a = document.createElement('a');
               a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], { type: 'application/json' }));
@@ -185,7 +187,7 @@ duck race  = label "race"`}</div>
               a.click();
             }}
           >
-            Download proof (JSON)
+            <Icon name="download" size={15} /> Download proof (JSON)
           </button>
         </div>
       </div>
@@ -198,8 +200,7 @@ export default function ProofPage({ id }: { id?: string }) {
   if (id && d) {
     return (
       <>
-        <a href="#/proofs" className="muted" style={{ fontSize: 13 }}>← All proofs</a>
-        <div style={{ height: 16 }} />
+        <a href="#/proofs" className="back-link"><Icon name="back" size={15} /> All proofs</a>
         <ProofDetail d={d} />
       </>
     );
@@ -207,28 +208,40 @@ export default function ProofPage({ id }: { id?: string }) {
   const draws = listDraws();
   return (
     <>
-      <div className="eyebrow">Public</div>
-      <h1 style={{ marginTop: 6, marginBottom: 8 }}>Fairness proofs</h1>
-      <p className="muted" style={{ marginTop: 0, maxWidth: 640 }}>
-        Every draw gets a public page. Viewers can recompute the dice, every shuffle and the final result from the revealed
-        seed, and confirm it matches what was shown on stream.
-      </p>
-      <div className="card" style={{ marginTop: 20 }}>
+      <Hero
+        tone="aqua"
+        glyph="shield"
+        compact
+        chips={<span className="chip chip-glass"><Icon name="eye" size={13} /> Public</span>}
+        title={<>Fairness <span className="grad-text">proofs</span></>}
+        lede="Every draw gets a public page. Viewers can recompute the dice, every shuffle and the final result from the revealed seed, and confirm it matches what was shown on stream."
+        stats={[
+          { icon: 'file', label: 'Draws', value: draws.length },
+          { icon: 'shield', label: 'Verifiable', value: draws.filter((x) => x.revealed && !x.voided).length },
+          { icon: 'lock', label: 'Sealed', value: draws.filter((x) => !x.revealed).length },
+        ]}
+      />
+      <div className="card">
         {draws.length === 0 ? (
-          <div className="empty">No draws yet. Run a break or a giveaway and its proof appears here.</div>
+          <div className="empty">
+            <span className="empty-ic"><Icon name="shield" size={26} /></span>
+            <b>No draws yet</b>
+            <span>Run a break or a giveaway and its proof appears here.</span>
+            <a href="#/break/394" className="btn btn-primary btn-sm">Run a team draw <Icon name="arrow" size={14} /></a>
+          </div>
         ) : (
           <table className="plain">
             <thead><tr><th>Draw</th><th>Type</th><th>When</th><th>Status</th><th /></tr></thead>
             <tbody>
               {draws.map((x) => (
                 <tr key={x.id}>
-                  <td><b>{x.title}</b><div className="mono dim">{x.id}</div></td>
+                  <td><a href={`#/proof/${x.id}`} className="t-title"><b>{x.title}</b><span className="mono dim">{x.id}</span></a></td>
                   <td className="muted">{KIND_LABEL[x.inputs.kind]}</td>
                   <td className="muted">{new Date(x.createdAt).toLocaleString('nb-NO')}</td>
                   <td>
                     {x.voided ? <span className="chip chip-void">Voided</span> : x.revealed ? <span className="chip chip-good">Verifiable</span> : <span className="chip chip-gold">Sealed</span>}
                   </td>
-                  <td><a className="btn btn-sm" href={`#/proof/${x.id}`}>Open</a></td>
+                  <td className="t-right"><a className="btn btn-sm btn-soft" href={`#/proof/${x.id}`}>Open <Icon name="arrow" size={14} /></a></td>
                 </tr>
               ))}
             </tbody>

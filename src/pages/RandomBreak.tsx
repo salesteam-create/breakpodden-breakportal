@@ -5,6 +5,8 @@ import { useShuffleDraw } from '../lib/useShuffleDraw.ts';
 import ShuffleBoard from '../components/ShuffleBoard.tsx';
 import { FairnessPanel, LogPanel, RevealGrid, Steps, VoidedPanel, downloadCsv } from '../components/Panels.tsx';
 import { RollProgress, ShuffleModeControl, VoidButton } from '../components/DrawControls.tsx';
+import Hero, { AvatarStack } from '../components/Hero.tsx';
+import Icon from '../components/Icons.tsx';
 
 const brk = BREAKS.find((b) => b.id === '394')!;
 const STEPS = ['Import buyers', 'Load checklist', 'Seal draw', 'Roll and shuffle', 'Reveal'];
@@ -68,8 +70,8 @@ export default function RandomBreak() {
   if (step === 0)
     action = (
       <>
-        <button className="btn btn-gold btn-lg" onClick={importOrders} disabled={importing}>
-          {importing ? <><span className="spinner" /> Importing…</> : 'Import buyers from Shopify'}
+        <button className="btn btn-primary btn-lg" onClick={importOrders} disabled={importing}>
+          {importing ? <><span className="spinner" /> Importing {imported}/{slots.length}…</> : <><Icon name="download" size={18} /> Import buyers from Shopify</>}
         </button>
         <span className="hint">Pulls every paid order for this break product. One row per spot bought.</span>
       </>
@@ -85,20 +87,20 @@ export default function RandomBreak() {
             ))}
           </select>
         </div>
-        <button className="btn btn-gold btn-lg" onClick={loadChecklist}>Load checklist</button>
-        <a className="hint" href="#/checklists">Edit checklists →</a>
+        <button className="btn btn-primary btn-lg" onClick={loadChecklist}><Icon name="list" size={18} /> Load checklist</button>
+        <a className="link" href="#/checklists">Edit checklists <Icon name="arrow" size={14} /></a>
       </>
     );
   else if (step === 2)
     action = mismatch ? (
       <>
-        <div className="warn-box">⚠ {buyers.length} spots but {teams.length} teams. Every spot needs exactly one team.</div>
+        <div className="warn-box"><Icon name="bolt" size={16} /> {buyers.length} spots but {teams.length} teams. Every spot needs exactly one team.</div>
         <button className="btn btn-sm" onClick={() => setTeams([])}>Pick another checklist</button>
       </>
     ) : (
       <>
         <ShuffleModeControl value={fixed} onChange={setFixed} />
-        <button className="btn btn-gold btn-lg" onClick={draw.seal}>🔒 Seal the draw</button>
+        <button className="btn btn-primary btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the draw</button>
         <span className="hint">Locks both lists, the shuffle setting and a secret seed.</span>
       </>
     );
@@ -107,7 +109,7 @@ export default function RandomBreak() {
       <>
         <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
         {phase === 'sealed' && (
-          <button className="btn btn-gold btn-lg" onClick={draw.roll}>{fixed ? '🔀 Start shuffling' : '🎲 Roll the dice'}</button>
+          <button className="btn btn-primary btn-lg" onClick={draw.roll}><Icon name={fixed ? 'shuffle' : 'dice'} size={18} /> {fixed ? 'Start shuffling' : 'Roll the dice'}</button>
         )}
         {phase === 'sealed' && <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={draw.voidDraw} /></span>}
       </>
@@ -116,25 +118,26 @@ export default function RandomBreak() {
     action = (
       <>
         <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
-        <button className="btn btn-gold btn-lg" onClick={draw.reveal}>✨ Reveal results</button>
+        <button className="btn btn-primary btn-lg" onClick={draw.reveal}><Icon name="sparkle" size={18} /> Reveal results</button>
         <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={draw.voidDraw} /></span>
       </>
     );
   else
     action = (
       <>
-        <span className="chip chip-good">Break is live</span>
+        <span className="chip chip-good"><Icon name="check" size={13} /> Break is live</span>
         <div className="row" style={{ marginLeft: 'auto', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-          <button className="btn btn-sm" onClick={() => setView(view === 'cards' ? 'list' : 'cards')}>
-            {view === 'cards' ? 'List view' : 'Card view'}
-          </button>
+          <div className="seg" role="group" aria-label="Result view">
+            <button className={view === 'cards' ? 'on' : ''} onClick={() => setView('cards')}><Icon name="grid" size={14} /> Cards</button>
+            <button className={view === 'list' ? 'on' : ''} onClick={() => setView('list')}><Icon name="rows" size={14} /> List</button>
+          </div>
           <button
             className="btn btn-sm"
             onClick={() => downloadCsv(`break-${brk.number}-results.csv`, [['#', 'Order', 'Buyer', 'Team'], ...pairs.map((p, i) => [String(p.n), tags[i], p.who, p.what])])}
           >
-            Export CSV
+            <Icon name="download" size={15} /> Export CSV
           </button>
-          <button className="btn btn-sm" onClick={() => addLog('Results written to Shopify orders (simulated)')}>Write to Shopify</button>
+          <button className="btn btn-sm" onClick={() => addLog('Results written to Shopify orders (simulated)')}><Icon name="upload" size={15} /> Write to Shopify</button>
           <VoidButton onVoid={draw.voidDraw} disabled={!canVoid} />
         </div>
       </>
@@ -142,24 +145,30 @@ export default function RandomBreak() {
 
   return (
     <>
-      <div className="break-head">
-        <div className="thumb"><img src={brk.image} alt="" /></div>
-        <div>
-          <div className="eyebrow">Break #{brk.number} · Random team</div>
-          <h1 style={{ fontSize: 38, marginTop: 6 }}>{brk.title}</h1>
-          <div className="facts">
-            <span>Box <b>{kr(brk.boxPrice)}</b></span>
-            <span>Spot price <b>{kr(brk.slotPrice!)}</b></span>
-            <span>Spots <b>{brk.spots}</b></span>
-            <span>Sold <b>{brk.spots}/{brk.spots}</b></span>
-            <span>{brk.startsAt}</span>
-          </div>
-        </div>
-        <button className="btn" onClick={openStreamWindow}>⧉ Pop out stream view</button>
-      </div>
+      <Hero
+        tone="gold"
+        image={brk.image}
+        compact
+        chips={
+          <>
+            <span className="chip chip-glass">Break #{brk.number}</span>
+            <span className="chip chip-glass"><Icon name="dice" size={13} /> Random team</span>
+            <span className="chip chip-glass"><Icon name="clock" size={13} /> {brk.startsAt}</span>
+            <span className="chip chip-good">Sold out</span>
+          </>
+        }
+        title={<span className="grad-text">{brk.title}</span>}
+        stats={[
+          { icon: 'box', label: 'Box', value: kr(brk.boxPrice) },
+          { icon: 'cart', label: 'Spot price', value: kr(brk.slotPrice!) },
+          { icon: 'users', label: 'Sold', value: `${brk.spots}/${brk.spots}` },
+        ]}
+        actions={<button className="btn btn-glass" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
+        aside={<AvatarStack names={ORDERS_394.map((o) => o.buyer)} label="buyers" />}
+      />
 
       <div className="workspace">
-        <div className="card">
+        <div className="card stage">
           <Steps labels={STEPS} current={step} />
           <div className="action-bar">{action}</div>
           {phase === 'revealed' && view === 'cards' ? (

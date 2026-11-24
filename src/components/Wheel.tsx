@@ -6,9 +6,9 @@
 import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import { WORKSPACE } from '../lib/workspace.ts';
 
-// Gold, black, cream, navy, light gold, near-black.
-const COLORS = ['#b08d2f', '#111111', '#e5dec9', '#1d243d', '#d9b654', '#050505'];
-const INK = ['#ffffff', '#f3e3ad', '#1d243d', '#ffffff', '#111111', '#d9b654'];
+// Gold, midnight, violet, deep navy, cream, magenta.
+const COLORS = ['#f2c14e', '#14163a', '#7b5cff', '#0b0d22', '#f4eedc', '#c13fc9'];
+const INK = ['#1d1503', '#f2c14e', '#ffffff', '#b9a6ff', '#14163a', '#ffffff'];
 const STUDS = 32;
 const PARTICLES = 22;
 
@@ -114,14 +114,14 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
             const d = n === 1 ? `M${c} ${c - r}A${r} ${r} 0 1 1 ${c - 0.01} ${c - r}Z` : `M${c} ${c}L${x0} ${y0}A${r} ${r} 0 ${seg > 180 ? 1 : 0} 1 ${x1} ${y1}Z`;
             return (
               <g key={i}>
-                <path d={d} fill={COLORS[k]} stroke="#b08d2f" strokeOpacity=".55" strokeWidth="1" />
+                <path d={d} fill={COLORS[k]} stroke="#ffffff" strokeOpacity=".16" strokeWidth="1" />
                 <text
                   x={c}
                   y={c - r + 16}
                   transform={`rotate(${mid} ${c} ${c}) rotate(90 ${c} ${c - r + 16})`}
                   fill={INK[k]}
                   fontSize={fontSize}
-                  fontFamily="Inter, sans-serif"
+                  fontFamily="Plus Jakarta Sans, sans-serif"
                   fontWeight="600"
                   dominantBaseline="middle"
                 >
@@ -155,8 +155,8 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
               <stop offset="1" stopColor="#e8c96a" />
             </linearGradient>
             <radialGradient id={`hub-${uid}`} cx="40%" cy="35%" r="70%">
-              <stop offset="0" stopColor="#2a2a2a" />
-              <stop offset="1" stopColor="#000" />
+              <stop offset="0" stopColor="#2a2e55" />
+              <stop offset="1" stopColor="#07080f" />
             </radialGradient>
           </defs>
           <circle cx={c} cy={c} r={c - 2 - rim / 2} fill="none" stroke={`url(#rim-${uid})`} strokeWidth={rim} />

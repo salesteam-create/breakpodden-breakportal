@@ -4,6 +4,8 @@ import { commitmentFor, newSeed, runWheel, type DrawInputs } from '../lib/fair.t
 import { newDrawId, openStreamWindow, publishStream, saveDraw, type DrawRecord } from '../lib/store.ts';
 import Wheel, { landingRotation } from '../components/Wheel.tsx';
 import { FairnessPanel, LogPanel } from '../components/Panels.tsx';
+import Hero from '../components/Hero.tsx';
+import Icon from '../components/Icons.tsx';
 
 const SPIN_MS = 6400;
 
@@ -103,21 +105,32 @@ export default function WheelPage() {
 
   return (
     <>
-      <div className="spread" style={{ marginBottom: 24, alignItems: 'flex-end' }}>
-        <div>
-          <div className="eyebrow">Giveaway</div>
-          <h1 style={{ marginTop: 6 }}>Wheel of fortune</h1>
-          <p className="muted" style={{ margin: '8px 0 0' }}>One segment per purchase. Three spots bought means three entries on the wheel.</p>
-        </div>
-        <button className="btn" onClick={openStreamWindow}>⧉ Pop out stream view</button>
-      </div>
+      <Hero
+        tone="rose"
+        glyph="wheel"
+        compact
+        chips={
+          <>
+            <span className="chip chip-glass"><Icon name="sparkle" size={13} /> Giveaway</span>
+            {record ? (revealed ? <span className="chip chip-good">Closed · verifiable</span> : <span className="chip chip-gold"><Icon name="lock" size={12} /> Sealed</span>) : <span className="chip chip-glass">Not sealed</span>}
+          </>
+        }
+        title={<>Wheel of <span className="grad-text">fortune</span></>}
+        lede="One segment per purchase. Three spots bought means three entries on the wheel."
+        stats={[
+          { icon: 'users', label: 'Entries', value: entries.length },
+          { icon: 'grid', label: 'Buyers', value: counts.length },
+          { icon: 'trophy', label: 'Winners', value: allWinners.length },
+        ]}
+        actions={<button className="btn btn-glass" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
+      />
 
       <div className="workspace">
-        <div className="card">
+        <div className="card stage">
           <div className="action-bar">
             {!record && (
               <>
-                <button className="btn btn-gold btn-lg" onClick={seal}>🔒 Seal giveaway</button>
+                <button className="btn btn-primary btn-lg" onClick={seal}><Icon name="lock" size={18} /> Seal giveaway</button>
                 <span className="hint">Locks the {entries.length} entries and a secret seed before the first spin.</span>
               </>
             )}
@@ -127,15 +140,15 @@ export default function WheelPage() {
                   <label>Prize for this spin</label>
                   <input type="text" value={prize} onChange={(e) => setPrize(e.target.value)} />
                 </div>
-                <button className="btn btn-gold btn-lg" onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
-                  {spinning ? 'Spinning…' : allWinners.length ? 'Spin again' : 'Spin the wheel'}
+                <button className="btn btn-primary btn-lg" onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
+                  {spinning ? <><span className="spinner" /> Spinning…</> : <><Icon name="wheel" size={18} /> {allWinners.length ? 'Spin again' : 'Spin the wheel'}</>}
                 </button>
-                <button className="btn" onClick={finish} disabled={spinning || allWinners.length === 0}>Close and reveal</button>
+                <button className="btn btn-soft" onClick={finish} disabled={spinning || allWinners.length === 0}>Close and reveal</button>
               </>
             )}
             {revealed && (
               <>
-                <span className="chip chip-good">Giveaway closed</span>
+                <span className="chip chip-good"><Icon name="check" size={13} /> Giveaway closed</span>
                 <span className="hint">{allWinners.length} winners. The proof page lets anyone recompute every spin.</span>
               </>
             )}
@@ -164,9 +177,9 @@ export default function WheelPage() {
             <div className="card-pad" style={{ paddingTop: 8, paddingBottom: 8 }}>
               {allWinners.length === 0 && <p className="dim" style={{ margin: '8px 0' }}>No spins yet.</p>}
               {allWinners.map((w, i) => (
-                <div key={i} className="spread" style={{ padding: '8px 0', borderBottom: '1px solid var(--line)', fontSize: 13.5 }}>
-                  <span><b className="gold">{i + 1}.</b> {w.name}</span>
-                  <span className="muted">{w.prize}</span>
+                <div key={i} className="winner-row">
+                  <span className={`place m${Math.min(i + 1, 4)}`}>{i + 1}</span>
+                  <span className="wr-text"><b>{w.name}</b><span className="muted">{w.prize}</span></span>
                 </div>
               ))}
             </div>

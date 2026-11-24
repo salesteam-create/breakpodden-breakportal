@@ -5,6 +5,8 @@ import { useShuffleDraw } from '../lib/useShuffleDraw.ts';
 import ShuffleBoard from '../components/ShuffleBoard.tsx';
 import { FairnessPanel, LogPanel, RevealGrid, Steps, VoidedPanel } from '../components/Panels.tsx';
 import { RollProgress, ShuffleModeControl, VoidButton } from '../components/DrawControls.tsx';
+import Hero, { AvatarStack } from '../components/Hero.tsx';
+import Icon from '../components/Icons.tsx';
 
 const brk = BREAKS.find((b) => b.id === '403')!;
 const STEPS = ['Open spots', 'Seal draw', 'Roll and shuffle', 'Reveal winners', 'Assign teams'];
@@ -75,41 +77,54 @@ export default function PytBreak() {
 
   return (
     <>
-      <div className="break-head">
-        <div className="thumb"><img src={brk.image} alt="" /></div>
-        <div>
-          <div className="eyebrow">Break #{brk.number} · Pick your team</div>
-          <h1 style={{ fontSize: 38, marginTop: 6 }}>{brk.title}</h1>
-          <div className="facts">
-            <span>Box <b>{kr(brk.boxPrice)}</b></span>
-            <span>Teams and player splits <b>{slots.length}</b></span>
-            <span>Sold <b>{sold}/{slots.length}</b></span>
-            <span>{brk.startsAt}</span>
+      <Hero
+        tone="violet"
+        image={brk.image}
+        compact
+        chips={
+          <>
+            <span className="chip chip-glass">Break #{brk.number}</span>
+            <span className="chip chip-glass"><Icon name="ticket" size={13} /> Pick your team</span>
+            <span className="chip chip-glass"><Icon name="clock" size={13} /> {brk.startsAt}</span>
+            <span className={`chip ${sold === slots.length ? 'chip-good' : 'chip-gold'}`}>{Math.round((sold / slots.length) * 100)}% sold</span>
+          </>
+        }
+        title={<span className="grad-text">{brk.title}</span>}
+        stats={[
+          { icon: 'box', label: 'Box', value: kr(brk.boxPrice) },
+          { icon: 'grid', label: 'Teams and splits', value: slots.length },
+          { icon: 'users', label: 'Sold', value: `${sold}/${slots.length}` },
+        ]}
+        actions={<button className="btn btn-glass" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
+        aside={<AvatarStack names={slots.filter((x) => x.owner).map((x) => x.owner!)} label="team owners" />}
+        tabs={
+          <div className="tabs" role="tablist" aria-label="Break view">
+            <button role="tab" aria-selected={mode === 'board'} className={mode === 'board' ? 'on' : ''} onClick={() => setMode('board')}><Icon name="grid" size={16} /> Team board</button>
+            <button role="tab" aria-selected={mode === 'filler'} className={mode === 'filler' ? 'on' : ''} onClick={() => setMode('filler')}><Icon name="ticket" size={16} /> Filler draw {done && <Icon name="check" size={14} />}</button>
           </div>
-        </div>
-        <div className="row">
-          {mode === 'board' ? (
-            <button className="btn" onClick={() => setMode('filler')}>Filler draw</button>
-          ) : (
-            <button className="btn" onClick={() => setMode('board')}>Team board</button>
-          )}
-          <button className="btn" onClick={openStreamWindow}>⧉ Pop out stream view</button>
-        </div>
-      </div>
+        }
+      />
 
       {mode === 'board' ? (
         <div className="workspace">
           <div className="card">
             <div className="card-head">
-              <h3>Team board</h3>
-              <span className="muted" style={{ fontSize: 13 }}>Prices and splits from breakpodden.com</span>
+              <div>
+                <h3>Team board</h3>
+                <span className="muted sm">Prices and splits from breakpodden.com</span>
+              </div>
+              <div className="legend">
+                <span><i className="lg-sold" /> Sold</span>
+                <span><i className="lg-open" /> Open</span>
+                <span><i className="lg-filler" /> Won via filler</span>
+              </div>
             </div>
             <div className="team-grid">
               {slots.map((s) => (
                 <div key={s.team} className={`tile${s.owner ? (s.viaFiller ? ' filled' : '') : ' open'}`}>
                   <span className="t">{s.team}</span>
                   <span className="o">
-                    <span>{s.owner ? (s.viaFiller ? `★ ${s.owner}` : s.owner) : 'OPEN'}</span>
+                    <span>{s.owner ? (s.viaFiller ? <><Icon name="trophy" size={12} /> {s.owner}</> : s.owner) : 'Open'}</span>
                     <span>{kr(s.price)}</span>
                   </span>
                 </div>
@@ -119,10 +134,10 @@ export default function PytBreak() {
           <div className="side">
             <div className="card card-pad stack">
               <div className="spread"><h3>Sales</h3><span className="chip chip-gold">{Math.round((sold / slots.length) * 100)}% sold</span></div>
-              <div className="progress"><div style={{ width: `${(sold / slots.length) * 100}%` }} /></div>
-              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Sold value</span><b style={{ color: 'var(--text)' }}>{kr(soldValue)}</b></div>
-              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Open teams</span><b style={{ color: 'var(--text)' }}>{slots.length - sold}</b></div>
-              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Value before fillers</span><b style={{ color: 'var(--text)' }}>{kr(openValue)} open</b></div>
+              <div className="progress"><span style={{ width: `${(sold / slots.length) * 100}%` }} /></div>
+              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Sold value</span><b className="strong">{kr(soldValue)}</b></div>
+              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Open teams</span><b className="strong">{slots.length - sold}</b></div>
+              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Value before fillers</span><b className="strong">{kr(openValue)} open</b></div>
             </div>
             <div className="card card-pad stack">
               <h3>Fillers</h3>
@@ -130,17 +145,17 @@ export default function PytBreak() {
                 The top teams rarely sell. Fillers sell the remaining {kr(openValue)} as cheap entries. A seeded draw decides
                 which {openTeams.length} entries win the open teams.
               </p>
-              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Entry price</span><b style={{ color: 'var(--text)' }}>{kr(FILLER_PRICE)}</b></div>
-              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Entries sold</span><b style={{ color: 'var(--text)' }}>{entries.length} ({kr(entries.length * FILLER_PRICE)})</b></div>
-              <button className="btn btn-gold" onClick={() => setMode('filler')} disabled={done}>
-                {done ? 'Filler draw done' : 'Start filler draw'}
+              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Entry price</span><b className="strong">{kr(FILLER_PRICE)}</b></div>
+              <div className="spread muted" style={{ fontSize: 13.5 }}><span>Entries sold</span><b className="strong">{entries.length} ({kr(entries.length * FILLER_PRICE)})</b></div>
+              <button className="btn btn-primary btn-block" onClick={() => setMode('filler')} disabled={done}>
+                {done ? <><Icon name="check" size={16} /> Filler draw done</> : <>Start filler draw <Icon name="arrow" size={16} /></>}
               </button>
             </div>
           </div>
         </div>
       ) : (
         <div className="workspace">
-          <div className="card">
+          <div className="card stage">
             <Steps labels={STEPS} current={step} />
             <div className="action-bar" style={{ flexWrap: 'wrap' }}>
               {phase === 'ready' && (
@@ -152,7 +167,7 @@ export default function PytBreak() {
                     </div>
                     <ShuffleModeControl value={fixed} onChange={setFixed} />
                   </div>
-                  <button className="btn btn-gold btn-lg" onClick={draw.seal}>🔒 Seal the filler draw</button>
+                  <button className="btn btn-primary btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the filler draw</button>
                   <span className="hint" style={{ maxWidth: 320 }}>
                     {assign === 'draw'
                       ? `Top ${openTeams.length} entries are paired with the open teams in list order.`
@@ -165,7 +180,7 @@ export default function PytBreak() {
                   <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
                   {phase === 'sealed' && (
                     <>
-                      <button className="btn btn-gold btn-lg" onClick={draw.roll}>{fixed ? '🔀 Start shuffling' : '🎲 Roll the dice'}</button>
+                      <button className="btn btn-primary btn-lg" onClick={draw.roll}><Icon name={fixed ? 'shuffle' : 'dice'} size={18} /> {fixed ? 'Start shuffling' : 'Roll the dice'}</button>
                       <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={voidDraw} /></span>
                     </>
                   )}
@@ -174,7 +189,7 @@ export default function PytBreak() {
               {phase === 'shuffled' && (
                 <>
                   <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
-                  <button className="btn btn-gold btn-lg" onClick={reveal}>✨ Reveal winners</button>
+                  <button className="btn btn-primary btn-lg" onClick={reveal}><Icon name="sparkle" size={18} /> Reveal winners</button>
                   <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={voidDraw} /></span>
                 </>
               )}
@@ -182,7 +197,7 @@ export default function PytBreak() {
                 <>
                   <span className="chip chip-gold">Pick {picks.length + 1} of {winners.length}</span>
                   <span className="hint">
-                    <b style={{ color: 'var(--gold-hi)' }}>{entryBuyer(winners[picks.length])}</b> ({winners[picks.length].split(' · ')[1]}) chooses a team
+                    <b className="gold">{entryBuyer(winners[picks.length])}</b> ({winners[picks.length].split(' · ')[1]}) chooses a team
                   </span>
                 </>
               )}
@@ -192,7 +207,7 @@ export default function PytBreak() {
                   <span className="hint">All {slots.length} teams are owned. The break can start.</span>
                   <div className="row" style={{ marginLeft: 'auto' }}>
                     <VoidButton onVoid={voidDraw} />
-                    <button className="btn btn-sm" onClick={() => setMode('board')}>View team board →</button>
+                    <button className="btn btn-sm" onClick={() => setMode('board')}>View team board <Icon name="arrow" size={14} /></button>
                   </div>
                 </>
               )}

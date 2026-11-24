@@ -4,6 +4,7 @@ import logoFull from '../assets/logo-full.svg';
 import logoMark from '../assets/logo-mark.svg';
 import ShuffleBoard from '../components/ShuffleBoard.tsx';
 import Dice from '../components/Dice.tsx';
+import Icon from '../components/Icons.tsx';
 import Wheel from '../components/Wheel.tsx';
 import DuckRace from '../components/DuckRace.tsx';
 
@@ -73,7 +74,7 @@ export default function StreamView() {
               </div>
             </>
           )}
-          {s.phase === 'revealed' && <h2 style={{ fontSize: 52, color: 'var(--gold-hi)' }}>Results locked</h2>}
+          {s.phase === 'revealed' && <h2 style={{ fontSize: 52, color: 'var(--gold-hi)', textTransform: 'uppercase' }}>Results locked</h2>}
         </div>
       </div>
     );
@@ -131,7 +132,7 @@ export default function StreamView() {
           </div>
           {body}
           <div className="stream-foot">
-            <span>🔒 Provably fair{commitment && <> · commitment <span className="mono gold">{commitment.slice(0, 16)}…</span></>}</span>
+            <span><Icon name="shield" size={24} /> Provably fair{commitment && <> · commitment <span className="mono gold">{commitment.slice(0, 16)}…</span></>}</span>
             <span>breakpodden.com</span>
           </div>
         </div>
