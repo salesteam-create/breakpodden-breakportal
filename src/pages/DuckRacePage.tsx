@@ -4,6 +4,8 @@ import { commitmentFor, newSeed, runRace, type DrawInputs } from '../lib/fair.ts
 import { newDrawId, openStreamWindow, publishStream, saveDraw, type DrawRecord } from '../lib/store.ts';
 import DuckRace from '../components/DuckRace.tsx';
 import { FairnessPanel, LogPanel } from '../components/Panels.tsx';
+import PageHeader from '../components/PageHeader.tsx';
+import Icon from '../components/Icon.tsx';
 
 const MAX_DUCKS = 50;
 const COUNTDOWN_MS = 3000;
@@ -82,42 +84,41 @@ export default function DuckRacePage() {
 
   return (
     <>
-      <div className="spread" style={{ marginBottom: 24, alignItems: 'flex-end' }}>
-        <div>
-          <div className="eyebrow">Giveaway</div>
-          <h1 style={{ marginTop: 6 }}>Duck race</h1>
-          <p className="muted" style={{ margin: '8px 0 0' }}>Up to {MAX_DUCKS} ducks. The finishing order is drawn and sealed before the start; the race plays it out.</p>
-        </div>
-        <button className="btn" onClick={openStreamWindow}>⧉ Pop out stream view</button>
-      </div>
+      <PageHeader
+        eyebrow="Giveaway"
+        title="Duck race"
+        actions={<button className="btn btn-secondary" onClick={openStreamWindow}><Icon name="external" size={16} /> Pop out stream view</button>}
+      >
+        Up to {MAX_DUCKS} ducks. The finishing order is drawn and sealed before the start; the race plays it out.
+      </PageHeader>
 
       <div className="workspace">
         <div className="card">
-          <div className="action-bar">
+          <div className="action-bar" key={`${!!record}-${startedAt !== null}-${finished}-${revealed}`}>
             {!record && (
               <>
                 <div className="field" style={{ width: 240 }}>
-                  <label>Race length: {duration} s</label>
-                  <input type="range" min={5} max={30} value={duration} onChange={(e) => setDuration(Number(e.target.value))} />
+                  <label htmlFor="race-length">Race length: <span className="tnum">{duration}</span> s</label>
+                  <input id="race-length" type="range" min={5} max={30} value={duration} onChange={(e) => setDuration(Number(e.target.value))} />
                 </div>
-                <button className="btn btn-gold btn-lg" onClick={seal} disabled={ducks.length < 2}>🔒 Seal race</button>
+                <button className="btn btn-gold btn-lg" onClick={seal} disabled={ducks.length < 2}><Icon name="lock" size={18} /> Seal race</button>
                 <span className="hint">{ducks.length} ducks ready.</span>
               </>
             )}
             {record && startedAt === null && (
               <>
-                <button className="btn btn-gold btn-lg" onClick={start}>🏁 Start the race</button>
+                <button className="btn btn-gold btn-lg" onClick={start}><Icon name="flag" size={18} /> Start the race</button>
                 <span className="hint">{ducks.length} ducks, {duration} seconds. Commitment is on stream.</span>
               </>
             )}
-            {startedAt !== null && !finished && <span className="hint"><span className="spinner" style={{ display: 'inline-block', verticalAlign: -3, marginRight: 8 }} />Race in progress…</span>}
+            {startedAt !== null && !finished && <span className="hint row" style={{ gap: 10 }}><span className="live-dot" />Race in progress…</span>}
             {finished && !revealed && (
               <>
-                <span className="chip chip-gold">Winner: {order[0]}</span>
-                <button className="btn btn-gold" onClick={reveal}>Reveal seed</button>
+                <span className="chip chip-gold"><Icon name="trophy" size={12} /> Winner: {order[0]}</span>
+                <button className="btn btn-gold" onClick={reveal}><Icon name="shield" size={16} /> Reveal seed</button>
               </>
             )}
-            {revealed && <span className="chip chip-good">Race verified · proof published</span>}
+            {revealed && <span className="chip chip-good"><Icon name="check" size={12} /> Seed revealed · proof published</span>}
           </div>
           <div style={{ padding: 20 }}>
             <DuckRace ducks={ducks} order={order} duration={duration} startedAt={startedAt} />
@@ -135,7 +136,7 @@ export default function DuckRacePage() {
           <FairnessPanel record={record} revealed={revealed} />
           <div className="card card-pad stack">
             <div className="spread"><h3>Ducks</h3><span className="dim mono">{ducks.length}/{MAX_DUCKS}</span></div>
-            <textarea value={text} onChange={(e) => setText(e.target.value)} disabled={!!record} />
+            <textarea value={text} onChange={(e) => setText(e.target.value)} disabled={!!record} aria-label="Duck names, one per line" />
             <div className="row">
               <button className="btn btn-sm" disabled={!!record} onClick={() => setText(uniqueEntrants().join('\n'))}>One per buyer</button>
               <button className="btn btn-sm" disabled={!!record} onClick={() => setText(giveawayEntries().join('\n'))}>One per purchase</button>

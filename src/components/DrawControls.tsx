@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import Dice from './Dice.tsx';
+import Icon from './Icon.tsx';
 import type { Phase } from '../lib/useShuffleDraw.ts';
 
 /** Host choice before sealing: roll the dice, or a fixed number of shuffles. */
 export function ShuffleModeControl({ value, onChange }: { value: number | undefined; onChange: (v: number | undefined) => void }) {
   return (
     <div className="seg" role="group" aria-label="Shuffle count">
-      <button className={value === undefined ? 'on' : ''} onClick={() => onChange(undefined)}>🎲 Dice</button>
-      <button className={value !== undefined ? 'on' : ''} onClick={() => onChange(value ?? 7)}>Fixed</button>
+      <button className={value === undefined ? 'on' : ''} onClick={() => onChange(undefined)}><Icon name="dice" size={15} /> Dice</button>
+      <button className={value !== undefined ? 'on' : ''} onClick={() => onChange(value ?? 7)}><Icon name="hash" size={15} /> Fixed</button>
       {value !== undefined && (
         <input
           type="number"
@@ -27,10 +28,11 @@ export function RollProgress({
   phase, dice, rollId, round, total, fixed,
 }: { phase: Phase; dice: [number, number] | null; rollId: number; round: number; total: number; fixed?: number }) {
   const meter = total > 0 && (
-    <div className="round-meter">
+    <div className="round-meter" aria-hidden="true">
       {Array.from({ length: total }, (_, i) => <span key={i} className={i < round ? 'on' : ''} />)}
     </div>
   );
+  const pad = (n: number) => String(n).padStart(2, '0');
   return (
     <>
       {fixed ? (
@@ -39,8 +41,12 @@ export function RollProgress({
         <Dice values={dice} rollId={rollId} showTotal={phase === 'shuffling' || phase === 'shuffled' || phase === 'revealed'} />
       )}
       {(phase === 'rolling' || phase === 'shuffling') && (
-        <div className="stack" style={{ gap: 8 }}>
-          <span className="hint">{phase === 'rolling' ? 'Rolling…' : `Shuffle ${round} of ${total}`}</span>
+        <div className="round" aria-live="polite">
+          {phase === 'rolling' ? (
+            <span className="round-count">Rolling<small>…</small></span>
+          ) : (
+            <span className="round-count" aria-label={`Shuffle ${round} of ${total}`}>Round <em>{pad(round)}</em> <small>/ {pad(total)}</small></span>
+          )}
           {meter}
         </div>
       )}
@@ -55,7 +61,7 @@ export function VoidButton({ onVoid, disabled }: { onVoid: (reason: string) => v
   if (!open)
     return (
       <button className="btn btn-sm btn-ghost" disabled={disabled} onClick={() => setOpen(true)} title="Void this draw and run it again">
-        ⟲ Void and re-draw
+        <Icon name="void" size={15} /> Void and re-draw
       </button>
     );
   return (
@@ -64,6 +70,7 @@ export function VoidButton({ onVoid, disabled }: { onVoid: (reason: string) => v
         type="text"
         autoFocus
         placeholder="Reason, e.g. wrong buyer list imported"
+        aria-label="Reason for voiding the draw"
         value={reason}
         onChange={(e) => setReason(e.target.value)}
         onKeyDown={(e) => {
@@ -71,7 +78,7 @@ export function VoidButton({ onVoid, disabled }: { onVoid: (reason: string) => v
           if (e.key === 'Escape') setOpen(false);
         }}
       />
-      <button className="btn btn-sm" disabled={!reason.trim()} onClick={() => onVoid(reason.trim())}>Void draw</button>
+      <button className="btn btn-sm btn-danger" disabled={!reason.trim()} onClick={() => onVoid(reason.trim())}>Void draw</button>
       <button className="btn btn-sm btn-ghost" onClick={() => setOpen(false)}>Cancel</button>
     </div>
   );

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { getChecklists, saveChecklists } from '../lib/store.ts';
+import PageHeader from '../components/PageHeader.tsx';
+import Icon from '../components/Icon.tsx';
 
 /** Box checklist library: the team list that loads when a host picks a box. */
 export default function ChecklistsPage() {
@@ -57,13 +59,11 @@ export default function ChecklistsPage() {
 
   return (
     <>
-      <div className="eyebrow">Library</div>
-      <h1 style={{ marginTop: 6, marginBottom: 8 }}>Box checklists</h1>
-      <p className="muted" style={{ marginTop: 0, maxWidth: 680 }}>
+      <PageHeader eyebrow="Library" title="Box checklists">
         The team list that loads when a host picks a box. Split a valuable team by star player to sell it as separate spots.
-      </p>
+      </PageHeader>
 
-      <div className="workspace checklists-ws" style={{ marginTop: 20 }}>
+      <div className="workspace checklists-ws">
         <div className="side" style={{ position: 'static' }}>
           <div className="card">
             <div className="card-head"><h3>Boxes</h3><span className="dim mono">{Object.keys(lists).length}</span></div>
@@ -75,10 +75,10 @@ export default function ChecklistsPage() {
                 </button>
               ))}
               <div className="row" style={{ marginTop: 8 }}>
-                <input type="text" placeholder="New box name" value={newBox} onChange={(e) => setNewBox(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addBox()} style={{ flex: 1, minWidth: 0 }} />
-                <button className="btn btn-sm" onClick={addBox} disabled={!newBox.trim()}>Add</button>
+                <input type="text" placeholder="New box name" aria-label="New box name" value={newBox} onChange={(e) => setNewBox(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addBox()} style={{ flex: 1, minWidth: 0 }} />
+                <button className="btn btn-sm" onClick={addBox} disabled={!newBox.trim()}><Icon name="plus" size={15} /> Add</button>
               </div>
-              <button className="btn btn-sm btn-ghost" disabled title="Planned for a later phase">✨ Draft a checklist with AI (later phase)</button>
+              <button className="btn btn-sm btn-ghost" disabled title="Planned for a later phase"><Icon name="sparkle" size={15} /> Draft a checklist with AI (later phase)</button>
             </div>
           </div>
         </div>
@@ -88,18 +88,18 @@ export default function ChecklistsPage() {
             <div className="card-head">
               <div>
                 <h3>{box}</h3>
-                <span className="muted" style={{ fontSize: 13 }}>{teams.length} teams and splits · saved automatically</span>
+                <span className="dim" style={{ fontSize: 13 }}>{teams.length} teams and splits · saved automatically</span>
               </div>
               <div className="row">
-                <button className="btn btn-sm" onClick={() => setPaste(paste === null ? teams.join('\n') : null)}>{paste === null ? 'Paste list' : 'Cancel paste'}</button>
-                <button className="btn btn-sm btn-ghost" onClick={deleteBox}>Delete box</button>
+                <button className="btn btn-sm" onClick={() => setPaste(paste === null ? teams.join('\n') : null)}><Icon name="paste" size={15} /> {paste === null ? 'Paste list' : 'Cancel paste'}</button>
+                <button className="btn btn-sm btn-ghost" onClick={deleteBox}><Icon name="trash" size={15} /> Delete box</button>
               </div>
             </div>
 
             {paste !== null ? (
               <div className="card-pad stack">
                 <span className="muted" style={{ fontSize: 13.5 }}>One team per line, for example copied from the manufacturer's checklist.</span>
-                <textarea value={paste} onChange={(e) => setPaste(e.target.value)} style={{ minHeight: 320 }} />
+                <textarea value={paste} onChange={(e) => setPaste(e.target.value)} style={{ minHeight: 320 }} aria-label="Team list, one per line" />
                 <div className="row">
                   <button
                     className="btn btn-gold"
@@ -115,8 +115,8 @@ export default function ChecklistsPage() {
               </div>
             ) : (
               <div className="card-pad stack" style={{ gap: 6 }}>
-                {duplicates.length > 0 && <div className="warn-box">⚠ Duplicate teams: {[...new Set(duplicates)].join(', ')}</div>}
-                {teams.length === 0 && <p className="dim">No teams yet. Add them below or paste a list.</p>}
+                {duplicates.length > 0 && <div className="warn-box" role="alert"><Icon name="alert" size={16} /> Duplicate teams: {[...new Set(duplicates)].join(', ')}</div>}
+                {teams.length === 0 && <p className="dim" style={{ padding: '8px 0' }}>No teams yet. Add them below or paste a list.</p>}
                 {teams.map((t, i) => (
                   <div key={`${t}-${i}`} className="team-row">
                     <span className="mono dim">{i + 1}</span>
@@ -135,6 +135,7 @@ export default function ChecklistsPage() {
                           type="text"
                           autoFocus
                           placeholder="Players, e.g. Cristiano"
+                          aria-label={`Players to split from ${t}`}
                           value={players}
                           onChange={(e) => setPlayers(e.target.value)}
                           onKeyDown={(e) => {
@@ -149,22 +150,22 @@ export default function ChecklistsPage() {
                     ) : (
                       <div className="row" style={{ gap: 6 }}>
                         {!t.includes(' - ') && (
-                          <button className="btn btn-sm btn-ghost" onClick={() => { setSplitting(t); setPlayers(''); }} title="Split this team by star player">Split by player</button>
+                          <button className="btn btn-sm btn-ghost" onClick={() => { setSplitting(t); setPlayers(''); }} title="Split this team by star player"><Icon name="split" size={15} /> Split by player</button>
                         )}
-                        <button className="btn btn-sm btn-ghost" onClick={() => setTeams(teams.filter((_, j) => j !== i))} aria-label={`Remove ${t}`}>✕</button>
+                        <button className="btn btn-sm btn-ghost" onClick={() => setTeams(teams.filter((_, j) => j !== i))} aria-label={`Remove ${t}`}><Icon name="x" size={15} /></button>
                       </div>
                     )}
                   </div>
                 ))}
                 <div className="row" style={{ marginTop: 10 }}>
-                  <input type="text" placeholder="Add a team" value={newTeam} onChange={(e) => setNewTeam(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTeam()} style={{ flex: 1 }} />
-                  <button className="btn btn-sm" onClick={addTeam} disabled={!newTeam.trim()}>Add team</button>
+                  <input type="text" placeholder="Add a team" aria-label="Add a team" value={newTeam} onChange={(e) => setNewTeam(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTeam()} style={{ flex: 1 }} />
+                  <button className="btn btn-sm" onClick={addTeam} disabled={!newTeam.trim()}><Icon name="plus" size={15} /> Add team</button>
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <div className="card empty">No boxes yet. Add one on the left.</div>
+          <div className="card empty"><span className="empty-ic"><Icon name="list" size={22} /></span><b>No boxes yet</b><span>Add one on the left.</span></div>
         )}
       </div>
     </>

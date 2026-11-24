@@ -4,6 +4,8 @@ import { commitmentFor, newSeed, runWheel, type DrawInputs } from '../lib/fair.t
 import { newDrawId, openStreamWindow, publishStream, saveDraw, type DrawRecord } from '../lib/store.ts';
 import Wheel, { landingRotation } from '../components/Wheel.tsx';
 import { FairnessPanel, LogPanel } from '../components/Panels.tsx';
+import PageHeader from '../components/PageHeader.tsx';
+import Icon from '../components/Icon.tsx';
 
 const SPIN_MS = 6400;
 
@@ -103,39 +105,38 @@ export default function WheelPage() {
 
   return (
     <>
-      <div className="spread" style={{ marginBottom: 24, alignItems: 'flex-end' }}>
-        <div>
-          <div className="eyebrow">Giveaway</div>
-          <h1 style={{ marginTop: 6 }}>Wheel of fortune</h1>
-          <p className="muted" style={{ margin: '8px 0 0' }}>One segment per purchase. Three spots bought means three entries on the wheel.</p>
-        </div>
-        <button className="btn" onClick={openStreamWindow}>⧉ Pop out stream view</button>
-      </div>
+      <PageHeader
+        eyebrow="Giveaway"
+        title="Wheel of fortune"
+        actions={<button className="btn btn-secondary" onClick={openStreamWindow}><Icon name="external" size={16} /> Pop out stream view</button>}
+      >
+        One segment per purchase. Three spots bought means three entries on the wheel.
+      </PageHeader>
 
       <div className="workspace">
         <div className="card">
-          <div className="action-bar">
+          <div className="action-bar" key={`${!!record}-${revealed}`}>
             {!record && (
               <>
-                <button className="btn btn-gold btn-lg" onClick={seal}>🔒 Seal giveaway</button>
+                <button className="btn btn-gold btn-lg" onClick={seal}><Icon name="lock" size={18} /> Seal giveaway</button>
                 <span className="hint">Locks the {entries.length} entries and a secret seed before the first spin.</span>
               </>
             )}
             {record && !revealed && (
               <>
                 <div className="field" style={{ flex: 1, maxWidth: 320 }}>
-                  <label>Prize for this spin</label>
-                  <input type="text" value={prize} onChange={(e) => setPrize(e.target.value)} />
+                  <label htmlFor="wheel-prize">Prize for this spin</label>
+                  <input id="wheel-prize" type="text" value={prize} onChange={(e) => setPrize(e.target.value)} />
                 </div>
                 <button className="btn btn-gold btn-lg" onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
-                  {spinning ? 'Spinning…' : allWinners.length ? 'Spin again' : 'Spin the wheel'}
+                  {spinning ? <><span className="spinner" /> Spinning…</> : <><Icon name="wheel" size={18} /> {allWinners.length ? 'Spin again' : 'Spin the wheel'}</>}
                 </button>
-                <button className="btn" onClick={finish} disabled={spinning || allWinners.length === 0}>Close and reveal</button>
+                <button className="btn btn-lg" onClick={finish} disabled={spinning || allWinners.length === 0}><Icon name="shield" size={18} /> Close and reveal</button>
               </>
             )}
             {revealed && (
               <>
-                <span className="chip chip-good">Giveaway closed</span>
+                <span className="chip chip-good"><Icon name="check" size={12} /> Giveaway closed</span>
                 <span className="hint">{allWinners.length} winners. The proof page lets anyone recompute every spin.</span>
               </>
             )}
@@ -148,8 +149,8 @@ export default function WheelPage() {
             winner={latest ? remaining.findIndex((e) => e.index === latest.index) : null}
           />
           {latest && !spinning && (
-            <div style={{ padding: '0 20px 20px' }}>
-              <div className="winner-banner">
+            <div style={{ padding: '0 20px 20px' }} aria-live="polite">
+              <div className="winner-banner" key={latest.index}>
                 <span className="eyebrow">Winner · {latest.prize}</span>
                 <b>{latest.name}</b>
               </div>
@@ -162,10 +163,10 @@ export default function WheelPage() {
           <div className="card">
             <div className="card-head"><h3>Winners</h3><span className="dim mono">{allWinners.length}</span></div>
             <div className="card-pad" style={{ paddingTop: 8, paddingBottom: 8 }}>
-              {allWinners.length === 0 && <p className="dim" style={{ margin: '8px 0' }}>No spins yet.</p>}
+              {allWinners.length === 0 && <p className="dim" style={{ margin: '10px 0' }}>No spins yet. Winners appear here in spin order.</p>}
               {allWinners.map((w, i) => (
-                <div key={i} className="spread" style={{ padding: '8px 0', borderBottom: '1px solid var(--line)', fontSize: 13.5 }}>
-                  <span><b className="gold">{i + 1}.</b> {w.name}</span>
+                <div key={i} className="spread" style={{ padding: '9px 0', borderBottom: '1px solid var(--border-subtle)', fontSize: 13.5 }}>
+                  <span><b className="gold tnum">{i + 1}.</b> {w.name}</span>
                   <span className="muted">{w.prize}</span>
                 </div>
               ))}

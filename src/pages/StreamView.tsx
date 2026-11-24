@@ -6,6 +6,7 @@ import ShuffleBoard from '../components/ShuffleBoard.tsx';
 import Dice from '../components/Dice.tsx';
 import Wheel from '../components/Wheel.tsx';
 import DuckRace from '../components/DuckRace.tsx';
+import Icon from '../components/Icon.tsx';
 
 const MAX_ROWS = 18;
 
@@ -39,8 +40,9 @@ export default function StreamView() {
     commitment = s.commitment;
     const rows = Math.min(Math.max(s.left.length, s.order.length), MAX_ROWS);
     const rowH = Math.min(52, (720 - 8 * (rows - 1)) / rows);
+    const pad = (n: number) => String(n).padStart(2, '0');
     body = (
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: 40, flex: 1, minHeight: 0 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 520px', gap: 56, flex: 1, minHeight: 0 }}>
         <div style={{ overflow: 'hidden' }}>
           <ShuffleBoard
             left={s.left.slice(0, MAX_ROWS)}
@@ -55,25 +57,29 @@ export default function StreamView() {
           />
         </div>
         <div className="stack" style={{ gap: 28, justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-          {s.phase === 'ready' && <h2 style={{ fontSize: 40, color: 'var(--muted)' }}>Preparing the draw</h2>}
+          {s.phase === 'ready' && <h2 style={{ fontSize: 48, color: 'var(--text-secondary)' }}>Preparing the draw</h2>}
           {s.phase !== 'ready' && (s.dice || s.totalRounds === 0) && (
             <div style={{ transform: 'scale(1.9)', margin: '40px 0' }}>
               <Dice values={s.dice} rollId={rollId} showTotal={s.phase !== 'sealed' && s.phase !== 'rolling'} />
             </div>
           )}
           {s.phase !== 'ready' && !s.dice && s.totalRounds > 0 && (
-            <div className="dice-total" style={{ fontSize: 96 }}>{s.totalRounds}<small style={{ fontSize: 20 }}>shuffles set by host</small></div>
+            <div className="dice-total" style={{ fontSize: 140, lineHeight: '130px' }}>{s.totalRounds}<small style={{ fontSize: 22, lineHeight: '30px' }}>shuffles set by host</small></div>
           )}
-          {s.phase === 'sealed' && <h2 style={{ fontSize: 40 }}>Draw sealed. Rolling next</h2>}
+          {s.phase === 'sealed' && <h2 style={{ fontSize: 52 }}><Icon name="lock" size={40} className="inline-ico" /> Draw sealed. Rolling next</h2>}
           {(s.phase === 'shuffling' || s.phase === 'rolling') && s.totalRounds > 0 && (
             <>
-              <h2 style={{ fontSize: 44 }}>{s.phase === 'rolling' ? 'Rolling' : `Shuffle ${s.round} / ${s.totalRounds}`}</h2>
-              <div className="round-meter" style={{ transform: 'scale(1.8)' }}>
+              {s.phase === 'rolling' ? (
+                <h2 style={{ fontSize: 64 }}>Rolling</h2>
+              ) : (
+                <span className="round-count">Round <em>{pad(s.round)}</em> <small>/ {pad(s.totalRounds)}</small></span>
+              )}
+              <div className="round-meter">
                 {Array.from({ length: s.totalRounds }, (_, i) => <span key={i} className={i < s.round ? 'on' : ''} />)}
               </div>
             </>
           )}
-          {s.phase === 'revealed' && <h2 style={{ fontSize: 52, color: 'var(--gold-hi)' }}>Results locked</h2>}
+          {s.phase === 'revealed' && <h2 style={{ fontSize: 72, color: 'var(--brand-highlight)' }}>Results locked</h2>}
         </div>
       </div>
     );
@@ -88,12 +94,12 @@ export default function StreamView() {
         </div>
         <div>
           {s.winner ? (
-            <div className="winner-banner" style={{ padding: 40 }}>
-              <span className="eyebrow" style={{ fontSize: 20 }}>Winner</span>
-              <b style={{ fontSize: 72 }}>{s.winner}</b>
+            <div className="winner-banner" key={s.winner} style={{ padding: '48px 40px 52px' }}>
+              <span className="eyebrow" style={{ fontSize: 24, lineHeight: '30px' }}>Winner</span>
+              <b style={{ fontSize: 96, lineHeight: '96px', marginTop: 14 }}>{s.winner}</b>
             </div>
           ) : (
-            <h2 style={{ fontSize: 56, color: 'var(--muted)' }}>{s.spinning ? 'Spinning…' : 'Get ready'}</h2>
+            <h2 style={{ fontSize: 72, color: 'var(--text-secondary)' }}>{s.spinning ? 'Spinning…' : 'Get ready'}</h2>
           )}
         </div>
       </div>
@@ -109,16 +115,29 @@ export default function StreamView() {
     );
   } else {
     body = (
-      <div style={{ flex: 1, display: 'grid', placeItems: 'center' }}>
-        <img src={logoFull} alt="Breakpodden" style={{ height: 420 }} />
+      <div className="stream-idle">
+        <div>
+          <img src={logoFull} alt="Breakpodden" />
+          <p>{subtitle}</p>
+        </div>
       </div>
     );
   }
 
+  // Badge text comes straight from the published draw state, never decoration.
+  const status: { label: string; active: boolean } | null =
+    s.kind === 'shuffle'
+      ? { ready: { label: 'Preparing', active: false }, sealed: { label: 'Sealed', active: false }, rolling: { label: 'Rolling', active: true }, shuffling: { label: 'Shuffling', active: true }, revealed: { label: 'Results locked', active: false } }[s.phase]
+      : s.kind === 'wheel'
+        ? s.spinning ? { label: 'Spinning', active: true } : s.winner ? { label: 'Winner drawn', active: false } : { label: s.commitment ? 'Sealed' : 'Preparing', active: false }
+        : s.kind === 'duck'
+          ? s.startedAt !== null ? { label: 'Race', active: false } : { label: s.commitment ? 'Sealed' : 'Line-up', active: false }
+          : null;
+
   return (
     <div className={`stream-root${green ? ' green' : ''}`}>
       <div className="stream-controls">
-        <button className="btn btn-sm" onClick={() => setGreen(!green)}>{green ? 'Dark background' : 'Green screen'}</button>
+        <button className="btn btn-sm btn-secondary" onClick={() => setGreen(!green)}>{green ? 'Dark background' : 'Green screen'}</button>
       </div>
       <div className="stream-stage" style={{ transform: `translate(-50%, -50%) scale(${scale})` }}>
         <div className="stream-frame">
@@ -128,10 +147,11 @@ export default function StreamView() {
               <h1>{title}</h1>
               <div className="sub">{subtitle}</div>
             </div>
+            {status && <span className={`live-badge${status.active ? '' : ' quiet'}`}>{status.active && <span className="live-dot" />}{status.label}</span>}
           </div>
           {body}
           <div className="stream-foot">
-            <span>🔒 Provably fair{commitment && <> · commitment <span className="mono gold">{commitment.slice(0, 16)}…</span></>}</span>
+            <span><Icon name="shield" size={24} />Provably fair{commitment && <> · commitment <span className="mono gold">{commitment.slice(0, 16)}…</span></>}</span>
             <span>breakpodden.com</span>
           </div>
         </div>

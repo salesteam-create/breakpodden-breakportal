@@ -42,7 +42,7 @@ export default function ShuffleBoard({
 
       <div className="col" style={{ height }}>
         {left.length === 0 && leftPlaceholder && (
-          <div className="cell" style={{ top: 0, height: h, ...font, color: 'var(--dim)', borderStyle: 'dashed' }}>{leftPlaceholder}</div>
+          <div className="cell" style={{ top: 0, height: h, ...font, color: 'var(--text-muted)', borderStyle: 'dashed', borderColor: 'var(--border-default)', background: 'transparent' }}>{leftPlaceholder}</div>
         )}
         {left.map((name, i) => (
           <div key={i} className={`cell${done && (winTop === undefined || i < winTop) ? ' win' : ''}`} style={{ top: i * step, height: h, ...font }}>
@@ -59,7 +59,7 @@ export default function ShuffleBoard({
 
       <div className="col" style={{ height }}>
         {order.length === 0 && rightPlaceholder && (
-          <div className="cell" style={{ top: 0, height: h, ...font, color: 'var(--dim)', borderStyle: 'dashed' }}>{rightPlaceholder}</div>
+          <div className="cell" style={{ top: 0, height: h, ...font, color: 'var(--text-muted)', borderStyle: 'dashed', borderColor: 'var(--border-default)', background: 'transparent' }}>{rightPlaceholder}</div>
         )}
         {order.map((name, i) => (
           <div

@@ -6,9 +6,9 @@
 import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import { WORKSPACE } from '../lib/workspace.ts';
 
-// Gold, black, cream, navy, light gold, near-black.
-const COLORS = ['#b08d2f', '#111111', '#e5dec9', '#1d243d', '#d9b654', '#050505'];
-const INK = ['#ffffff', '#f3e3ad', '#1d243d', '#ffffff', '#111111', '#d9b654'];
+// Graphite, champagne, ivory, slate, antique gold, obsidian: a calm, balanced palette.
+const COLORS = ['#222227', '#D4B56D', '#EFE6D0', '#2B2F38', '#8C7343', '#141417'];
+const INK = ['#F5F5F7', '#09090B', '#18181C', '#F1DDA6', '#0B0B0D', '#D4B56D'];
 const STUDS = 32;
 const PARTICLES = 22;
 
@@ -84,7 +84,7 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
               </linearGradient>
             </defs>
             <path d="M20 57 L3 18 A17 17 0 1 1 37 18 Z" fill={`url(#pf-${uid})`} stroke="#3a2a05" strokeWidth="1.5" />
-            <circle cx="20" cy="17" r="7" fill="#7a0c12" stroke="#fbe9a8" strokeWidth="2" />
+            <circle cx="20" cy="17" r="7" fill="#141417" stroke="#F1DDA6" strokeWidth="2" />
             <circle cx="17.5" cy="14.5" r="2" fill="#fff" opacity=".7" />
           </svg>
         </div>
@@ -114,7 +114,7 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
             const d = n === 1 ? `M${c} ${c - r}A${r} ${r} 0 1 1 ${c - 0.01} ${c - r}Z` : `M${c} ${c}L${x0} ${y0}A${r} ${r} 0 ${seg > 180 ? 1 : 0} 1 ${x1} ${y1}Z`;
             return (
               <g key={i}>
-                <path d={d} fill={COLORS[k]} stroke="#b08d2f" strokeOpacity=".55" strokeWidth="1" />
+                <path d={d} fill={COLORS[k]} stroke="#796744" strokeOpacity=".7" strokeWidth="1" />
                 <text
                   x={c}
                   y={c - r + 16}
@@ -123,6 +123,7 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
                   fontSize={fontSize}
                   fontFamily="Inter, sans-serif"
                   fontWeight="600"
+                  style={{ fontVariantNumeric: 'tabular-nums' }}
                   dominantBaseline="middle"
                 >
                   {name.length > 16 ? `${name.slice(0, 15)}…` : name}
