@@ -883,3 +883,77 @@ input[type=text], input[type=number], textarea, select,
 .tile .t { overflow-wrap: anywhere; hyphens: auto; }
 .tile .o > span:last-child { white-space: nowrap; flex: none; }
 .tile .o > span:first-child { flex: 1 1 auto; }
+
+/* ---------- Duck race: realistic pond ----------
+   Teal water with drifting caustic light and wave texture, red/white lane-rope
+   floats, a wooden start dock, buoy distance markers and a finish banner. */
+.pond {
+  --track-start: 150px; --track-end: 56px;
+  border-radius: 18px; border: 1px solid rgba(255, 255, 255, .14);
+  background:
+    radial-gradient(120% 90% at 70% 0%, rgba(120, 220, 230, .28), transparent 60%),
+    linear-gradient(180deg, #1f7f92 0%, #17697d 45%, #0f5163 100%);
+  box-shadow: inset 0 10px 30px rgba(0, 0, 0, .25), inset 0 -20px 40px rgba(4, 40, 52, .45), 0 18px 40px rgba(10, 30, 40, .25);
+  color: #fff;
+}
+.water {
+  opacity: 1; mix-blend-mode: screen;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='180'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .07' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .95 0 0 0 0 1 0 0 0 1.6 -.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),
+    radial-gradient(40px 10px at 30% 40%, rgba(220, 250, 255, .22), transparent 70%),
+    radial-gradient(60px 12px at 75% 70%, rgba(220, 250, 255, .16), transparent 70%),
+    radial-gradient(30px 8px at 55% 20%, rgba(220, 250, 255, .18), transparent 70%);
+  background-size: 360px 180px, 220px 90px, 300px 120px, 180px 80px;
+  animation: pondDrift 14s linear infinite;
+}
+@keyframes pondDrift { to { background-position: -360px 0, 220px 30px, -300px -20px, 180px 10px; } }
+.pond-head {
+  height: 34px; color: rgba(255, 255, 255, .85); font-weight: 700; letter-spacing: .14em;
+  background: linear-gradient(180deg, rgba(6, 40, 52, .75), rgba(6, 40, 52, .45));
+  border-bottom: 1px solid rgba(255, 255, 255, .12); backdrop-filter: blur(6px);
+}
+.pond-head .gold { color: #ffd76a; }
+/* Wooden start dock under the names */
+.lanes::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: var(--track-start); z-index: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 92%, rgba(0, 0, 0, .35)),
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, .28) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(92deg, rgba(255, 255, 255, .04) 0 3px, transparent 3px 11px),
+    linear-gradient(180deg, #7a5634, #5e4027);
+  box-shadow: 6px 0 14px rgba(0, 0, 0, .3);
+}
+.lane { background: none; }
+.lane:nth-child(odd) { background: rgba(255, 255, 255, .025); }
+/* Lane ropes: red and white floats */
+.lane::after {
+  content: ''; position: absolute; left: var(--track-start); right: 0; bottom: -4px; height: 8px; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 45%, #ff6a5e 0 2.2px, #d8332b 2.8px 3.6px, transparent 4.1px) 0 0 / 20px 8px repeat-x,
+    radial-gradient(circle at 50% 45%, #ffffff 0 2.2px, #d9e4e8 2.8px 3.6px, transparent 4.1px) 10px 0 / 20px 8px repeat-x,
+    linear-gradient(transparent 3.5px, rgba(255, 255, 255, .35) 3.5px 4.5px, transparent 4.5px);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .35));
+}
+.lane:last-child::after { display: none; }
+.startline { width: 3px; background: linear-gradient(180deg, #fff, #e8f6f8); box-shadow: 0 0 8px rgba(255, 255, 255, .45); z-index: 2; }
+/* Distance markers: a thin rope with a yellow buoy at the top */
+.marker { width: 2px; background: repeating-linear-gradient(180deg, rgba(255, 255, 255, .35) 0 6px, transparent 6px 14px); }
+.marker::before { content: ''; position: absolute; top: -5px; left: -5px; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff3b0, #f2b630 60%, #b07812); box-shadow: 0 2px 4px rgba(0, 0, 0, .35); }
+/* Finish: checkered strip with a glow and posts */
+.finishline { width: 14px; opacity: 1; background: repeating-conic-gradient(#ffffff 0 25%, #16191c 0 50%) 0 0 / 14px 14px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .25), 0 0 22px rgba(255, 215, 106, .45); z-index: 2; }
+.finishline::before, .finishline::after { content: ''; position: absolute; left: 50%; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #ffd76a; box-shadow: 0 0 10px #ffd76a; }
+.finishline::before { top: -2px; } .finishline::after { bottom: -2px; }
+.finishline span { color: #ffd76a; text-shadow: 0 1px 4px rgba(0, 0, 0, .5); }
+/* Ducks: name tags on the dock, a soft reflection on the water */
+.duck { z-index: 3; }
+.duck .label { background: rgba(255, 255, 255, .92); color: #2a2216; border: 0; font-weight: 700; box-shadow: 0 2px 6px rgba(0, 0, 0, .25); }
+.duck.champ .label { background: #ffd76a; color: #2a2216; }
+.duck .label { max-width: calc(var(--track-start) - 52px); overflow: hidden; text-overflow: ellipsis; }
+.duck.champ .label { max-width: none; }
+.duck-body::after { content: ''; position: absolute; left: 8%; right: 8%; bottom: -3px; height: 6px; border-radius: 50%; background: radial-gradient(closest-side, rgba(4, 30, 40, .45), transparent); z-index: 0; }
+.wake { background: radial-gradient(ellipse at right, rgba(255, 255, 255, .55), transparent 70%); }
+.race-overlay { background: rgba(6, 40, 52, .45); }
+@media (max-width: 720px) {
+  .pond { --track-start: 44px; --track-end: 40px; }
+}
+@media (prefers-reduced-motion: reduce) { .water { animation: none; } }
