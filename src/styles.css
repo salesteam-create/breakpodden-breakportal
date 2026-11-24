@@ -220,7 +220,8 @@ p { margin: 0; }
 .scrim { display: none; }
 
 .main { position: relative; z-index: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; padding: 0; }
-.topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 10px; padding: 12px 0 10px; margin-top: -12px; background: transparent; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+.topbar { position: sticky; top: 0; z-index: 30; display: flex; align-items: center; gap: 10px; padding: 12px 0 10px; margin-top: -12px; background: transparent; }
+.topbar::before { content: ''; position: absolute; inset: 0 -16px -14px -16px; z-index: -1; pointer-events: none; background: color-mix(in srgb, var(--frame) 72%, transparent); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent); mask-image: linear-gradient(to bottom, #000 62%, transparent); }
 .menu-btn { display: none; }
 .search { position: relative; flex: 1; min-width: 0; max-width: 360px; display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); color: var(--dim); transition: border-color .2s; }
 .search:focus-within { border-color: var(--accent-line); }
@@ -653,6 +654,48 @@ table.plain .gold { font-weight: 600; }
 .team-row > input:hover { border-color: var(--line); }
 .team-row > input:focus { background: var(--surface); }
 
+/* ---------- Glass system ----------
+   Sections are frosted glass: mostly see-through, strongly blurred, with a thin
+   light edge and a top highlight, so the drifting gold clouds show through softly
+   while text stays crisp. Inner elements are lightly tinted glass, not solid blocks. */
+:root {
+  --glass-bg: rgba(255, 255, 255, .5);
+  --glass-edge: rgba(255, 255, 255, .8);
+  --glass-hi: rgba(255, 255, 255, .85);
+  --glass-chip: rgba(255, 255, 255, .55);
+  --surface-2: rgba(110, 90, 40, .065);
+  --surface-3: rgba(110, 90, 40, .12);
+  --field: rgba(255, 255, 255, .62);
+  --cloud: rgba(156, 124, 39, .34);
+}
+:root[data-theme="dark"] {
+  --glass-bg: rgba(58, 58, 62, .5);
+  --glass-edge: rgba(255, 255, 255, .1);
+  --glass-hi: rgba(255, 255, 255, .08);
+  --glass-chip: rgba(255, 255, 255, .07);
+  --surface-2: rgba(0, 0, 0, .2);
+  --surface-3: rgba(255, 255, 255, .1);
+  --field: rgba(0, 0, 0, .26);
+  --cloud: rgba(205, 164, 62, .26);
+}
+.card, .panel, .sidebar {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-edge);
+  box-shadow: inset 0 1px 0 var(--glass-hi), var(--shadow);
+  backdrop-filter: blur(30px) saturate(1.45); -webkit-backdrop-filter: blur(30px) saturate(1.45);
+}
+.icon-btn, .see-all, .search, :root[data-theme="dark"] .search {
+  background: var(--glass-chip); border-color: var(--glass-edge);
+  backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+.icon-btn.ghost { background: transparent; border-color: transparent; backdrop-filter: none; }
+input[type=text], input[type=number], textarea, select,
+:root[data-theme="dark"] input[type=text], :root[data-theme="dark"] input[type=number], :root[data-theme="dark"] textarea, :root[data-theme="dark"] select { background: var(--field); }
+.search input[type=text], :root[data-theme="dark"] .search input[type=text], .team-row > input, :root[data-theme="dark"] .team-row > input { background: transparent; }
+.team-row > input:focus, :root[data-theme="dark"] .team-row > input:focus { background: var(--field); }
+.tile.open, .cell.team, .standing, .seg button.on { background: var(--glass-chip); }
+.btn:not(.btn-primary):not(.btn-ghost):not(.btn-danger):not(.btn-outline) { background: var(--glass-chip); }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1280px) {
   .posters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -667,6 +710,7 @@ table.plain .gold { font-weight: 600; }
   .sb-close, .menu-btn { display: inline-grid; }
   .main { padding: 0; }
   .topbar { top: 0; }
+  .topbar::before { inset: 0 -10px -14px -10px; }
   .workspace, .checklists-ws, .pick-layout { grid-template-columns: 1fr; }
   .side { position: static; }
 }
