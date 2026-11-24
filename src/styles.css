@@ -868,3 +868,16 @@ input[type=text], input[type=number], textarea, select,
   .check > .chip { grid-column: 2; justify-self: start; }
   .formula { font-size: 11px; }
 }
+
+/* ---------- Mobile: tables scroll left/right ---------- */
+@media (max-width: 720px) {
+  .card:has(> table.plain), div:has(> table.plain) { overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  table.plain:has(th:nth-child(4)) { min-width: 600px; }
+  table.plain:has(th:nth-child(4)) td, table.plain:has(th:nth-child(4)) th { white-space: nowrap; }
+  /* Keep the first column pinned so each row stays identifiable while scrolling. */
+  table.plain th:first-child, table.plain td:first-child { position: sticky; left: 0; z-index: 1; background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 1px 0 0 var(--line); }
+  :root:not([data-theme="dark"]) table.plain th:first-child, :root:not([data-theme="dark"]) table.plain td:first-child { background: rgba(255, 255, 255, .94); }
+  :root[data-theme="dark"] table.plain th:first-child, :root[data-theme="dark"] table.plain td:first-child { background: rgba(48, 48, 52, .96); }
+  .t-title { max-width: 220px; }
+  .t-title b { display: block; overflow: hidden; text-overflow: ellipsis; }
+}
