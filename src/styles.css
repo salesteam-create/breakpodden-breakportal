@@ -751,8 +751,9 @@ input[type=text], input[type=number], textarea, select,
   .pond { --track-start: 112px; }
   .step { flex: none; }
   table.plain td, table.plain th { padding: 10px 12px; }
-  .team-row { grid-template-columns: 24px 1fr; }
-  .team-row > div { grid-column: 2; }
+  .team-row { grid-template-columns: 22px minmax(0, 1fr) auto; gap: 6px; }
+  .team-row > div { gap: 2px !important; }
+  .team-row .void-form, .team-row > .row.fade-in { grid-column: 1 / -1; }
   .hide-sm { display: none; }
   .card-head { flex-wrap: wrap; }
   .app-footer { flex-direction: column; gap: 2px; }
@@ -791,4 +792,79 @@ input[type=text], input[type=number], textarea, select,
   .hero-actions { padding-right: 0; flex-wrap: nowrap; }
   .hero-actions .btn { flex: 0 1 auto; min-width: 0; }
   .hero-dots { left: 18px; right: auto; bottom: 18px; }
+}
+
+/* ---------- Mobile: draw board, controls and results ---------- */
+@media (max-width: 720px) {
+  .board { grid-template-columns: 24px minmax(0, 1fr) minmax(0, 1fr) !important; column-gap: 8px !important; padding: 14px 12px 16px; }
+  .board-label { font-size: 11.5px !important; letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cell { font-size: 13px !important; padding: 0 10px; border-radius: 9px; }
+  .cell.idx { font-size: 11px !important; padding: 0; }
+  .cell .tag { display: none; }
+  /* Placeholders wrap instead of being cut off. */
+  .cell[style*="dashed"] { white-space: normal; line-height: 1.2; font-size: 12px !important; height: auto !important; min-height: 40px; padding: 8px 10px; }
+  .cut-line { left: -32px; }
+  .action-bar { gap: 10px; }
+  .action-bar .field { flex: 1 1 100% !important; max-width: none !important; }
+  .action-bar .field select { width: 100%; }
+  .action-bar > .btn-lg { flex: 1 1 auto; }
+  .action-bar .hint { max-width: none; flex: 1 1 100%; }
+  .reveal { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; padding: 14px 12px; }
+  .rcard { height: 128px; }
+  .rcard-face { padding: 10px 12px; }
+  .rcard-front .what { font-size: 15px; }
+  .dice { padding: 6px 8px 14px 4px; gap: 22px; }
+  .steps { padding: 12px; }
+  .step { flex: 1; font-size: 0; gap: 0; padding-right: 6px; }
+  .step i { font-size: 12px; }
+  .step.now { flex: none; font-size: 13px; gap: 8px; padding-right: 8px; }
+  .step:last-child { flex: none; }
+}
+
+/* ---------- Mobile UX pass: touch targets (>=44px), readable text, compact lists ---------- */
+@media (max-width: 720px) {
+  /* Fitts's law: every tap target at least 44px tall. */
+  .btn, .btn-sm, .btn-lg { min-height: 44px; }
+  .icon-btn { width: 44px; height: 44px; }
+  .search { height: 44px; }
+  .see-all { height: 40px; padding: 0 14px; position: relative; }
+  .see-all::after, .hero-dots button::after { content: ''; position: absolute; inset: -6px -4px; }
+  .hero-dots { gap: 10px; }
+  .hero-dots button { position: relative; height: 8px; overflow: visible; }
+  .hero-dots button i { border-radius: 8px; }
+  .seg button, .tabs button { min-height: 40px; }
+  .seg { padding: 3px; }
+  .legend { gap: 4px; }
+  .legend button { height: 40px; padding: 0 10px; }
+  input[type=text], input[type=number], select { min-height: 44px; font-size: 16px; }
+  .team-row > input { min-height: 44px; font-size: 15px; }
+  .team-row .btn-sm { min-width: 40px; padding: 0 10px; }
+  input[type=range] { height: 28px; }
+  .box-item { min-height: 48px; }
+  /* Readable text: nothing smaller than 12px for content. */
+  .tag.sm, .wc-meta, .lr-text .mono, .chip, .standing .who b, .kv label, .field label, .board-label { font-size: 12px; }
+  .tile .o { font-size: 12.5px; }
+  .pond-head, .standings-head .eyebrow, .standing .place, .standing .lane-no, .legend button em, .sc-card .n, .sc-card .who, .cell.idx { font-size: 12px !important; }
+  /* Pick-your-team board: two columns instead of one long list. */
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .tile { padding: 11px 12px; min-height: 78px; }
+  .tile .t { font-size: 13px; }
+  .pick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pick-layout > div:last-child { order: -1; }
+  .pick-order { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .pick-row { grid-template-columns: auto auto; padding: 8px 10px; }
+  .pick-row .tag { grid-column: 1 / -1; }
+  .cut-line span { white-space: nowrap; font-size: 10.5px !important; }
+  /* Duck race: lane numbers on the ducks, names in the line-up (no clipped labels). */
+  .pond { --track-start: 44px; --track-end: 40px; }
+  .pond-head span:first-child { visibility: hidden; }
+  .duck .label { display: none; }
+  .duck.champ .label { display: inline-block; }
+  .podium b { font-size: 26px; }
+  .podium div { font-size: 13px; word-break: break-word; }
+  /* Proof page tables stay readable. */
+  table.plain { font-size: 13px; }
+  .check { grid-template-columns: 30px minmax(0, 1fr); }
+  .check > .chip { grid-column: 2; justify-self: start; }
+  .formula { font-size: 11px; }
 }
