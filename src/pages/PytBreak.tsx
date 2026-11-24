@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { MEDIA } from '../lib/media.ts';
 import { BREAKS, FILLER_PRICE, entryBuyer, fillerEntries, initialPytSlots, kr, type Slot } from '../lib/data.ts';
 import { openStreamWindow } from '../lib/store.ts';
 import { useShuffleDraw } from '../lib/useShuffleDraw.ts';
@@ -78,8 +79,8 @@ export default function PytBreak() {
   return (
     <>
       <Hero
+        image={MEDIA.pitch} focus="center 70%"
        
-        image={brk.image}
         compact
         badge={{ icon: 'bolt', label: `Break #${brk.number}` }}
         chips={
@@ -148,7 +149,7 @@ export default function PytBreak() {
               </p>
               <div className="spread muted" style={{ fontSize: 13.5 }}><span>Entry price</span><b className="strong">{kr(FILLER_PRICE)}</b></div>
               <div className="spread muted" style={{ fontSize: 13.5 }}><span>Entries sold</span><b className="strong">{entries.length} ({kr(entries.length * FILLER_PRICE)})</b></div>
-              <button className="btn btn-gold btn-block" onClick={() => setMode('filler')} disabled={done}>
+              <button className="btn btn-primary btn-block" onClick={() => setMode('filler')} disabled={done}>
                 {done ? <><Icon name="check" size={16} /> Filler draw done</> : <>Start filler draw <Icon name="arrow" size={16} /></>}
               </button>
             </div>
@@ -168,7 +169,7 @@ export default function PytBreak() {
                     </div>
                     <ShuffleModeControl value={fixed} onChange={setFixed} />
                   </div>
-                  <button className="btn btn-gold btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the filler draw</button>
+                  <button className="btn btn-primary btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the filler draw</button>
                   <span className="hint" style={{ maxWidth: 320 }}>
                     {assign === 'draw'
                       ? `Top ${openTeams.length} entries are paired with the open teams in list order.`
@@ -181,7 +182,7 @@ export default function PytBreak() {
                   <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
                   {phase === 'sealed' && (
                     <>
-                      <button className="btn btn-gold btn-lg" onClick={draw.roll}><Icon name={fixed ? 'shuffle' : 'dice'} size={18} /> {fixed ? 'Start shuffling' : 'Roll the dice'}</button>
+                      <button className="btn btn-primary btn-lg" onClick={draw.roll}><Icon name={fixed ? 'shuffle' : 'dice'} size={18} /> {fixed ? 'Start shuffling' : 'Roll the dice'}</button>
                       <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={voidDraw} /></span>
                     </>
                   )}
@@ -190,7 +191,7 @@ export default function PytBreak() {
               {phase === 'shuffled' && (
                 <>
                   <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
-                  <button className="btn btn-gold btn-lg" onClick={reveal}><Icon name="sparkle" size={18} /> Reveal winners</button>
+                  <button className="btn btn-primary btn-lg" onClick={reveal}><Icon name="sparkle" size={18} /> Reveal winners</button>
                   <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={voidDraw} /></span>
                 </>
               )}

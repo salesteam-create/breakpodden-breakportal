@@ -7,8 +7,8 @@ import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import { WORKSPACE } from '../lib/workspace.ts';
 
 // Gold, midnight, violet, deep navy, cream, magenta.
-const COLORS = ['#d9a441', '#1e1b17', '#efe3c8', '#3a2f22', '#b9853a', '#0f0e0c'];
-const INK = ['#1b1407', '#e9c77a', '#2a2218', '#efe3c8', '#1b1407', '#d9a441'];
+const COLORS = ['#8b6cff', '#1b1636', '#ece6ff', '#2d2654', '#b9a2ff', '#120f24'];
+const INK = ['#ffffff', '#cbbdff', '#1b1636', '#ece6ff', '#1b1636', '#b9a2ff'];
 const STUDS = 32;
 const PARTICLES = 22;
 
@@ -78,13 +78,13 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
           <svg viewBox="0 0 40 58" width="100%" height="100%">
             <defs>
               <linearGradient id={`pf-${uid}`} x1="0" x2="1" y1="0" y2="1">
-                <stop offset="0" stopColor="#fbe9a8" />
-                <stop offset=".45" stopColor="#c9a43f" />
-                <stop offset="1" stopColor="#7a5c12" />
+                <stop offset="0" stopColor="#f4f0ff" />
+                <stop offset=".45" stopColor="#a993f5" />
+                <stop offset="1" stopColor="#4a3c8f" />
               </linearGradient>
             </defs>
-            <path d="M20 57 L3 18 A17 17 0 1 1 37 18 Z" fill={`url(#pf-${uid})`} stroke="#3a2a05" strokeWidth="1.5" />
-            <circle cx="20" cy="17" r="7" fill="#7a0c12" stroke="#fbe9a8" strokeWidth="2" />
+            <path d="M20 57 L3 18 A17 17 0 1 1 37 18 Z" fill={`url(#pf-${uid})`} stroke="#231c45" strokeWidth="1.5" />
+            <circle cx="20" cy="17" r="7" fill="#1b1636" stroke="#f4f0ff" strokeWidth="2" />
             <circle cx="17.5" cy="14.5" r="2" fill="#fff" opacity=".7" />
           </svg>
         </div>
@@ -121,7 +121,7 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
                   transform={`rotate(${mid} ${c} ${c}) rotate(90 ${c} ${c - r + 16})`}
                   fill={INK[k]}
                   fontSize={fontSize}
-                  fontFamily="Outfit, sans-serif"
+                  fontFamily="Manrope, sans-serif"
                   fontWeight="600"
                   dominantBaseline="middle"
                 >
@@ -138,8 +138,8 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
             const d = n === 1 ? `M${c} ${c - r}A${r} ${r} 0 1 1 ${c - 0.01} ${c - r}Z` : `M${c} ${c}L${x0} ${y0}A${r} ${r} 0 ${seg > 180 ? 1 : 0} 1 ${x1} ${y1}Z`;
             return (
               <g className="win-seg">
-                <path d={d} fill="#ffe08a" fillOpacity=".22" stroke="#ffe08a" strokeWidth="6" filter={`url(#gl-${uid})`} />
-                <path d={d} fill="none" stroke="#fff4c7" strokeWidth="2.5" />
+                <path d={d} fill="#d8ccff" fillOpacity=".22" stroke="#d8ccff" strokeWidth="6" filter={`url(#gl-${uid})`} />
+                <path d={d} fill="none" stroke="#ffffff" strokeWidth="2.5" />
               </g>
             );
           })()}
@@ -148,20 +148,20 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
         <svg className="wheel-overlay" viewBox={`0 0 ${size} ${size}`} aria-hidden="true">
           <defs>
             <linearGradient id={`rim-${uid}`} x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#fbe9a8" />
-              <stop offset=".25" stopColor="#b08d2f" />
-              <stop offset=".5" stopColor="#f3d77a" />
-              <stop offset=".75" stopColor="#7a5c12" />
-              <stop offset="1" stopColor="#e8c96a" />
+              <stop offset="0" stopColor="#f4f0ff" />
+              <stop offset=".25" stopColor="#8f7ae6" />
+              <stop offset=".5" stopColor="#e0d7ff" />
+              <stop offset=".75" stopColor="#4a3c8f" />
+              <stop offset="1" stopColor="#cfc2ff" />
             </linearGradient>
             <radialGradient id={`hub-${uid}`} cx="40%" cy="35%" r="70%">
-              <stop offset="0" stopColor="#3a3026" />
-              <stop offset="1" stopColor="#0f0e0c" />
+              <stop offset="0" stopColor="#2d2654" />
+              <stop offset="1" stopColor="#0f0c1f" />
             </radialGradient>
           </defs>
           <circle cx={c} cy={c} r={c - 2 - rim / 2} fill="none" stroke={`url(#rim-${uid})`} strokeWidth={rim} />
-          <circle cx={c} cy={c} r={c - 2} fill="none" stroke="#3a2a05" strokeWidth="2" />
-          <circle cx={c} cy={c} r={c - rim - 2} fill="none" stroke="#3a2a05" strokeWidth="2" />
+          <circle cx={c} cy={c} r={c - 2} fill="none" stroke="#231c45" strokeWidth="2" />
+          <circle cx={c} cy={c} r={c - rim - 2} fill="none" stroke="#231c45" strokeWidth="2" />
           {Array.from({ length: STUDS }, (_, i) => {
             const [x, y] = pt(c, c, c - 2 - rim / 2, (360 / STUDS) * i);
             return <circle key={i} className="stud" cx={x} cy={y} r={rim * 0.2} style={{ animationDelay: `${(i % 8) * 0.07}s` }} />;

@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { MEDIA } from '../lib/media.ts';
 import { giveawayEntries } from '../lib/data.ts';
 import { commitmentFor, newSeed, runWheel, type DrawInputs } from '../lib/fair.ts';
 import { newDrawId, openStreamWindow, publishStream, saveDraw, type DrawRecord } from '../lib/store.ts';
 import Wheel, { landingRotation } from '../components/Wheel.tsx';
 import { FairnessPanel, LogPanel } from '../components/Panels.tsx';
-import Hero, { TradingCard } from '../components/Hero.tsx';
+import Hero from '../components/Hero.tsx';
 import Icon from '../components/Icons.tsx';
 
 const SPIN_MS = 6400;
@@ -106,8 +107,8 @@ export default function WheelPage() {
   return (
     <>
       <Hero
+        image={MEDIA.confetti}
        
-        art={<div className="art-prize"><TradingCard className="back" serial="GIVEAWAY" name="Next spin" /><TradingCard serial="PRIZE" name={prize} sub={`${entries.length} entries in the draw`} /></div>}
         compact
         badge={{ icon: 'sparkle', label: 'Giveaway' }}
         chips={
@@ -131,7 +132,7 @@ export default function WheelPage() {
           <div className="action-bar">
             {!record && (
               <>
-                <button className="btn btn-gold btn-lg" onClick={seal}><Icon name="lock" size={18} /> Seal giveaway</button>
+                <button className="btn btn-primary btn-lg" onClick={seal}><Icon name="lock" size={18} /> Seal giveaway</button>
                 <span className="hint">Locks the {entries.length} entries and a secret seed before the first spin.</span>
               </>
             )}
@@ -141,7 +142,7 @@ export default function WheelPage() {
                   <label>Prize for this spin</label>
                   <input type="text" value={prize} onChange={(e) => setPrize(e.target.value)} />
                 </div>
-                <button className="btn btn-gold btn-lg" onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
+                <button className="btn btn-primary btn-lg" onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
                   {spinning ? <><span className="spinner" /> Spinning…</> : <><Icon name="wheel" size={18} /> {allWinners.length ? 'Spin again' : 'Spin the wheel'}</>}
                 </button>
                 <button className="btn btn-outline" onClick={finish} disabled={spinning || allWinners.length === 0}>Close and reveal</button>

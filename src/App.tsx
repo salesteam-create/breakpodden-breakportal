@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRoute, go } from './lib/router.ts';
 import { listDraws, openStreamWindow, resetDemo } from './lib/store.ts';
-import { BREAKS, ORDERS_394 } from './lib/data.ts';
+import { useTheme } from './lib/theme.ts';
+import { BREAKS } from './lib/data.ts';
 import { PRODUCT, WORKSPACE } from './lib/workspace.ts';
 import Icon from './components/Icons.tsx';
 import Dashboard from './pages/Dashboard.tsx';
@@ -12,13 +13,6 @@ import DuckRacePage from './pages/DuckRacePage.tsx';
 import ProofPage from './pages/ProofPage.tsx';
 import ChecklistsPage from './pages/ChecklistsPage.tsx';
 import StreamView from './pages/StreamView.tsx';
-
-/** Biggest buyers tonight (spots across break #394), for the sidebar roster. */
-const TOP_BUYERS = (() => {
-  const m = new Map<string, number>();
-  ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + o.qty));
-  return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
-})();
 
 function destinations() {
   const base = [
@@ -66,7 +60,7 @@ function Search() {
 
   return (
     <div className="search">
-      <Icon name="search" size={19} />
+      <Icon name="search" size={17} />
       <input
         ref={ref}
         type="text"
@@ -74,7 +68,7 @@ function Search() {
         aria-expanded={open}
         aria-controls="search-results"
         aria-label="Search breaks, giveaways and proofs"
-        placeholder="Search breaks, giveaways, proofs…"
+        placeholder="Search breaks, giveaways or proofs…"
         value={q}
         onFocus={() => { setOpen(true); setSel(0); }}
         onBlur={() => window.setTimeout(() => setOpen(false), 120)}
@@ -86,7 +80,6 @@ function Search() {
           if (e.key === 'Escape') ref.current?.blur();
         }}
       />
-      <kbd>/</kbd>
       {open && (
         <div className="search-pop" id="search-results" role="listbox">
           {results.length === 0 && <div className="search-empty">Nothing matches “{q}”</div>}
@@ -99,7 +92,7 @@ function Search() {
               onMouseEnter={() => setSel(i)}
               onMouseDown={(e) => { e.preventDefault(); pick(r.href); }}
             >
-              <Icon name={r.icon} size={18} />
+              <Icon name={r.icon} size={17} />
               <span className="st">{r.label}</span>
               <span className="sm">{r.meta}</span>
             </button>
@@ -112,10 +105,10 @@ function Search() {
 
 export default function App() {
   const [section = '', id] = useRoute();
+  const { theme, toggle } = useTheme();
   const [drawer, setDrawer] = useState(false);
 
   useEffect(() => setDrawer(false), [section, id]);
-  useEffect(() => { document.documentElement.dataset.theme = 'dark'; }, []);
 
   if (section === 'stream') return <StreamView />;
 
@@ -132,72 +125,78 @@ export default function App() {
   const proofs = listDraws().length;
   const link = (href: string, label: string, icon: string, active: boolean, extra?: React.ReactNode) => (
     <a key={href} href={href} className={`nav-item${active ? ' active' : ''}`} aria-current={active ? 'page' : undefined}>
-      <Icon name={icon} size={21} weight={active ? 'regular' : 'light'} />
+      <Icon name={icon} size={18} weight={active ? 'fill' : 'regular'} />
       <span>{label}</span>
       {extra}
     </a>
   );
+  const dark = theme === 'dark';
 
   return (
     <div className={`frame${drawer ? ' drawer-open' : ''}`}>
       <aside className="sidebar" aria-label="Main navigation">
         <div className="sb-top">
           <a href="#/" className="brand" aria-label={`${PRODUCT} home`}>
-            <img src={WORKSPACE.logoMark} alt="" />
-            <span><b>{PRODUCT}</b><small>{WORKSPACE.name}</small></span>
+            <span className="brand-mark"><img src={WORKSPACE.logoMark} alt="" /></span>
+            <b>{PRODUCT}</b>
           </a>
-          <button className="round-btn sb-close" aria-label="Close menu" onClick={() => setDrawer(false)}><Icon name="close" size={16} /></button>
+          <button className="icon-btn ghost sb-close" aria-label="Close menu" onClick={() => setDrawer(false)}><Icon name="close" size={18} /></button>
         </div>
 
         <nav className="sb-nav">
-          {link('#/', 'Dashboard', 'home', section === '')}
-          {BREAKS.map((b) => link(`#/break/${b.id}`, `Break #${b.number}`, b.format === 'random' ? 'dice' : 'ticket', brk?.id === b.id, <em className="nav-meta">{b.startsAt.replace('Tonight ', '')}</em>))}
-          {link('#/wheel', 'Wheel of fortune', 'wheel', section === 'wheel')}
-          {link('#/duck', 'Duck race', 'duck', section === 'duck')}
-          {link('#/checklists', 'Box checklists', 'list', section === 'checklists')}
-          {link('#/proofs', 'Fairness proofs', 'shield', section === 'proofs' || section === 'proof', proofs > 0 ? <em className="nav-count">{proofs}</em> : null)}
+          <div className="sb-group">
+            {link('#/', 'Dashboard', 'home', section === '')}
+            {BREAKS.map((b) => link(`#/break/${b.id}`, `Break #${b.number}`, b.format === 'random' ? 'dice' : 'ticket', brk?.id === b.id, <em className="nav-meta">{b.startsAt.replace('Tonight ', '')}</em>))}
+          </div>
+          <div className="sb-group">
+            {link('#/wheel', 'Wheel of fortune', 'wheel', section === 'wheel')}
+            {link('#/duck', 'Duck race', 'duck', section === 'duck')}
+          </div>
+          <div className="sb-group">
+            {link('#/checklists', 'Box checklists', 'list', section === 'checklists')}
+            {link('#/proofs', 'Fairness proofs', 'shield', section === 'proofs' || section === 'proof', proofs > 0 ? <em className="nav-count">{proofs}</em> : null)}
+          </div>
+          <div className="sb-group">
+            <button className="nav-item" onClick={openStreamWindow}><Icon name="live" size={18} /><span>Stream view</span></button>
+            <button className="nav-item" role="switch" aria-checked={dark} onClick={toggle}>
+              <Icon name={dark ? 'moon' : 'sun'} size={18} />
+              <span>Dark mode</span>
+              <span className={`switch${dark ? ' on' : ''}`} aria-hidden="true"><i /></span>
+            </button>
+          </div>
         </nav>
 
-        <div className="sb-roster">
-          <div className="sb-label">Top buyers tonight</div>
-          {TOP_BUYERS.map(([name, n], i) => (
-            <div key={name} className="roster-row">
-              <span className={`av h${i}`}>{name.slice(0, 1).toUpperCase()}<i /></span>
-              <span className="rn">{name}</span>
-              <span className="rc mono">{n}×</span>
-            </div>
-          ))}
-        </div>
-
         <button
-          className="btn btn-outline btn-block sb-reset"
+          className="nav-item sb-reset"
           onClick={() => {
             if (confirm('Reset the demo? All draws and proofs on this device are cleared.')) resetDemo();
           }}
         >
-          <Icon name="reset" size={18} /> Reset demo
+          <Icon name="reset" size={18} /><span>Reset demo</span>
         </button>
       </aside>
       <div className="scrim" onClick={() => setDrawer(false)} aria-hidden="true" />
 
       <div className="main">
         <header className="topbar">
-          <button className="round-btn menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}><Icon name="menu" size={18} /></button>
+          <button className="icon-btn ghost menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}><Icon name="menu" size={20} /></button>
           <Search />
-          <button className="round-btn live-btn" aria-label="Open stream view" title="Open stream view" onClick={openStreamWindow}>
-            <Icon name="live" size={19} /><i className="live-pip" />
-          </button>
-          <div className="profile">
-            <span className="av h0">{WORKSPACE.host.initials}</span>
-            <span className="pf-text"><b>{WORKSPACE.name}</b><small><i className="ok-pip" /> Shopify connected</small></span>
+          <div className="topbar-right">
+            <button className="icon-btn" aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'} title={dark ? 'Light mode' : 'Dark mode'} onClick={toggle}>
+              <Icon name={dark ? 'sun' : 'moon'} size={18} />
+            </button>
+            <button className="icon-btn" aria-label="Open stream view" title="Stream view" onClick={openStreamWindow}>
+              <Icon name="live" size={18} /><i className="pip" />
+            </button>
+            <span className="avatar" title={`${WORKSPACE.name} · Shopify connected`}>{WORKSPACE.host.initials}</span>
           </div>
         </header>
 
         <main className="page" key={`${section}/${id ?? ''}`}>{page}</main>
 
         <footer className="app-footer">
-          <span>{PRODUCT} · {WORKSPACE.domain}</span>
-          <span>Prototype · sample buyers are invented · Shopify connection simulated</span>
+          <span>{PRODUCT} · {WORKSPACE.domain} · Shopify connected</span>
+          <span>Prototype · sample buyers are invented · photos from Unsplash</span>
         </footer>
       </div>
     </div>

@@ -5,7 +5,7 @@ import {
   ArrowCounterClockwise, List, X, ArrowRight, ArrowLeft, CaretRight, CaretDown, Check,
   DownloadSimple, UploadSimple, ShoppingCartSimple, UsersThree, SquaresFour, Rows, Clock,
   Package, Trophy, Scissors, Plus, Trash, ClipboardText, Broadcast, Lightning, Eye, FileText,
-  MagicWand, Cards, SealCheck, GearSix, ArrowDown, Fire, Crown, SignOut, Hash, Storefront,
+  MagicWand, Cards, SealCheck, GearSix, ArrowDown, Fire, Crown, SignOut, Hash, Storefront, Play, SidebarSimple,
   type Icon as PhosphorIcon, type IconWeight,
 } from '@phosphor-icons/react';
 
@@ -18,7 +18,7 @@ const MAP: Record<string, PhosphorIcon> = {
   cart: ShoppingCartSimple, users: UsersThree, grid: SquaresFour, rows: Rows, clock: Clock, box: Package,
   trophy: Trophy, scissors: Scissors, plus: Plus, trash: Trash, paste: ClipboardText, live: Broadcast,
   bolt: Lightning, eye: Eye, file: FileText, ai: MagicWand, cards: Cards, seal: SealCheck, gear: GearSix,
-  down: ArrowDown, fire: Fire, crown: Crown, signout: SignOut, hash: Hash, store: Storefront,
+  down: ArrowDown, fire: Fire, crown: Crown, signout: SignOut, hash: Hash, store: Storefront, play: Play, sidebar: SidebarSimple,
 };
 
 interface Props {

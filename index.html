@@ -4,11 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Break Portal</title>
-    <meta name="theme-color" content="#0f0e0c" />
-    <script>document.documentElement.dataset.theme = "dark";</script>
+    <meta name="theme-color" content="#0d0a1a" />
+    <script>
+      // Apply the saved theme (dark by default) before first paint.
+      (function () {
+        var t;
+        try { t = localStorage.getItem('bp-theme'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') t = 'dark';
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>

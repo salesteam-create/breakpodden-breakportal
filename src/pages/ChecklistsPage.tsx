@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { MEDIA } from '../lib/media.ts';
 import { getChecklists, saveChecklists } from '../lib/store.ts';
-import Hero, { TradingCard } from '../components/Hero.tsx';
+import Hero from '../components/Hero.tsx';
 import Icon from '../components/Icons.tsx';
 
 /** Box checklist library: the team list that loads when a host picks a box. */
@@ -60,8 +61,8 @@ export default function ChecklistsPage() {
   return (
     <>
       <Hero
+        image={MEDIA.cardwall}
        
-        art={<div className="art-fan">{teams.slice(0, 3).map((t, k) => <TradingCard key={t} className={`f${k}`} serial={`${String(k + 1).padStart(2, "0")}/${String(teams.length).padStart(2, "0")}`} name={t} sub={box} />)}</div>}
         compact
         badge={{ icon: 'cards', label: 'Library' }}
         title={<>Box checklists</>}
@@ -85,7 +86,7 @@ export default function ChecklistsPage() {
               ))}
               <div className="row" style={{ marginTop: 8 }}>
                 <input type="text" placeholder="New box name" value={newBox} onChange={(e) => setNewBox(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addBox()} style={{ flex: 1, minWidth: 0 }} />
-                <button className="btn btn-sm btn-gold" onClick={addBox} disabled={!newBox.trim()} aria-label="Add box"><Icon name="plus" size={15} /></button>
+                <button className="btn btn-sm btn-primary" onClick={addBox} disabled={!newBox.trim()} aria-label="Add box"><Icon name="plus" size={15} /></button>
               </div>
               <button className="btn btn-sm btn-ghost btn-block" disabled title="Planned for a later phase"><Icon name="ai" size={15} /> Draft with AI · later phase</button>
             </div>
@@ -111,7 +112,7 @@ export default function ChecklistsPage() {
                 <textarea value={paste} onChange={(e) => setPaste(e.target.value)} style={{ minHeight: 320 }} />
                 <div className="row">
                   <button
-                    className="btn btn-gold"
+                    className="btn btn-primary"
                     onClick={() => {
                       setTeams([...new Set(paste.split('\n').map((t) => t.trim()).filter(Boolean))]);
                       setPaste(null);
@@ -167,7 +168,7 @@ export default function ChecklistsPage() {
                 ))}
                 <div className="row" style={{ marginTop: 10 }}>
                   <input type="text" placeholder="Add a team" value={newTeam} onChange={(e) => setNewTeam(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTeam()} style={{ flex: 1 }} />
-                  <button className="btn btn-sm btn-gold" onClick={addTeam} disabled={!newTeam.trim()}><Icon name="plus" size={15} /> Add team</button>
+                  <button className="btn btn-sm btn-primary" onClick={addTeam} disabled={!newTeam.trim()}><Icon name="plus" size={15} /> Add team</button>
                 </div>
               </div>
             )}

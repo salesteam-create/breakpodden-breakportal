@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { MEDIA } from '../lib/media.ts';
 import { BREAKS, ORDERS_394, kr } from '../lib/data.ts';
 import { getChecklists, openStreamWindow } from '../lib/store.ts';
 import { useShuffleDraw } from '../lib/useShuffleDraw.ts';
@@ -70,7 +71,7 @@ export default function RandomBreak() {
   if (step === 0)
     action = (
       <>
-        <button className="btn btn-gold btn-lg" onClick={importOrders} disabled={importing}>
+        <button className="btn btn-primary btn-lg" onClick={importOrders} disabled={importing}>
           {importing ? <><span className="spinner" /> Importing {imported}/{slots.length}…</> : <><Icon name="download" size={18} /> Import buyers from Shopify</>}
         </button>
         <span className="hint">Pulls every paid order for this break product. One row per spot bought.</span>
@@ -87,7 +88,7 @@ export default function RandomBreak() {
             ))}
           </select>
         </div>
-        <button className="btn btn-gold btn-lg" onClick={loadChecklist}><Icon name="list" size={18} /> Load checklist</button>
+        <button className="btn btn-primary btn-lg" onClick={loadChecklist}><Icon name="list" size={18} /> Load checklist</button>
         <a className="link" href="#/checklists">Edit checklists <Icon name="arrow" size={14} /></a>
       </>
     );
@@ -100,7 +101,7 @@ export default function RandomBreak() {
     ) : (
       <>
         <ShuffleModeControl value={fixed} onChange={setFixed} />
-        <button className="btn btn-gold btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the draw</button>
+        <button className="btn btn-primary btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the draw</button>
         <span className="hint">Locks both lists, the shuffle setting and a secret seed.</span>
       </>
     );
@@ -109,7 +110,7 @@ export default function RandomBreak() {
       <>
         <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
         {phase === 'sealed' && (
-          <button className="btn btn-gold btn-lg" onClick={draw.roll}><Icon name={fixed ? 'shuffle' : 'dice'} size={18} /> {fixed ? 'Start shuffling' : 'Roll the dice'}</button>
+          <button className="btn btn-primary btn-lg" onClick={draw.roll}><Icon name={fixed ? 'shuffle' : 'dice'} size={18} /> {fixed ? 'Start shuffling' : 'Roll the dice'}</button>
         )}
         {phase === 'sealed' && <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={draw.voidDraw} /></span>}
       </>
@@ -118,7 +119,7 @@ export default function RandomBreak() {
     action = (
       <>
         <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
-        <button className="btn btn-gold btn-lg" onClick={draw.reveal}><Icon name="sparkle" size={18} /> Reveal results</button>
+        <button className="btn btn-primary btn-lg" onClick={draw.reveal}><Icon name="sparkle" size={18} /> Reveal results</button>
         <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={draw.voidDraw} /></span>
       </>
     );
@@ -146,8 +147,8 @@ export default function RandomBreak() {
   return (
     <>
       <Hero
+        image={MEDIA.cards} focus="center 40%"
        
-        image={brk.image}
         compact
         badge={{ icon: 'fire', label: `Break #${brk.number}` }}
         chips={

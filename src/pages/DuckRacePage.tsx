@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { MEDIA } from '../lib/media.ts';
 import { giveawayEntries, uniqueEntrants } from '../lib/data.ts';
 import { commitmentFor, newSeed, runRace, type DrawInputs } from '../lib/fair.ts';
 import { newDrawId, openStreamWindow, publishStream, saveDraw, type DrawRecord } from '../lib/store.ts';
-import DuckRace, { DuckIcon } from '../components/DuckRace.tsx';
+import DuckRace from '../components/DuckRace.tsx';
 import { FairnessPanel, LogPanel } from '../components/Panels.tsx';
 import Hero from '../components/Hero.tsx';
 import Icon from '../components/Icons.tsx';
@@ -85,8 +86,8 @@ export default function DuckRacePage() {
   return (
     <>
       <Hero
+        image={MEDIA.ducks} focus="center 60%"
        
-        art={<div className="art-ducks"><span className="ripple" /><span className="d d1"><DuckIcon size={70} gold num={1} /></span><span className="d d2"><DuckIcon size={54} num={2} /></span><span className="d d3"><DuckIcon size={44} num={3} /></span></div>}
         compact
         badge={{ icon: 'sparkle', label: 'Giveaway' }}
         chips={
@@ -114,13 +115,13 @@ export default function DuckRacePage() {
                   <label>Race length: {duration} s</label>
                   <input type="range" min={5} max={30} value={duration} onChange={(e) => setDuration(Number(e.target.value))} />
                 </div>
-                <button className="btn btn-gold btn-lg" onClick={seal} disabled={ducks.length < 2}><Icon name="lock" size={18} /> Seal race</button>
+                <button className="btn btn-primary btn-lg" onClick={seal} disabled={ducks.length < 2}><Icon name="lock" size={18} /> Seal race</button>
                 <span className="hint">{ducks.length} ducks ready.</span>
               </>
             )}
             {record && startedAt === null && (
               <>
-                <button className="btn btn-gold btn-lg" onClick={start}><Icon name="flag" size={18} /> Start the race</button>
+                <button className="btn btn-primary btn-lg" onClick={start}><Icon name="flag" size={18} /> Start the race</button>
                 <span className="hint">{ducks.length} ducks, {duration} seconds. Commitment is on stream.</span>
               </>
             )}
@@ -128,7 +129,7 @@ export default function DuckRacePage() {
             {finished && !revealed && (
               <>
                 <span className="chip chip-gold"><Icon name="trophy" size={13} /> Winner: {order[0]}</span>
-                <button className="btn btn-gold" onClick={reveal}><Icon name="unlock" size={17} /> Reveal seed</button>
+                <button className="btn btn-primary" onClick={reveal}><Icon name="unlock" size={17} /> Reveal seed</button>
               </>
             )}
             {revealed && <span className="chip chip-good"><Icon name="check" size={13} /> Race verified · proof published</span>}
