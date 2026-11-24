@@ -244,8 +244,10 @@ p { margin: 0; }
 .hero-tabs { margin-top: 8px; }
 .hero-aside { position: absolute; right: 28px; top: 24px; }
 .hero-dots { position: absolute; right: 28px; bottom: 28px; display: flex; gap: 6px; }
-.hero-dots button { width: 8px; height: 6px; border-radius: 6px; border: 0; padding: 0; background: rgba(255, 255, 255, .4); cursor: pointer; transition: width .35s var(--ease), background .2s; }
-.hero-dots button.on { width: 26px; background: #fff; }
+.hero-dots button { position: relative; overflow: hidden; width: 8px; height: 6px; border-radius: 6px; border: 0; padding: 0; background: rgba(255, 255, 255, .4); cursor: pointer; transition: width .35s var(--ease), background .2s; }
+.hero-dots button.on { width: 30px; background: #fff; }
+.hero-dots button.on:has(i) { background: rgba(255, 255, 255, .35); }
+.hero-dots button i { position: absolute; inset: 0; background: #fff; transform-origin: left; animation: dotfill linear both; }
 .fade-swap { animation: swapIn .6s var(--ease) both; min-width: 0; }
 @keyframes swapIn { from { opacity: .3; transform: scale(.995); } }
 
@@ -265,7 +267,7 @@ p { margin: 0; }
 .dash .hero { margin: 0; }
 .scroller { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, calc((100% - 36px) / 4)); gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 2px; }
 .scroller::-webkit-scrollbar { display: none; }
-.wide-card { position: relative; height: 150px; border-radius: var(--r-md); overflow: hidden; isolation: isolate; scroll-snap-align: start; display: flex; align-items: flex-end; color: #fff; background: #121214; }
+.wide-card { position: relative; height: 210px; border-radius: var(--r-md); overflow: hidden; isolation: isolate; scroll-snap-align: start; display: flex; align-items: flex-end; color: #fff; background: #121214; }
 .wide-card img, .poster img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
 .wide-card:hover img, .poster:hover img { transform: scale(1.05); }
 .wc-shade, .pc-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(10, 10, 12, .9), rgba(10, 10, 12, .25) 60%, rgba(10, 10, 12, .05)); }
@@ -618,7 +620,7 @@ table.plain .gold { font-weight: 600; }
   .hero-dots { right: 18px; bottom: 18px; }
   .hero-actions { padding-right: 56px; }
   .posters { grid-template-columns: 1fr 1fr; }
-  .poster { height: 170px; }
+  .poster, .wide-card { height: 170px; }
   .scroller { grid-auto-columns: 78%; }
   .avatar { display: none; }
   .action-bar, .board, .team-grid, .reveal { padding: 14px; }

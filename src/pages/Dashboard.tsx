@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BREAKS, ORDERS_394, giveawayEntries, initialPytSlots, uniqueEntrants, kr } from '../lib/data.ts';
 import { listDraws, openStreamWindow } from '../lib/store.ts';
 import { MEDIA } from '../lib/media.ts';
@@ -32,8 +32,20 @@ const QUICK = [
   { href: '#/stream', title: 'Stream view', tags: ['OBS', '1080p'], image: MEDIA.stream, stream: true },
 ];
 
+const SLIDE_MS = 6000;
+
 export default function Dashboard() {
   const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const reduced = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const autoplay = !paused && !reduced;
+
+  // Featured breaks loop on their own; hovering or focusing the hero pauses it.
+  useEffect(() => {
+    if (!autoplay) return;
+    const t = window.setTimeout(() => setI((x) => (x + 1) % BREAKS.length), SLIDE_MS);
+    return () => clearTimeout(t);
+  }, [i, autoplay]);
   const draws = listDraws();
   const recent = draws.slice(0, 5);
 
@@ -43,7 +55,14 @@ export default function Dashboard() {
 
   return (
     <div className="dash">
-      <div key={b.id} className="fade-swap">
+      <div
+        key={b.id}
+        className="fade-swap"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+      >
         <Hero
           image={HERO_IMG[b.id].src}
           focus={HERO_IMG[b.id].focus}
@@ -66,7 +85,7 @@ export default function Dashboard() {
             </>
           }
           aside={<AvatarStack names={BUYERS[b.id] ?? []} label="buyers" />}
-          dots={{ index: i, total: BREAKS.length, label: 'Featured break', onPick: setI }}
+          dots={{ index: i, total: BREAKS.length, label: 'Featured break', onPick: setI, duration: autoplay ? SLIDE_MS : undefined }}
         />
       </div>
 

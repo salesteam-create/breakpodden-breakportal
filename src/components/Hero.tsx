@@ -18,7 +18,7 @@ interface Props {
   compact?: boolean;
   /** Focal point of the photo, CSS object-position. */
   focus?: string;
-  dots?: { index: number; total: number; onPick: (i: number) => void; label: string };
+  dots?: { index: number; total: number; onPick: (i: number) => void; label: string; /** Autoplay interval in ms; shows a progress fill on the active dot. */ duration?: number };
 }
 
 export default function Hero({ image, badge, chips, title, lede, stats, actions, aside, tabs, compact, focus, dots }: Props) {
@@ -47,7 +47,9 @@ export default function Hero({ image, badge, chips, title, lede, stats, actions,
       {dots && (
         <div className="hero-dots" role="tablist" aria-label={dots.label}>
           {Array.from({ length: dots.total }, (_, i) => (
-            <button key={i} role="tab" aria-selected={i === dots.index} aria-label={`${dots.label} ${i + 1}`} className={i === dots.index ? 'on' : ''} onClick={() => dots.onPick(i)} />
+            <button key={i} role="tab" aria-selected={i === dots.index} aria-label={`${dots.label} ${i + 1}`} className={i === dots.index ? 'on' : ''} onClick={() => dots.onPick(i)}>
+              {i === dots.index && dots.duration ? <i key={dots.index} style={{ animationDuration: `${dots.duration}ms` }} /> : null}
+            </button>
           ))}
         </div>
       )}
