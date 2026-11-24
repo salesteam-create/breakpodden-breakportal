@@ -14,9 +14,10 @@ function Face({ n }: { n: number }) {
   );
 }
 
-function Die({ value, rollId, delay = 0 }: { value: number | null; rollId: number; delay?: number }) {
+/** A resting tilt so each die always shows its top and one side, like a real die on a table. */
+function Die({ value, rollId, delay = 0, tilt }: { value: number | null; rollId: number; delay?: number; tilt: string }) {
   const turns = useRef(0);
-  const [rot, setRot] = useState<[number, number]>([-24, 32]);
+  const [rot, setRot] = useState<[number, number]>([0, 0]);
   useEffect(() => {
     if (!value || !rollId) return;
     turns.current += 3;
@@ -26,8 +27,13 @@ function Die({ value, rollId, delay = 0 }: { value: number | null; rollId: numbe
   }, [value, rollId]);
   return (
     <div className="die-wrap">
-      <div className="die" style={{ transform: `rotateX(${rot[0]}deg) rotateY(${rot[1]}deg)`, transitionDelay: `${delay}ms` }}>
-        {[1, 2, 3, 4, 5, 6].map((n) => <Face key={n} n={n} />)}
+      <span className="die-shadow" aria-hidden="true" />
+      <div className="die-tilt" style={{ transform: tilt }}>
+        <div className="die" style={{ transform: `rotateX(${rot[0]}deg) rotateY(${rot[1]}deg)`, transitionDelay: `${delay}ms` }}>
+          {/* Inner planes fill the cube so the rounded corners never show a gap. */}
+          <span className="die-core cx" /><span className="die-core cy" /><span className="die-core cz" />
+          {[1, 2, 3, 4, 5, 6].map((n) => <Face key={n} n={n} />)}
+        </div>
       </div>
     </div>
   );
@@ -35,9 +41,9 @@ function Die({ value, rollId, delay = 0 }: { value: number | null; rollId: numbe
 
 export default function Dice({ values, rollId, showTotal }: { values: [number, number] | null; rollId: number; showTotal: boolean }) {
   return (
-    <div className="dice">
-      <Die value={values?.[0] ?? null} rollId={rollId} />
-      <Die value={values?.[1] ?? null} rollId={rollId} delay={120} />
+    <div className="dice" role="img" aria-label={values ? `Dice: ${values[0]} and ${values[1]}` : 'Dice'}>
+      <Die value={values?.[0] ?? null} rollId={rollId} tilt="rotateX(-20deg) rotateY(-26deg)" />
+      <Die value={values?.[1] ?? null} rollId={rollId} delay={120} tilt="rotateX(-20deg) rotateY(22deg) rotateZ(4deg)" />
       {values && showTotal && (
         <div className="dice-total fade-in">
           {values[0] + values[1]}
