@@ -145,7 +145,7 @@ export default function DuckRace({ ducks, order, duration, startedAt, height = 5
                   </span>
                   <span className="duck-body">
                     {moving && <i className="wake" />}
-                    <DuckIcon size={laneH * 0.82} gold={isWinner} num={lane + 1} />
+                    <DuckIcon size={laneH * 0.82} gold={isWinner} />
                   </span>
                 </div>
               </div>

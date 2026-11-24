@@ -899,7 +899,7 @@ input[type=text], input[type=number], textarea, select,
 .water {
   opacity: 1; mix-blend-mode: screen;
   background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='180'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .07' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .95 0 0 0 0 1 0 0 0 1.6 -.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='180'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .07' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .95 0 0 0 0 1 0 0 0 1.6 -.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),
     radial-gradient(40px 10px at 30% 40%, rgba(220, 250, 255, .22), transparent 70%),
     radial-gradient(60px 12px at 75% 70%, rgba(220, 250, 255, .16), transparent 70%),
     radial-gradient(30px 8px at 55% 20%, rgba(220, 250, 255, .18), transparent 70%);
@@ -957,3 +957,17 @@ input[type=text], input[type=number], textarea, select,
   .pond { --track-start: 44px; --track-end: 40px; }
 }
 @media (prefers-reduced-motion: reduce) { .water { animation: none; } }
+
+/* ---------- Duck race: minimal pond ---------- */
+.lanes::before { content: none; }
+.lane, .lane:nth-child(odd) { background: none; }
+.lane::after { content: none; }
+.marker { display: none; }
+.pond-head span:nth-child(2), .pond-head span:nth-child(3), .pond-head span:nth-child(4) { visibility: hidden; }
+.duck .label { background: rgba(255, 255, 255, .9); }
+@media (min-width: 721px) { .duck.swimming .label { max-width: none; } }
+@media (max-width: 720px) {
+  .pond { --track-start: 104px; }
+  .pond-head span:first-child { visibility: visible; }
+  .duck .label { display: inline-block; font-size: 10.5px !important; padding: 1px 7px; max-width: calc(var(--track-start) - 40px); }
+}
