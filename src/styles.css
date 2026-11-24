@@ -761,3 +761,34 @@ input[type=text], input[type=number], textarea, select,
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .ambient i { animation: none !important; }
 }
+
+/* ---------- Mobile fixes ---------- */
+.wheel-stage { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+.wheel-stage > .wheel-wrap { max-width: 100%; }
+@media (max-width: 720px) {
+  /* Wheel scales to the card instead of overflowing it. */
+  .wheel-stage > .wheel-wrap { width: min(100%, 520px) !important; }
+  .stage > .wheel-stage { padding: 44px 0 36px; }
+  /* Menu button gets the same frosted chip as the other controls. */
+  .topbar .menu-btn { background: rgba(255, 255, 255, .9); border: 1px solid rgba(30, 26, 16, .11); box-shadow: 0 4px 14px rgba(30, 26, 16, .08); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); }
+  :root[data-theme="dark"] .topbar .menu-btn { background: rgba(40, 40, 44, .86); border-color: rgba(255, 255, 255, .12); }
+  .topbar { gap: 8px; }
+  .search { max-width: none; }
+  /* Search results span the screen, never wider than it. */
+  .search-pop { position: fixed; top: 60px; left: 10px; right: 10px; width: auto; max-height: 60vh; }
+  .search-pop .sm { display: none; }
+  .topbar .search, :root[data-theme="dark"] .topbar .search, :root:not([data-theme="dark"]) .topbar .search { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .hero-aside { display: none; }
+  /* Mobile top navigation: translucent frosted bar, like the glass side panel. */
+  .topbar::before { content: ''; position: absolute; inset: 0 -10px; z-index: -1; pointer-events: none;
+    background: rgba(255, 255, 255, .62); border-bottom: 1px solid rgba(255, 255, 255, .8);
+    box-shadow: 0 6px 20px rgba(30, 26, 16, .06);
+    backdrop-filter: blur(24px) saturate(1.4); -webkit-backdrop-filter: blur(24px) saturate(1.4); }
+  :root[data-theme="dark"] .topbar::before { background: rgba(40, 40, 44, .62); border-bottom-color: rgba(255, 255, 255, .08); box-shadow: 0 6px 20px rgba(0, 0, 0, .25); }
+  .search-pop button { grid-template-columns: 20px minmax(0, 1fr); }
+  /* Hero: buttons stay on one row; dots sit below them. */
+  .hero { padding-bottom: 44px; }
+  .hero-actions { padding-right: 0; flex-wrap: nowrap; }
+  .hero-actions .btn { flex: 0 1 auto; min-width: 0; }
+  .hero-dots { left: 18px; right: auto; bottom: 18px; }
+}
