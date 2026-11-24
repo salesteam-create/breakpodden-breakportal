@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRoute, go } from './lib/router.ts';
 import { listDraws, openStreamWindow, resetDemo } from './lib/store.ts';
-import { useTheme } from './lib/theme.ts';
-import { BREAKS } from './lib/data.ts';
+import { BREAKS, ORDERS_394 } from './lib/data.ts';
 import { PRODUCT, WORKSPACE } from './lib/workspace.ts';
 import Icon from './components/Icons.tsx';
 import Dashboard from './pages/Dashboard.tsx';
@@ -14,17 +13,13 @@ import ProofPage from './pages/ProofPage.tsx';
 import ChecklistsPage from './pages/ChecklistsPage.tsx';
 import StreamView from './pages/StreamView.tsx';
 
-const GIVEAWAYS = [
-  { href: '#/wheel', label: 'Wheel of fortune', icon: 'wheel', match: 'wheel' },
-  { href: '#/duck', label: 'Duck race', icon: 'duck', match: 'duck' },
-];
+/** Biggest buyers tonight (spots across break #394), for the sidebar roster. */
+const TOP_BUYERS = (() => {
+  const m = new Map<string, number>();
+  ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + o.qty));
+  return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
+})();
 
-function greeting() {
-  const h = new Date().getHours();
-  return h < 5 ? 'Good evening' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
-}
-
-/** Every place the search box can take you. */
 function destinations() {
   const base = [
     { href: '#/', label: 'Dashboard', meta: 'Overview', icon: 'home' },
@@ -34,7 +29,7 @@ function destinations() {
     { href: '#/checklists', label: 'Box checklists', meta: 'Library', icon: 'list' },
     { href: '#/proofs', label: 'Fairness proofs', meta: 'Public', icon: 'shield' },
   ];
-  const draws = listDraws().map((d) => ({ href: `#/proof/${d.id}`, label: d.title, meta: `Proof ${d.id}`, icon: 'file' }));
+  const draws = listDraws().map((d) => ({ href: `#/proof/${d.id}`, label: d.title, meta: d.id, icon: 'seal' }));
   return [...base, ...draws];
 }
 
@@ -56,12 +51,11 @@ function Search() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const results = useMemo(() => {
     const all = destinations();
     const s = q.trim().toLowerCase();
     return (s ? all.filter((d) => `${d.label} ${d.meta}`.toLowerCase().includes(s)) : all).slice(0, 8);
-  }, [q, open]);
+  }, [q, open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const pick = (href: string) => {
     go(href.slice(1));
@@ -72,7 +66,7 @@ function Search() {
 
   return (
     <div className="search">
-      <Icon name="search" size={17} />
+      <Icon name="search" size={19} />
       <input
         ref={ref}
         type="text"
@@ -95,7 +89,7 @@ function Search() {
       <kbd>/</kbd>
       {open && (
         <div className="search-pop" id="search-results" role="listbox">
-          {results.length === 0 && <div className="search-empty">Nothing matches "{q}"</div>}
+          {results.length === 0 && <div className="search-empty">Nothing matches “{q}”</div>}
           {results.map((r, i) => (
             <button
               key={r.href}
@@ -105,7 +99,7 @@ function Search() {
               onMouseEnter={() => setSel(i)}
               onMouseDown={(e) => { e.preventDefault(); pick(r.href); }}
             >
-              <span className="si"><Icon name={r.icon} size={16} /></span>
+              <Icon name={r.icon} size={18} />
               <span className="st">{r.label}</span>
               <span className="sm">{r.meta}</span>
             </button>
@@ -118,15 +112,14 @@ function Search() {
 
 export default function App() {
   const [section = '', id] = useRoute();
-  const { theme, toggle } = useTheme();
   const [drawer, setDrawer] = useState(false);
 
   useEffect(() => setDrawer(false), [section, id]);
+  useEffect(() => { document.documentElement.dataset.theme = 'dark'; }, []);
 
   if (section === 'stream') return <StreamView />;
 
   let page;
-  let crumbs: { label: string; href?: string }[] = [];
   const brk = section === 'break' ? BREAKS.find((b) => b.id === id) : undefined;
   if (brk && brk.id === '394') page = <RandomBreak />;
   else if (brk && brk.id === '403') page = <PytBreak />;
@@ -136,109 +129,74 @@ export default function App() {
   else if (section === 'checklists') page = <ChecklistsPage />;
   else page = <Dashboard />;
 
-  if (brk) crumbs = [{ label: 'Breaks', href: '#/' }, { label: `Break #${brk.number}` }];
-  else if (section === 'wheel') crumbs = [{ label: 'Giveaways' }, { label: 'Wheel of fortune' }];
-  else if (section === 'duck') crumbs = [{ label: 'Giveaways' }, { label: 'Duck race' }];
-  else if (section === 'checklists') crumbs = [{ label: 'Library' }, { label: 'Box checklists' }];
-  else if (section === 'proofs') crumbs = [{ label: 'Public' }, { label: 'Fairness proofs' }];
-  else if (section === 'proof') crumbs = [{ label: 'Fairness proofs', href: '#/proofs' }, { label: id ?? '' }];
-  else crumbs = [{ label: WORKSPACE.name }, { label: 'Dashboard' }];
-
   const proofs = listDraws().length;
-  const navItem = (href: string, label: string, icon: string, active: boolean, extra?: React.ReactNode) => (
+  const link = (href: string, label: string, icon: string, active: boolean, extra?: React.ReactNode) => (
     <a key={href} href={href} className={`nav-item${active ? ' active' : ''}`} aria-current={active ? 'page' : undefined}>
-      <Icon name={icon} size={18} />
+      <Icon name={icon} size={21} weight={active ? 'regular' : 'light'} />
       <span>{label}</span>
       {extra}
     </a>
   );
 
   return (
-    <div className={`shell${drawer ? ' drawer-open' : ''}`}>
+    <div className={`frame${drawer ? ' drawer-open' : ''}`}>
       <aside className="sidebar" aria-label="Main navigation">
         <div className="sb-top">
           <a href="#/" className="brand" aria-label={`${PRODUCT} home`}>
-            <span className="brand-mark"><img src={WORKSPACE.logoMark} alt="" /></span>
-            <span className="brand-text"><b>{PRODUCT}</b><span>{WORKSPACE.name}</span></span>
+            <img src={WORKSPACE.logoMark} alt="" />
+            <span><b>{PRODUCT}</b><small>{WORKSPACE.name}</small></span>
           </a>
-          <button className="icon-btn sb-close" aria-label="Close menu" onClick={() => setDrawer(false)}><Icon name="close" /></button>
-        </div>
-
-        <div className="sb-profile">
-          <span className="avatar lg">{WORKSPACE.host.initials}<i className="online" /></span>
-          <span>
-            <span className="dim">{greeting()},</span>
-            <b>{WORKSPACE.name} host</b>
-          </span>
+          <button className="round-btn sb-close" aria-label="Close menu" onClick={() => setDrawer(false)}><Icon name="close" size={16} /></button>
         </div>
 
         <nav className="sb-nav">
-          <div className="sb-label">Navigation</div>
-          {navItem('#/', 'Dashboard', 'home', section === '')}
-          {navItem('#/proofs', 'Fairness proofs', 'shield', section === 'proofs' || section === 'proof', proofs > 0 ? <em className="count">{proofs}</em> : null)}
-          {navItem('#/checklists', 'Box checklists', 'list', section === 'checklists')}
-
-          <div className="sb-label">Tonight's breaks</div>
-          {BREAKS.map((b) => (
-            <a key={b.id} href={`#/break/${b.id}`} className={`nav-break${brk?.id === b.id ? ' active' : ''}`} aria-current={brk?.id === b.id ? 'page' : undefined}>
-              <span className="nb-thumb"><img src={b.image} alt="" /></span>
-              <span className="nb-text">
-                <b>#{b.number} · {b.format === 'random' ? 'Random team' : 'Pick your team'}</b>
-                <span>{b.startsAt}</span>
-              </span>
-            </a>
-          ))}
-
-          <div className="sb-label">Giveaways</div>
-          {GIVEAWAYS.map((g) => navItem(g.href, g.label, g.icon, section === g.match))}
+          {link('#/', 'Dashboard', 'home', section === '')}
+          {BREAKS.map((b) => link(`#/break/${b.id}`, `Break #${b.number}`, b.format === 'random' ? 'dice' : 'ticket', brk?.id === b.id, <em className="nav-meta">{b.startsAt.replace('Tonight ', '')}</em>))}
+          {link('#/wheel', 'Wheel of fortune', 'wheel', section === 'wheel')}
+          {link('#/duck', 'Duck race', 'duck', section === 'duck')}
+          {link('#/checklists', 'Box checklists', 'list', section === 'checklists')}
+          {link('#/proofs', 'Fairness proofs', 'shield', section === 'proofs' || section === 'proof', proofs > 0 ? <em className="nav-count">{proofs}</em> : null)}
         </nav>
 
-        <div className="sb-promo">
-          <span className="promo-ic"><Icon name="live" size={18} /></span>
-          <b>Go live on stream</b>
-          <p>A 1920×1080 overlay for OBS or Streamlabs that follows every draw.</p>
-          <button className="btn btn-primary btn-sm btn-block" onClick={openStreamWindow}>Open stream view</button>
+        <div className="sb-roster">
+          <div className="sb-label">Top buyers tonight</div>
+          {TOP_BUYERS.map(([name, n], i) => (
+            <div key={name} className="roster-row">
+              <span className={`av h${i}`}>{name.slice(0, 1).toUpperCase()}<i /></span>
+              <span className="rn">{name}</span>
+              <span className="rc mono">{n}×</span>
+            </div>
+          ))}
         </div>
 
-        <div className="sb-foot">
-          <span className="status"><span className="dot" /> Shopify · {WORKSPACE.domain}</span>
-          <button
-            className="nav-item ghost"
-            onClick={() => {
-              if (confirm('Reset the demo? All draws and proofs on this device are cleared.')) resetDemo();
-            }}
-          >
-            <Icon name="reset" size={18} /><span>Reset demo</span>
-          </button>
-        </div>
+        <button
+          className="btn btn-outline btn-block sb-reset"
+          onClick={() => {
+            if (confirm('Reset the demo? All draws and proofs on this device are cleared.')) resetDemo();
+          }}
+        >
+          <Icon name="reset" size={18} /> Reset demo
+        </button>
       </aside>
       <div className="scrim" onClick={() => setDrawer(false)} aria-hidden="true" />
 
       <div className="main">
         <header className="topbar">
-          <button className="icon-btn menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}><Icon name="menu" /></button>
-          <nav className="crumbs" aria-label="Breadcrumb">
-            {crumbs.map((c, i) => (
-              <span key={i} className="crumb">
-                {i > 0 && <Icon name="chevron" size={14} className="sep" />}
-                {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current={i === crumbs.length - 1 ? 'page' : undefined}>{c.label}</span>}
-              </span>
-            ))}
-          </nav>
+          <button className="round-btn menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}><Icon name="menu" size={18} /></button>
           <Search />
-          <div className="topbar-right">
-            <button className="btn btn-sm btn-live" onClick={openStreamWindow}><span className="live-dot" /> <span className="hide-sm">Stream view</span></button>
-            <button className="icon-btn" aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} title={theme === 'dark' ? 'Light mode' : 'Dark mode'} onClick={toggle}>
-              <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
-            </button>
-            <span className="avatar" title={WORKSPACE.host.name}>{WORKSPACE.host.initials}</span>
+          <button className="round-btn live-btn" aria-label="Open stream view" title="Open stream view" onClick={openStreamWindow}>
+            <Icon name="live" size={19} /><i className="live-pip" />
+          </button>
+          <div className="profile">
+            <span className="av h0">{WORKSPACE.host.initials}</span>
+            <span className="pf-text"><b>{WORKSPACE.name}</b><small><i className="ok-pip" /> Shopify connected</small></span>
           </div>
         </header>
 
         <main className="page" key={`${section}/${id ?? ''}`}>{page}</main>
 
         <footer className="app-footer">
-          <span><b>{PRODUCT}</b> · Workspace {WORKSPACE.name}</span>
+          <span>{PRODUCT} · {WORKSPACE.domain}</span>
           <span>Prototype · sample buyers are invented · Shopify connection simulated</span>
         </footer>
       </div>

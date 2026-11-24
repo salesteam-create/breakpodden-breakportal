@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { giveawayEntries, uniqueEntrants } from '../lib/data.ts';
 import { commitmentFor, newSeed, runRace, type DrawInputs } from '../lib/fair.ts';
 import { newDrawId, openStreamWindow, publishStream, saveDraw, type DrawRecord } from '../lib/store.ts';
-import DuckRace from '../components/DuckRace.tsx';
+import DuckRace, { DuckIcon } from '../components/DuckRace.tsx';
 import { FairnessPanel, LogPanel } from '../components/Panels.tsx';
 import Hero from '../components/Hero.tsx';
 import Icon from '../components/Icons.tsx';
@@ -85,23 +85,24 @@ export default function DuckRacePage() {
   return (
     <>
       <Hero
-        tone="aqua"
-        glyph="duck"
+       
+        art={<div className="art-ducks"><span className="ripple" /><span className="d d1"><DuckIcon size={70} gold num={1} /></span><span className="d d2"><DuckIcon size={54} num={2} /></span><span className="d d3"><DuckIcon size={44} num={3} /></span></div>}
         compact
+        badge={{ icon: 'sparkle', label: 'Giveaway' }}
         chips={
           <>
-            <span className="chip chip-glass"><Icon name="sparkle" size={13} /> Giveaway</span>
-            {record ? (revealed ? <span className="chip chip-good">Verified</span> : <span className="chip chip-gold"><Icon name="lock" size={12} /> Sealed</span>) : <span className="chip chip-glass">Not sealed</span>}
+            
+            {record ? (revealed ? <span className="chip chip-good">Verified</span> : <span className="chip chip-gold"><Icon name="lock" size={12} /> Sealed</span>) : <span className="tag">Not sealed</span>}
           </>
         }
-        title={<>Duck <span className="grad-text">race</span></>}
+        title={<>Duck race</>}
         lede={`Up to ${MAX_DUCKS} ducks. The finishing order is drawn and sealed before the start; the race plays it out.`}
         stats={[
           { icon: 'duck', label: 'Ducks', value: `${ducks.length}/${MAX_DUCKS}` },
           { icon: 'clock', label: 'Race length', value: `${duration} s` },
           { icon: 'trophy', label: 'Winner', value: finished ? order[0] : '–' },
         ]}
-        actions={<button className="btn btn-glass" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
+        actions={<button className="btn btn-outline" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
       />
 
       <div className="workspace">
@@ -113,13 +114,13 @@ export default function DuckRacePage() {
                   <label>Race length: {duration} s</label>
                   <input type="range" min={5} max={30} value={duration} onChange={(e) => setDuration(Number(e.target.value))} />
                 </div>
-                <button className="btn btn-primary btn-lg" onClick={seal} disabled={ducks.length < 2}><Icon name="lock" size={18} /> Seal race</button>
+                <button className="btn btn-gold btn-lg" onClick={seal} disabled={ducks.length < 2}><Icon name="lock" size={18} /> Seal race</button>
                 <span className="hint">{ducks.length} ducks ready.</span>
               </>
             )}
             {record && startedAt === null && (
               <>
-                <button className="btn btn-primary btn-lg" onClick={start}><Icon name="flag" size={18} /> Start the race</button>
+                <button className="btn btn-gold btn-lg" onClick={start}><Icon name="flag" size={18} /> Start the race</button>
                 <span className="hint">{ducks.length} ducks, {duration} seconds. Commitment is on stream.</span>
               </>
             )}
@@ -127,7 +128,7 @@ export default function DuckRacePage() {
             {finished && !revealed && (
               <>
                 <span className="chip chip-gold"><Icon name="trophy" size={13} /> Winner: {order[0]}</span>
-                <button className="btn btn-primary" onClick={reveal}><Icon name="unlock" size={17} /> Reveal seed</button>
+                <button className="btn btn-gold" onClick={reveal}><Icon name="unlock" size={17} /> Reveal seed</button>
               </>
             )}
             {revealed && <span className="chip chip-good"><Icon name="check" size={13} /> Race verified · proof published</span>}

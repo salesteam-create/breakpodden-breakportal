@@ -4,7 +4,7 @@ import { commitmentFor, newSeed, runWheel, type DrawInputs } from '../lib/fair.t
 import { newDrawId, openStreamWindow, publishStream, saveDraw, type DrawRecord } from '../lib/store.ts';
 import Wheel, { landingRotation } from '../components/Wheel.tsx';
 import { FairnessPanel, LogPanel } from '../components/Panels.tsx';
-import Hero from '../components/Hero.tsx';
+import Hero, { TradingCard } from '../components/Hero.tsx';
 import Icon from '../components/Icons.tsx';
 
 const SPIN_MS = 6400;
@@ -106,23 +106,24 @@ export default function WheelPage() {
   return (
     <>
       <Hero
-        tone="rose"
-        glyph="wheel"
+       
+        art={<div className="art-prize"><TradingCard className="back" serial="GIVEAWAY" name="Next spin" /><TradingCard serial="PRIZE" name={prize} sub={`${entries.length} entries in the draw`} /></div>}
         compact
+        badge={{ icon: 'sparkle', label: 'Giveaway' }}
         chips={
           <>
-            <span className="chip chip-glass"><Icon name="sparkle" size={13} /> Giveaway</span>
-            {record ? (revealed ? <span className="chip chip-good">Closed · verifiable</span> : <span className="chip chip-gold"><Icon name="lock" size={12} /> Sealed</span>) : <span className="chip chip-glass">Not sealed</span>}
+            
+            {record ? (revealed ? <span className="chip chip-good">Closed · verifiable</span> : <span className="chip chip-gold"><Icon name="lock" size={12} /> Sealed</span>) : <span className="tag">Not sealed</span>}
           </>
         }
-        title={<>Wheel of <span className="grad-text">fortune</span></>}
+        title={<>Wheel of fortune</>}
         lede="One segment per purchase. Three spots bought means three entries on the wheel."
         stats={[
           { icon: 'users', label: 'Entries', value: entries.length },
           { icon: 'grid', label: 'Buyers', value: counts.length },
           { icon: 'trophy', label: 'Winners', value: allWinners.length },
         ]}
-        actions={<button className="btn btn-glass" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
+        actions={<button className="btn btn-outline" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
       />
 
       <div className="workspace">
@@ -130,7 +131,7 @@ export default function WheelPage() {
           <div className="action-bar">
             {!record && (
               <>
-                <button className="btn btn-primary btn-lg" onClick={seal}><Icon name="lock" size={18} /> Seal giveaway</button>
+                <button className="btn btn-gold btn-lg" onClick={seal}><Icon name="lock" size={18} /> Seal giveaway</button>
                 <span className="hint">Locks the {entries.length} entries and a secret seed before the first spin.</span>
               </>
             )}
@@ -140,10 +141,10 @@ export default function WheelPage() {
                   <label>Prize for this spin</label>
                   <input type="text" value={prize} onChange={(e) => setPrize(e.target.value)} />
                 </div>
-                <button className="btn btn-primary btn-lg" onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
+                <button className="btn btn-gold btn-lg" onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
                   {spinning ? <><span className="spinner" /> Spinning…</> : <><Icon name="wheel" size={18} /> {allWinners.length ? 'Spin again' : 'Spin the wheel'}</>}
                 </button>
-                <button className="btn btn-soft" onClick={finish} disabled={spinning || allWinners.length === 0}>Close and reveal</button>
+                <button className="btn btn-outline" onClick={finish} disabled={spinning || allWinners.length === 0}>Close and reveal</button>
               </>
             )}
             {revealed && (

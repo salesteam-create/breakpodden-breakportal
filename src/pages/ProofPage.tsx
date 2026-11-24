@@ -61,7 +61,7 @@ function ProofDetail({ d }: { d: DrawRecord }) {
   return (
     <div className="workspace">
       <div className="stack" style={{ gap: 20 }}>
-        <div className="card">
+        <div className="card proof-cert">
           <div className="card-head">
             <div>
               <div className="eyebrow">{KIND_LABEL[d.inputs.kind]} · {d.id}</div>
@@ -175,7 +175,7 @@ duck race  = label "race"`}</div>
             The commitment is shown on stream before the dice roll. Because SHA-256 cannot be reversed, nobody can know or
             change the outcome after that point.
           </p>
-          <button className={`btn btn-sm btn-block${tampered ? ' btn-primary' : ''}`} onClick={() => setTampered(!tampered)}>
+          <button className={`btn btn-sm btn-block${tampered ? ' btn-gold' : ''}`} onClick={() => setTampered(!tampered)}>
             {tampered ? 'Undo tamper test' : 'Tamper test: swap two names'}
           </button>
           <button
@@ -209,11 +209,11 @@ export default function ProofPage({ id }: { id?: string }) {
   return (
     <>
       <Hero
-        tone="aqua"
-        glyph="shield"
+       
+        art={<div className="art-cert"><div className="slab"><div className="slab-label"><span>Certified draw</span><span className="mono">{draws[0]?.id ?? "D-000000"}</span></div><div className="slab-window hashes mono">{(draws[0]?.commitment ?? "9f2c41ab07d3e6c58a1f4b92d07e3c6a5b8d1e0f7c2a9b4d6e8f0a1c3b5d7e9f").match(/.{1,16}/g)!.map((l, k) => <span key={k}>{l}</span>)}<b><Icon name="seal" size={20} weight="fill" /> SHA-256 sealed</b></div></div></div>}
         compact
-        chips={<span className="chip chip-glass"><Icon name="eye" size={13} /> Public</span>}
-        title={<>Fairness <span className="grad-text">proofs</span></>}
+        badge={{ icon: 'eye', label: 'Public record' }}
+        title={<>Fairness proofs</>}
         lede="Every draw gets a public page. Viewers can recompute the dice, every shuffle and the final result from the revealed seed, and confirm it matches what was shown on stream."
         stats={[
           { icon: 'file', label: 'Draws', value: draws.length },
@@ -227,7 +227,7 @@ export default function ProofPage({ id }: { id?: string }) {
             <span className="empty-ic"><Icon name="shield" size={26} /></span>
             <b>No draws yet</b>
             <span>Run a break or a giveaway and its proof appears here.</span>
-            <a href="#/break/394" className="btn btn-primary btn-sm">Run a team draw <Icon name="arrow" size={14} /></a>
+            <a href="#/break/394" className="btn btn-gold btn-sm">Run a team draw <Icon name="arrow" size={14} /></a>
           </div>
         ) : (
           <table className="plain">
@@ -241,7 +241,7 @@ export default function ProofPage({ id }: { id?: string }) {
                   <td>
                     {x.voided ? <span className="chip chip-void">Voided</span> : x.revealed ? <span className="chip chip-good">Verifiable</span> : <span className="chip chip-gold">Sealed</span>}
                   </td>
-                  <td className="t-right"><a className="btn btn-sm btn-soft" href={`#/proof/${x.id}`}>Open <Icon name="arrow" size={14} /></a></td>
+                  <td className="t-right"><a className="btn btn-sm btn-outline" href={`#/proof/${x.id}`}>Open <Icon name="arrow" size={14} /></a></td>
                 </tr>
               ))}
             </tbody>

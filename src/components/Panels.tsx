@@ -66,7 +66,7 @@ export function FairnessPanel({ record, revealed }: { record: DrawRecord | null;
             </div>
             {revealed && (
               <div style={{ padding: '12px 0' }}>
-                <a className="btn btn-sm btn-soft btn-block" href={`#/proof/${record.id}`}>Open public proof page <Icon name="arrow" size={14} /></a>
+                <a className="btn btn-sm btn-outline btn-block" href={`#/proof/${record.id}`}>Open public proof page <Icon name="arrow" size={14} /></a>
               </div>
             )}
           </>
@@ -126,7 +126,7 @@ export function RevealGrid({ pairs }: { pairs: { who: string; what: string; n: n
           <div className="rcard-inner">
             <div className="rcard-face rcard-back"><img src={markLogo} alt="" /></div>
             <div className="rcard-face rcard-front">
-              <span className="num">#{String(p.n).padStart(2, '0')}</span>
+              <span className="num">{String(p.n).padStart(2, '0')}<i>/{String(pairs.length).padStart(2, '0')}</i></span>
               <span className="what">{p.what}</span>
               <span className="who">{p.who}</span>
             </div>

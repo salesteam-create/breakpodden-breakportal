@@ -78,24 +78,25 @@ export default function PytBreak() {
   return (
     <>
       <Hero
-        tone="violet"
+       
         image={brk.image}
         compact
+        badge={{ icon: 'bolt', label: `Break #${brk.number}` }}
         chips={
           <>
-            <span className="chip chip-glass">Break #{brk.number}</span>
-            <span className="chip chip-glass"><Icon name="ticket" size={13} /> Pick your team</span>
-            <span className="chip chip-glass"><Icon name="clock" size={13} /> {brk.startsAt}</span>
-            <span className={`chip ${sold === slots.length ? 'chip-good' : 'chip-gold'}`}>{Math.round((sold / slots.length) * 100)}% sold</span>
+            
+            <span className="tag"><Icon name="ticket" size={13} /> Pick your team</span>
+            <span className="tag"><Icon name="clock" size={13} /> {brk.startsAt}</span>
+            <span className="tag">{Math.round((sold / slots.length) * 100)}% sold</span>
           </>
         }
-        title={<span className="grad-text">{brk.title}</span>}
+        title={brk.title}
         stats={[
           { icon: 'box', label: 'Box', value: kr(brk.boxPrice) },
           { icon: 'grid', label: 'Teams and splits', value: slots.length },
           { icon: 'users', label: 'Sold', value: `${sold}/${slots.length}` },
         ]}
-        actions={<button className="btn btn-glass" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
+        actions={<button className="btn btn-outline" onClick={openStreamWindow}><Icon name="popout" size={17} /> Pop out stream view</button>}
         aside={<AvatarStack names={slots.filter((x) => x.owner).map((x) => x.owner!)} label="team owners" />}
         tabs={
           <div className="tabs" role="tablist" aria-label="Break view">
@@ -147,7 +148,7 @@ export default function PytBreak() {
               </p>
               <div className="spread muted" style={{ fontSize: 13.5 }}><span>Entry price</span><b className="strong">{kr(FILLER_PRICE)}</b></div>
               <div className="spread muted" style={{ fontSize: 13.5 }}><span>Entries sold</span><b className="strong">{entries.length} ({kr(entries.length * FILLER_PRICE)})</b></div>
-              <button className="btn btn-primary btn-block" onClick={() => setMode('filler')} disabled={done}>
+              <button className="btn btn-gold btn-block" onClick={() => setMode('filler')} disabled={done}>
                 {done ? <><Icon name="check" size={16} /> Filler draw done</> : <>Start filler draw <Icon name="arrow" size={16} /></>}
               </button>
             </div>
@@ -167,7 +168,7 @@ export default function PytBreak() {
                     </div>
                     <ShuffleModeControl value={fixed} onChange={setFixed} />
                   </div>
-                  <button className="btn btn-primary btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the filler draw</button>
+                  <button className="btn btn-gold btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the filler draw</button>
                   <span className="hint" style={{ maxWidth: 320 }}>
                     {assign === 'draw'
                       ? `Top ${openTeams.length} entries are paired with the open teams in list order.`
@@ -180,7 +181,7 @@ export default function PytBreak() {
                   <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
                   {phase === 'sealed' && (
                     <>
-                      <button className="btn btn-primary btn-lg" onClick={draw.roll}><Icon name={fixed ? 'shuffle' : 'dice'} size={18} /> {fixed ? 'Start shuffling' : 'Roll the dice'}</button>
+                      <button className="btn btn-gold btn-lg" onClick={draw.roll}><Icon name={fixed ? 'shuffle' : 'dice'} size={18} /> {fixed ? 'Start shuffling' : 'Roll the dice'}</button>
                       <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={voidDraw} /></span>
                     </>
                   )}
@@ -189,7 +190,7 @@ export default function PytBreak() {
               {phase === 'shuffled' && (
                 <>
                   <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
-                  <button className="btn btn-primary btn-lg" onClick={reveal}><Icon name="sparkle" size={18} /> Reveal winners</button>
+                  <button className="btn btn-gold btn-lg" onClick={reveal}><Icon name="sparkle" size={18} /> Reveal winners</button>
                   <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={voidDraw} /></span>
                 </>
               )}

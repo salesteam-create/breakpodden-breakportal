@@ -7,8 +7,8 @@ import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import { WORKSPACE } from '../lib/workspace.ts';
 
 // Gold, midnight, violet, deep navy, cream, magenta.
-const COLORS = ['#f2c14e', '#14163a', '#7b5cff', '#0b0d22', '#f4eedc', '#c13fc9'];
-const INK = ['#1d1503', '#f2c14e', '#ffffff', '#b9a6ff', '#14163a', '#ffffff'];
+const COLORS = ['#d9a441', '#1e1b17', '#efe3c8', '#3a2f22', '#b9853a', '#0f0e0c'];
+const INK = ['#1b1407', '#e9c77a', '#2a2218', '#efe3c8', '#1b1407', '#d9a441'];
 const STUDS = 32;
 const PARTICLES = 22;
 
@@ -121,7 +121,7 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
                   transform={`rotate(${mid} ${c} ${c}) rotate(90 ${c} ${c - r + 16})`}
                   fill={INK[k]}
                   fontSize={fontSize}
-                  fontFamily="Plus Jakarta Sans, sans-serif"
+                  fontFamily="Outfit, sans-serif"
                   fontWeight="600"
                   dominantBaseline="middle"
                 >
@@ -155,8 +155,8 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
               <stop offset="1" stopColor="#e8c96a" />
             </linearGradient>
             <radialGradient id={`hub-${uid}`} cx="40%" cy="35%" r="70%">
-              <stop offset="0" stopColor="#2a2e55" />
-              <stop offset="1" stopColor="#07080f" />
+              <stop offset="0" stopColor="#3a3026" />
+              <stop offset="1" stopColor="#0f0e0c" />
             </radialGradient>
           </defs>
           <circle cx={c} cy={c} r={c - 2 - rim / 2} fill="none" stroke={`url(#rim-${uid})`} strokeWidth={rim} />
