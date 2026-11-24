@@ -26,6 +26,18 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      # Frozen original design, served at /v1/ for side-by-side comparison
+      - uses: actions/checkout@v4
+        with:
+          ref: design-v1
+          path: v1-src
+      - name: Build v1
+        working-directory: v1-src
+        run: |
+          npm ci
+          npm run build
+          mkdir -p ../dist/v1
+          cp -r dist/. ../dist/v1/
       - uses: actions/configure-pages@v5
         with:
           enablement: true
