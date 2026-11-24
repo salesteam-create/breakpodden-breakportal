@@ -5,6 +5,7 @@ import { useTheme } from './lib/theme.ts';
 import { BREAKS } from './lib/data.ts';
 import { PRODUCT, WORKSPACE } from './lib/workspace.ts';
 import Icon from './components/Icons.tsx';
+import { MEDIA } from './lib/media.ts';
 import Dashboard from './pages/Dashboard.tsx';
 import RandomBreak from './pages/RandomBreak.tsx';
 import PytBreak from './pages/PytBreak.tsx';
@@ -190,7 +191,7 @@ export default function App() {
             <button className="icon-btn" aria-label="Open stream view" title="Stream view" onClick={openStreamWindow}>
               <Icon name="live" size={18} /><i className="pip" />
             </button>
-            <span className="avatar" title={`${WORKSPACE.name} · Shopify connected`}>{WORKSPACE.host.initials}</span>
+            <span className="avatar" title={`${WORKSPACE.name} host · Shopify connected`}><img src={MEDIA.avatar} alt={`${WORKSPACE.name} host`} /><i className="online" /></span>
           </div>
         </header>
 

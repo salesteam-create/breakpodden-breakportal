@@ -10,8 +10,9 @@ import ducks from '../assets/stock/ducks.webp';
 import stream from '../assets/stock/stream.webp';
 import abstract from '../assets/stock/abstract.webp';
 import cardwall from '../assets/stock/cardwall.webp';
+import avatar from '../assets/stock/avatar.webp';
 
-export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall };
+export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar };
 
 /** Credits, kept with the images. Chosen for one calm subject and empty space for text. */
 export const CREDITS = [
@@ -23,4 +24,5 @@ export const CREDITS = [
   { key: 'stream', by: 'Klim Musalimov', url: 'https://unsplash.com/photos/1vfuVGy5rYM' },
   { key: 'abstract', by: 'Gradient Wallpapers', url: 'https://unsplash.com/photos/5Q9Gf0WSyLk' },
   { key: 'cardwall', by: 'Kelly Sikkema', url: 'https://unsplash.com/photos/XH0VCNKhEkM' },
+  { key: 'avatar', by: 'SABBIR BHUIYAN', url: 'https://unsplash.com/photos/DDqybibS980' },
 ];
