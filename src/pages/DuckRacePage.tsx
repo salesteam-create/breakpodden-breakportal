@@ -86,7 +86,7 @@ export default function DuckRacePage() {
   return (
     <>
       <Hero
-        image={MEDIA.ducks} focus="center 60%"
+        image={MEDIA.ducks}
        
         compact
         badge={{ icon: 'sparkle', label: 'Giveaway' }}

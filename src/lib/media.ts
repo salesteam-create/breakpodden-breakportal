@@ -1,6 +1,7 @@
 // Stock photography, all from Unsplash (free to use under the Unsplash License,
-// https://unsplash.com/license). Re-encoded to WebP at web sizes; the abstract
-// gradient was hue-shifted from violet to the brand gold.
+// https://unsplash.com/license). Re-encoded to WebP at 1600x900; the abstract gradient
+// was hue-shifted to the brand gold, the notebook mirrored and the card deck placed
+// on an extended black canvas so each subject sits clear of the text.
 import cards from '../assets/stock/cards.webp';
 import pitch from '../assets/stock/pitch.webp';
 import dice from '../assets/stock/dice.webp';
@@ -12,14 +13,14 @@ import cardwall from '../assets/stock/cardwall.webp';
 
 export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall };
 
-/** Credits, kept with the images. */
+/** Credits, kept with the images. Chosen for one calm subject and empty space for text. */
 export const CREDITS = [
-  { key: 'cards', by: 'Mick Haupt', url: 'https://unsplash.com/photos/G1Z97mHZsR8' },
-  { key: 'pitch', by: 'Jonathan Petersson', url: 'https://unsplash.com/photos/ARU18GpF6QQ' },
+  { key: 'cards', by: 'Klim Musalimov', url: 'https://unsplash.com/photos/yJ0pNMKbyas' },
+  { key: 'pitch', by: 'Michal Balog', url: 'https://unsplash.com/photos/YERcZ48CyVc' },
   { key: 'dice', by: 'Alois Komenda', url: 'https://unsplash.com/photos/hAdfTKFXmwM' },
-  { key: 'confetti', by: 'BoliviaInteligente', url: 'https://unsplash.com/photos/7cAeg9d8C2M' },
-  { key: 'ducks', by: 'Callum Mullin', url: 'https://unsplash.com/photos/xhf2SrtKiOA' },
-  { key: 'stream', by: 'Gavin Phillips', url: 'https://unsplash.com/photos/Y-05vRRw3ng' },
+  { key: 'confetti', by: 'Ivona Rož', url: 'https://unsplash.com/photos/UIGSQ8K9xDU' },
+  { key: 'ducks', by: 'Matthew McBrayer', url: 'https://unsplash.com/photos/67eas7lSruI' },
+  { key: 'stream', by: 'Klim Musalimov', url: 'https://unsplash.com/photos/1vfuVGy5rYM' },
   { key: 'abstract', by: 'Gradient Wallpapers', url: 'https://unsplash.com/photos/5Q9Gf0WSyLk' },
-  { key: 'cardwall', by: 'ST Mathew', url: 'https://unsplash.com/photos/2wVn6-teK68' },
+  { key: 'cardwall', by: 'Kelly Sikkema', url: 'https://unsplash.com/photos/XH0VCNKhEkM' },
 ];

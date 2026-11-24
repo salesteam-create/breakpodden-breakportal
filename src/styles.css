@@ -270,7 +270,7 @@ p { margin: 0; }
 .wide-card { position: relative; height: 210px; border-radius: var(--r-md); overflow: hidden; isolation: isolate; scroll-snap-align: start; display: flex; align-items: flex-end; color: #fff; background: #121214; }
 .wide-card img, .poster img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
 .wide-card:hover img, .poster:hover img { transform: scale(1.05); }
-.wc-shade, .pc-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(10, 10, 12, .9), rgba(10, 10, 12, .25) 60%, rgba(10, 10, 12, .05)); }
+.wc-shade, .pc-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(10, 10, 12, .92) 0%, rgba(10, 10, 12, .6) 42%, rgba(10, 10, 12, .08) 78%); }
 .wc-body { width: 100%; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
 .wc-body b { font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wc-meta { display: flex; justify-content: space-between; gap: 8px; font-size: 11.5px; color: rgba(255, 255, 255, .72); }

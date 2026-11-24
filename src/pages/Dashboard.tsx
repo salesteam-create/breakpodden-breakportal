@@ -12,8 +12,8 @@ const BUYERS: Record<string, string[]> = {
   '403': initialPytSlots().filter((s) => s.owner).map((s) => s.owner!),
 };
 const HERO_IMG: Record<string, { src: string; focus?: string }> = {
-  '394': { src: MEDIA.cards, focus: 'center 40%' },
-  '403': { src: MEDIA.pitch, focus: 'center 70%' },
+  '394': { src: MEDIA.cards },
+  '403': { src: MEDIA.pitch },
 };
 
 /** "Continue watching" style row: tonight's runs with a progress bar. */
