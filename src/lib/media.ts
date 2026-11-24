@@ -1,5 +1,6 @@
 // Stock photography, all from Unsplash (free to use under the Unsplash License,
-// https://unsplash.com/license). Re-encoded to WebP at web sizes.
+// https://unsplash.com/license). Re-encoded to WebP at web sizes; the abstract
+// gradient was hue-shifted from violet to the brand gold.
 import cards from '../assets/stock/cards.webp';
 import pitch from '../assets/stock/pitch.webp';
 import dice from '../assets/stock/dice.webp';
