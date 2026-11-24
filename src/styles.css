@@ -43,12 +43,12 @@
   --bg: #0b0b0c;
   --bg-glow-1: rgba(156, 124, 39, .22);
   --bg-glow-2: rgba(156, 124, 39, .12);
-  --frame: #111113;
+  --frame: #0c0c0e;
   --frame-line: rgba(255, 255, 255, .08);
-  --side: #161618;
-  --surface: #18181b;
-  --surface-2: #1f1f23;
-  --surface-3: #29292e;
+  --side: #1a1a1e;
+  --surface: #1c1c21;
+  --surface-2: #26262c;
+  --surface-3: #313138;
   --line: rgba(255, 255, 255, .07);
   --line-2: rgba(255, 255, 255, .12);
   --text: #f5f4f0;
@@ -65,7 +65,7 @@
   --bad-soft: rgba(255, 122, 138, .12);
   --warn: #f5b85a;
   --warn-soft: rgba(245, 184, 90, .12);
-  --shadow: 0 1px 0 rgba(255, 255, 255, .02) inset, 0 10px 30px rgba(0, 0, 0, .28);
+  --shadow: 0 1px 0 rgba(255, 255, 255, .035) inset, 0 12px 32px rgba(0, 0, 0, .4);
   --shadow-lg: 0 40px 100px rgba(0, 0, 0, .55);
   color-scheme: dark;
   color: var(--text);
@@ -280,6 +280,8 @@ p { margin: 0; }
 .wide-card { position: relative; height: 210px; border-radius: var(--r-md); overflow: hidden; isolation: isolate; scroll-snap-align: start; display: flex; align-items: flex-end; color: #fff; background: #121214; }
 .wide-card img, .poster img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
 .wide-card:hover img, .poster:hover img { transform: scale(1.05); }
+/* Hairline edge drawn above the photo so dark images never melt into the page. */
+.wide-card::after, .poster::after, .hero::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1px solid var(--line-2); pointer-events: none; }
 .wc-shade, .pc-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(10, 10, 12, .92) 0%, rgba(10, 10, 12, .6) 42%, rgba(10, 10, 12, .08) 78%); }
 .wc-body { width: 100%; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
 .wc-body b { font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
