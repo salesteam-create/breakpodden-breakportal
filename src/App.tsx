@@ -134,6 +134,8 @@ export default function App() {
 
   return (
     <div className={`frame${drawer ? ' drawer-open' : ''}`}>
+      {/* Soft gold clouds drifting behind the glass panels. Decorative only. */}
+      <div className="ambient" aria-hidden="true"><i /><i /><i /></div>
       <aside className="sidebar" aria-label="Main navigation">
         <div className="sb-top">
           <a href="#/" className="brand" aria-label={`${PRODUCT} home`}>
