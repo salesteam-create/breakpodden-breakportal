@@ -436,6 +436,8 @@ p { margin: 0; }
 
 /* ---------- Wheel ---------- */
 .wheel-stage { position: relative; display: grid; place-items: center; padding: 32px 0 24px; }
+/* Wheel page: more breathing room above and below the wheel (same wheel size). */
+.stage > .wheel-stage { padding: 72px 0 64px; }
 .wheel-wrap { position: relative; aspect-ratio: 1; filter: drop-shadow(0 24px 40px rgba(20, 18, 12, .35)); }
 .wheel-wrap::before { content: ''; position: absolute; inset: -8%; border-radius: 50%; background: radial-gradient(closest-side, rgba(156, 124, 39, .3), transparent 72%); opacity: .6; pointer-events: none; }
 .wheel-wrap.is-spinning::before { opacity: 1; animation: halo 1.4s ease-in-out infinite alternate; }
