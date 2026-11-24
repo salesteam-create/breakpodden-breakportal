@@ -989,3 +989,7 @@ input[type=text], input[type=number], textarea, select,
 @keyframes waterLoop { to { background-position: -384px 0; } }
 @keyframes waterLoop2 { to { background-position: 576px 0; } }
 @media (prefers-reduced-motion: reduce) { .water, .water::after { animation: none; } }
+
+/* Calmer water: one faint layer, slow drift. */
+.water { opacity: .28; animation-duration: 40s; }
+.water::after { content: none; }
