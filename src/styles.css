@@ -971,3 +971,21 @@ input[type=text], input[type=number], textarea, select,
   .pond-head span:first-child { visibility: visible; }
   .duck .label { display: inline-block; font-size: 10.5px !important; padding: 1px 7px; max-width: calc(var(--track-start) - 40px); }
 }
+
+/* ---------- Duck race: seamless looping water + clean rounded corners ---------- */
+.pond { isolation: isolate; clip-path: inset(0 round 18px); }
+.pond-head { backdrop-filter: none; -webkit-backdrop-filter: none; border-radius: 18px 18px 0 0; }
+.water {
+  mix-blend-mode: normal; opacity: .9;
+  background: url("./assets/stock/water.webp") 0 0 / 384px 192px repeat;
+  animation: waterLoop 24s linear infinite;
+}
+.water::after {
+  content: ''; position: absolute; inset: 0; opacity: .55;
+  background: url("./assets/stock/water.webp") 0 0 / 576px 288px repeat;
+  animation: waterLoop2 38s linear infinite;
+}
+/* Shift by exactly one tile so each loop is seamless. */
+@keyframes waterLoop { to { background-position: -384px 0; } }
+@keyframes waterLoop2 { to { background-position: 576px 0; } }
+@media (prefers-reduced-motion: reduce) { .water, .water::after { animation: none; } }
