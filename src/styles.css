@@ -1577,3 +1577,10 @@ body::before, .ambient { display: none; }
 .hero.vivid { background: radial-gradient(60% 120% at 85% 40%, rgba(226, 184, 74, .16), transparent 60%), #111216; }
 .hero.vivid .hero-shade { background: linear-gradient(90deg, rgba(14, 15, 19, .9) 0%, rgba(14, 15, 19, .5) 38%, transparent 60%); }
 @media (max-width: 720px) { .hero.vivid .hero-img { width: 100%; opacity: .45; -webkit-mask-image: none; mask-image: none; } }
+/* Room + schedule cards: photos always in full colour, no image change on hover,
+   no outline flash; the card still lifts and the button turns gold */
+.room-art img, .wide-card img, .room:hover .room-art img, .wide-card:hover img { filter: none; transform: none; }
+.room, .room:hover { border-color: rgba(255, 255, 255, .05); }
+.wide-card:hover { border-color: rgba(255, 255, 255, .06); }
+.room-art { margin-bottom: -1px; transform: translateZ(0); }
+.room-art::after { bottom: -1px; }
