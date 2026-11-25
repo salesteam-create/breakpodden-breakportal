@@ -211,7 +211,7 @@ export default function ProofPage({ id }: { id?: string }) {
     <>
       <Hero
         image={MEDIA.shieldHero}
-        focus="55% 30%"
+        focus="50% 42%"
         vivid
        
         compact
