@@ -13,13 +13,16 @@ const HERO: Record<string, { img: string; word: string; photo: string; caption: 
 };
 
 const ROOMS = [
-  { href: '#/break/394', img: MEDIA.roomDice, tone: 'gold', badge: 'Break #394', title: 'Team draw', meta: [['spots', '18'], ['price', '199 kr']], cta: 'Play', hot: true },
-  { href: '#/break/403', img: MEDIA.roomBall, tone: 'blue', badge: 'Break #403', title: 'Filler draw', meta: [['open', '10'], ['entry', '49 kr']], cta: 'Play' },
-  { href: '#/wheel', img: MEDIA.roomWheel, tone: 'pink', badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
-  { href: '#/duck', img: MEDIA.roomDuck, tone: 'lime', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
-  { href: '#/checklists', img: MEDIA.roomCards, tone: 'violet', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
-  { href: '#/proofs', img: MEDIA.roomLock, tone: 'lime', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
+  { href: '#/wheel', img: MEDIA.roomWheel, tone: 'gold', hot: true, badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
+  { href: '#/duck', img: MEDIA.roomDuck, tone: 'blue', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
+  { href: '#/checklists', img: MEDIA.roomCards, tone: 'gold', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
+  { href: '#/proofs', img: MEDIA.roomLock, tone: 'blue', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
 ] as const;
+
+const FEATURE = [
+  { href: '#/break/394', tone: 'gold', img: MEDIA.featDice, title: 'Team draw', text: 'Break #394 · Topps Bundesliga Gold. Every team assigned by a sealed roll.' },
+  { href: '#/break/403', tone: 'blue', img: MEDIA.heroBall, title: 'Pick your team', text: 'Break #403 · Futera World. 10 teams still open, fillers from 49 kr.' },
+];
 
 const TONIGHT = [
   { href: '#/break/394', title: 'Break #394 · Topps Bundesliga', image: MEDIA.arena, left: 'Random team', right: '18/18 sold', progress: 1 },
@@ -33,7 +36,7 @@ const FEED = [
   ...ORDERS_394.slice(-7).reverse().map((o, k) => ({ who: o.buyer, what: `bought ${o.qty} spot${o.qty > 1 ? 's' : ''}`, where: 'Break #394', mins: 2 + k * 3 })),
   ...initialPytSlots().filter((s) => s.owner).slice(0, 4).map((s, k) => ({ who: s.owner!, what: `took ${s.team}`, where: 'Break #403', mins: 24 + k * 5 })),
 ];
-const AV = ['#e2b84a', '#2ed3c0', '#4c8dff', '#ff9f4a', '#ff6b7a'];
+const AV = ['#e2b84a', '#3b82f6', '#f6dc8c'];
 const SLIDE_MS = 6000;
 const repeat = (() => { const m = new Map<string, number>(); ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + 1)); return [...m.values()].filter((n) => n > 1).length; })();
 const totalSpots = Object.values(SOLD).reduce((a, [, of]) => a + of, 0);
@@ -82,7 +85,7 @@ export default function Dashboard() {
           onFocus={() => setPaused(true)}
           onBlur={() => setPaused(false)}
         >
-          <img className="neo-hero-img" src={h.img} alt="" />
+          <img className="neo-hero-img" src={h.photo} alt="" />
           <div className="neo-hero-tint" aria-hidden="true" />
           <div className="neo-hero-body">
             <div className="neo-pills">
@@ -111,14 +114,24 @@ export default function Dashboard() {
               ))}
             </div>
           </div>
-          <div className="neo-hero-art" aria-hidden="true">
-            <figure className="hero-shot">
-              <img src={h.photo} alt="" />
-              <figcaption><i className="live-dot sm" /> {h.caption}</figcaption>
-            </figure>
-            <span className="spark s1" /><span className="spark s3" />
-          </div>
+          
         </section>
+
+        <section className="feat-grid" aria-label="Tonight's breaks">
+          {FEATURE.map((f) => (
+            <a key={f.href} href={f.href} className={`feat t-${f.tone}`}>
+              <span className="feat-txt"><b>{f.title}</b><span>{f.text}</span></span>
+              <img src={f.img} alt="" loading="lazy" />
+            </a>
+          ))}
+        </section>
+
+        <a href="#/proofs" className="slim-row">
+          <span className="slim-ic"><Icon name="shield" size={18} weight="fill" /></span>
+          <b>Fairness proofs</b>
+          <span className="slim-txt">Every draw is sealed with a SHA-256 fingerprint before the roll. Anyone can verify it afterwards.</span>
+          <Icon name="arrow" size={16} />
+        </a>
 
         <section className="scoreboard reveal-up" aria-label="Tonight in numbers">
           <div className="sb-tag">
@@ -151,7 +164,7 @@ export default function Dashboard() {
         <section className="neo-rooms">
           <div className="neo-rooms-head">
             <div>
-              <span className="neo-kicker">Randomizers</span>
+              <span className="neo-kicker">Giveaways and tools</span>
               <h2 className="neo-h2">Game <span className="neo-grad">rooms</span></h2>
             </div>
             <div className="pager">
@@ -224,7 +237,7 @@ export default function Dashboard() {
         <div className="feed-list">
           {draws.slice(0, 3).map((d) => (
             <a key={d.id} href={`#/proof/${d.id}`} className="feed-item proof">
-              <span className="fi-av" style={{ background: 'linear-gradient(135deg,#2ed3c0,#1fa392)' }}><Icon name="seal" size={15} weight="fill" /></span>
+              <span className="fi-av" style={{ background: 'linear-gradient(135deg,#3b82f6,#2563eb)' }}><Icon name="seal" size={15} weight="fill" /></span>
               <span className="fi-txt"><b>{d.title}</b><span>{d.revealed ? 'Verified' : 'Sealed'} · {d.id}</span></span>
             </a>
           ))}
