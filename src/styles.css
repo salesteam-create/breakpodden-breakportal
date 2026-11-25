@@ -1611,3 +1611,23 @@ body::before, .ambient { display: none; }
 .live-ic { color: #ff2e3b; background: rgba(255, 46, 59, .12); }
 .live-ic::before, .live-ic::after { border-color: #ff2e3b; }
 @keyframes onAir { 0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 0 rgba(255, 46, 59, 0)); } 50% { opacity: .55; transform: scale(.88); filter: drop-shadow(0 0 6px rgba(255, 46, 59, .85)); } }
+/* Rain of prizes: gift tile + periodic shower across the card */
+.promo-card { isolation: isolate; }
+.promo-art { position: relative; z-index: 1; display: grid; place-items: center; background: radial-gradient(circle at 50% 60%, rgba(226, 184, 74, .28), #1c1d24 70%); }
+.promo-txt { position: relative; z-index: 1; }
+.prize-tile { display: grid; place-items: center; animation: giftBob 2.4s ease-in-out infinite; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .5)) drop-shadow(0 0 10px rgba(226, 184, 74, .45)); }
+@keyframes giftBob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-4px) rotate(4deg); } }
+.prize-shower { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.prize-shower i { position: absolute; top: 0; display: block; opacity: 0; animation: prizeFall 4.5s cubic-bezier(.45, .05, .7, .9) infinite; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .5)); }
+@keyframes prizeFall {
+  0% { transform: translateY(-24px) rotate(0deg); opacity: 0; }
+  4% { opacity: .9; }
+  32% { opacity: .9; }
+  38% { transform: translateY(120px) rotate(var(--spin)); opacity: 0; }
+  100% { transform: translateY(120px) rotate(var(--spin)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .prize-tile, .prize-shower i { animation: none; } .prize-shower { display: none; } }
+/* Taller schedule cards */
+.wide-card { height: 260px; }
+@media (max-width: 720px) { .wide-card { height: 210px; } }
+.promo-card .promo-txt, .promo-card .promo-art { z-index: 2 !important; } .prize-shower { z-index: 0 !important; }

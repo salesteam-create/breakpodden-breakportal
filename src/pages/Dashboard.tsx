@@ -6,6 +6,7 @@ import Showcase from '../components/Showcase.tsx';
 import Icon from '../components/Icons.tsx';
 import CountUp from '../components/CountUp.tsx';
 import TeamLogo from '../components/TeamLogo.tsx';
+import { PrizeShower, PrizeTile } from '../components/PrizeRain.tsx';
 
 const SOLD: Record<string, [number, number]> = { '394': [18, 18], '403': [33, 43] };
 const HERO: Record<string, { img: string; word: string; photo: string; caption: string }> = {
@@ -227,7 +228,8 @@ export default function Dashboard() {
         </div>
 
         <a href="#/wheel" className="promo-card">
-          <span className="promo-art"><img src={MEDIA.promo} alt="" /></span>
+          <PrizeShower />
+          <span className="promo-art"><PrizeTile /></span>
           <span className="promo-txt">
             <b>Rain of prizes</b>
             <span>Every purchase tonight is a ticket in the giveaway wheel.</span>
