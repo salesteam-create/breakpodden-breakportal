@@ -1555,3 +1555,5 @@ body::before, .ambient { display: none; }
 /* Feature cards: no outline */
 .feat, .feat:hover { border: 0; box-shadow: none; }
 .neo-lede { max-width: 420px; }
+.neo-hero-img { object-position: right 12%; }
+@media (max-width: 720px) { .neo-hero-img { object-position: 55% 8%; } }

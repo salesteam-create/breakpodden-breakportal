@@ -10,7 +10,7 @@ import Crest from '../components/Crest.tsx';
 const SOLD: Record<string, [number, number]> = { '394': [18, 18], '403': [33, 43] };
 const HERO: Record<string, { img: string; word: string; photo: string; caption: string }> = {
   '394': { img: MEDIA.arena, word: 'Draw night', photo: MEDIA.heroKick, caption: 'Every team, one fair roll' },
-  '403': { img: MEDIA.studio, word: 'Pick & win', photo: MEDIA.heroBall, caption: 'Your club, your spot' },
+  '403': { img: MEDIA.studio, word: 'Pick & win', photo: MEDIA.heroTrophy, caption: 'Your club, your spot' },
 };
 
 const ROOMS = [
