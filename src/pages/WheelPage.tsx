@@ -107,7 +107,7 @@ export default function WheelPage() {
   return (
     <>
       <Hero
-        image={MEDIA.confetti}
+        image={MEDIA.party}
        
         compact
         badge={{ icon: 'sparkle', label: 'Giveaway' }}

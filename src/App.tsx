@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRoute, go } from './lib/router.ts';
 import { listDraws, openStreamWindow, resetDemo } from './lib/store.ts';
-import { useTheme } from './lib/theme.ts';
 import { BREAKS } from './lib/data.ts';
 import { PRODUCT, WORKSPACE } from './lib/workspace.ts';
 import Icon from './components/Icons.tsx';
@@ -106,7 +105,6 @@ function Search() {
 
 export default function App() {
   const [section = '', id] = useRoute();
-  const { theme, toggle } = useTheme();
   const [drawer, setDrawer] = useState(false);
 
   useEffect(() => setDrawer(false), [section, id]);
@@ -131,7 +129,6 @@ export default function App() {
       {extra}
     </a>
   );
-  const dark = theme === 'dark';
 
   return (
     <div className={`frame${drawer ? ' drawer-open' : ''}`}>
@@ -161,11 +158,6 @@ export default function App() {
           </div>
           <div className="sb-group">
             <button className="nav-item" onClick={openStreamWindow}><Icon name="live" size={18} /><span>Stream view</span></button>
-            <button className="nav-item" role="switch" aria-checked={dark} onClick={toggle}>
-              <Icon name={dark ? 'moon' : 'sun'} size={18} />
-              <span>Dark mode</span>
-              <span className={`switch${dark ? ' on' : ''}`} aria-hidden="true"><i /></span>
-            </button>
           </div>
         </nav>
 
@@ -185,9 +177,6 @@ export default function App() {
           <button className="icon-btn ghost menu-btn" aria-label="Open menu" onClick={() => setDrawer(true)}><Icon name="menu" size={20} /></button>
           <Search />
           <div className="topbar-right">
-            <button className="icon-btn" aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'} title={dark ? 'Light mode' : 'Dark mode'} onClick={toggle}>
-              <Icon name={dark ? 'sun' : 'moon'} size={18} />
-            </button>
             <button className="icon-btn" aria-label="Open stream view" title="Stream view" onClick={openStreamWindow}>
               <Icon name="live" size={18} /><i className="pip" />
             </button>

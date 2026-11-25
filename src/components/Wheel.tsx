@@ -7,8 +7,8 @@ import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import { WORKSPACE } from '../lib/workspace.ts';
 
 // Gold, midnight, violet, deep navy, cream, magenta.
-const COLORS = ['#9c7c27', '#1c1c20', '#f1ece0', '#2c2c31', '#c9a548', '#121214'];
-const INK = ['#ffffff', '#d4b25a', '#1c1c20', '#f1ece0', '#1c1c20', '#d4b25a'];
+const COLORS = ['#9b4dff', '#141739', '#3d8bff', '#ff3d9a', '#a6ff3d', '#ffa53d'];
+const INK = ['#ffffff', '#a6ff3d', '#ffffff', '#ffffff', '#0c1600', '#1b1003'];
 const STUDS = 32;
 const PARTICLES = 22;
 

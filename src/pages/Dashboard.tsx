@@ -1,164 +1,177 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BREAKS, ORDERS_394, giveawayEntries, initialPytSlots, uniqueEntrants, kr } from '../lib/data.ts';
 import { listDraws, openStreamWindow } from '../lib/store.ts';
 import { MEDIA } from '../lib/media.ts';
 import Showcase from '../components/Showcase.tsx';
-import Hero, { AvatarStack } from '../components/Hero.tsx';
 import Icon from '../components/Icons.tsx';
+import Art3D from '../components/Art3D.tsx';
+import CountUp from '../components/CountUp.tsx';
 
 const SOLD: Record<string, [number, number]> = { '394': [18, 18], '403': [33, 43] };
-const BUYERS: Record<string, string[]> = {
-  '394': ORDERS_394.map((o) => o.buyer),
-  '403': initialPytSlots().filter((s) => s.owner).map((s) => s.owner!),
-};
-const HERO_IMG: Record<string, { src: string; focus?: string }> = {
-  '394': { src: MEDIA.cards },
-  '403': { src: MEDIA.pitch },
+const HERO: Record<string, { img: string; word: string; art: ('gift' | 'dice' | 'trophy' | 'cards' | 'ticket')[] }> = {
+  '394': { img: MEDIA.arena, word: 'Draw night', art: ['dice', 'trophy', 'cards'] },
+  '403': { img: MEDIA.studio, word: 'Pick & win', art: ['ticket', 'gift', 'cards'] },
 };
 
-/** "Continue watching" style row: tonight's runs with a progress bar. */
+const ROOMS = [
+  { href: '#/break/394', art: 'dice', tone: 'gold', badge: 'Break #394', title: 'Team draw', meta: [['spots', '18'], ['price', '199 kr']], cta: 'Play', hot: true },
+  { href: '#/break/403', art: 'ticket', tone: 'blue', badge: 'Break #403', title: 'Filler draw', meta: [['open', '10'], ['entry', '49 kr']], cta: 'Play' },
+  { href: '#/wheel', art: 'wheel', tone: 'pink', badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
+  { href: '#/duck', art: 'duck', tone: 'lime', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
+  { href: '#/checklists', art: 'cards', tone: 'violet', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
+  { href: '#/proofs', art: 'shield', tone: 'lime', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
+] as const;
+
 const TONIGHT = [
-  { href: '#/break/394', title: 'Break #394 · Topps Bundesliga', image: MEDIA.cards, left: 'Random team', right: '18/18 sold', progress: 1 },
-  { href: '#/break/403', title: 'Break #403 · Futera World', image: MEDIA.pitch, left: 'Pick your team', right: '33/43 sold', progress: 33 / 43 },
-  { href: '#/wheel', title: 'Wheel of fortune', image: MEDIA.confetti, left: 'Giveaway', right: `${giveawayEntries().length} entries`, progress: 0 },
+  { href: '#/break/394', title: 'Break #394 · Topps Bundesliga', image: MEDIA.arena, left: 'Random team', right: '18/18 sold', progress: 1 },
+  { href: '#/break/403', title: 'Break #403 · Futera World', image: MEDIA.studio, left: 'Pick your team', right: '33/43 sold', progress: 33 / 43 },
+  { href: '#/wheel', title: 'Wheel of fortune', image: MEDIA.party, left: 'Giveaway', right: `${giveawayEntries().length} entries`, progress: 0 },
   { href: '#/duck', title: 'Duck race', image: MEDIA.ducks, left: 'Giveaway', right: `${uniqueEntrants().length} ducks`, progress: 0 },
 ];
 
-/** "You might like" style row: poster cards for the tools. */
-const QUICK = [
-  { href: '#/break/394', title: 'Team draw', tags: ['Dice', 'Shuffle'], image: MEDIA.dice },
-  { href: '#/checklists', title: 'Box checklists', tags: ['Library'], image: MEDIA.cardwall },
-  { href: '#/proofs', title: 'Fairness proofs', tags: ['Public', 'SHA-256'], image: MEDIA.abstract },
-  { href: '#/stream', title: 'Stream view', tags: ['OBS', '1080p'], image: MEDIA.stream, stream: true },
+/** Live feed: recent purchases, newest first, with relative times. */
+const FEED = [
+  ...ORDERS_394.slice(-7).reverse().map((o, k) => ({ who: o.buyer, what: `bought ${o.qty} spot${o.qty > 1 ? 's' : ''}`, where: 'Break #394', mins: 2 + k * 3 })),
+  ...initialPytSlots().filter((s) => s.owner).slice(0, 4).map((s, k) => ({ who: s.owner!, what: `took ${s.team}`, where: 'Break #403', mins: 24 + k * 5 })),
 ];
-
+const AV = ['#a6ff3d', '#9b4dff', '#3d8bff', '#ffa53d', '#ff3d9a'];
 const SLIDE_MS = 6000;
 
 export default function Dashboard() {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
+  const rowRef = useRef<HTMLDivElement>(null);
   const reduced = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const autoplay = !paused && !reduced;
-
-  // Featured breaks loop on their own; hovering or focusing the hero pauses it.
   useEffect(() => {
     if (!autoplay) return;
     const t = window.setTimeout(() => setI((x) => (x + 1) % BREAKS.length), SLIDE_MS);
     return () => clearTimeout(t);
   }, [i, autoplay]);
-  const draws = listDraws();
-  const recent = draws.slice(0, 5);
 
+  const draws = listDraws();
   const b = BREAKS[i];
   const [sold, of] = SOLD[b.id] ?? [0, b.spots];
   const ready = sold === of;
+  const h = HERO[b.id];
+  const buyers = new Set([...ORDERS_394.map((o) => o.buyer), ...initialPytSlots().filter((s) => s.owner).map((s) => s.owner!)]).size;
+  const spots = Object.values(SOLD).reduce((a, [s]) => a + s, 0);
+  const boxValue = BREAKS.reduce((a, x) => a + x.boxPrice, 0);
+  const scroll = (d: 1 | -1) => rowRef.current?.scrollBy({ left: d * 300, behavior: 'smooth' });
 
   return (
-    <div className="dash">
-      <div
-        key={b.id}
-        className="fade-swap"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-        onFocus={() => setPaused(true)}
-        onBlur={() => setPaused(false)}
-      >
-        <Hero
-          image={HERO_IMG[b.id].src}
-          focus={HERO_IMG[b.id].focus}
-          badge={{ icon: ready ? 'fire' : 'bolt', label: ready ? 'Sold out tonight' : 'Fillers open' }}
-          chips={<><span className="tag">{b.format === 'random' ? 'Random team' : 'Pick your team'}</span><span className="tag">{b.startsAt}</span></>}
-          title={b.title}
-          lede={b.format === 'random'
-            ? 'Import the buyers, seal the draw and roll live on stream. Every shuffle can be checked by anyone afterwards.'
-            : `${of - sold} teams are still open. A sealed filler draw lets 49 kr entries win the rest.`}
-          stats={[
-            { label: 'Box', value: kr(b.boxPrice) },
-            { label: 'Sold', value: `${sold}/${of}` },
-            b.format === 'random' ? { label: 'Spot', value: kr(b.slotPrice!) } : { label: 'Open', value: of - sold },
-          ]}
-          actions={
-            <>
-              <a href={`#/break/${b.id}`} className="btn btn-primary"><Icon name="play" size={16} weight="fill" /> {ready ? 'Run the draw' : 'Open team board'}</a>
-              <button className="icon-btn glass" aria-label="Open stream view" title="Stream view" onClick={openStreamWindow}><Icon name="popout" size={18} /></button>
-              <a className="icon-btn glass" aria-label="Fairness proofs" title="Fairness proofs" href="#/proofs"><Icon name="shield" size={18} /></a>
-            </>
-          }
-          aside={<AvatarStack names={BUYERS[b.id] ?? []} label="buyers" />}
-          dots={{ index: i, total: BREAKS.length, label: 'Featured break', onPick: setI, duration: autoplay ? SLIDE_MS : undefined }}
-        />
-      </div>
-
-      <section>
-        <div className="row-head">
-          <h2>Tonight</h2>
-          <a href="#/proofs" className="see-all">See all</a>
-        </div>
-        <div className="scroller">
-          {TONIGHT.map((t) => (
-            <a key={t.href} href={t.href} className="wide-card">
-              <img src={t.image} alt="" loading="lazy" />
-              <span className="wc-shade" />
-              <span className="wc-body">
-                <b>{t.title}</b>
-                <span className="wc-meta"><span>{t.left}</span><span>{t.right}</span></span>
-                <span className="wc-bar"><i style={{ width: `${Math.max(t.progress, 0) * 100}%` }} /></span>
-              </span>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <div className="row-head">
-          <h2>Quick access</h2>
-        </div>
-        <div className="posters">
-          {QUICK.map((q) => (
-            <a
-              key={q.title}
-              href={q.href}
-              className="poster"
-              onClick={q.stream ? (e) => { e.preventDefault(); openStreamWindow(); } : undefined}
-            >
-              <img src={q.image} alt="" loading="lazy" />
-              <span className="pc-shade" />
-              <span className="pc-body">
-                <b>{q.title}</b>
-                <span className="tags">{q.tags.map((x) => <span key={x} className="tag sm">{x}</span>)}</span>
-              </span>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <div className="dash-bottom">
-        <section className="panel">
-          <div className="row-head">
-            <h2>Proof ledger</h2>
-            <a href="#/proofs" className="see-all">See all</a>
-          </div>
-          {recent.length === 0 ? (
-            <div className="empty">
-              <span className="empty-ic"><Icon name="seal" size={24} /></span>
-              <b>Nothing sealed yet</b>
-              <span>Each draw you run gets a public, verifiable record here.</span>
-              <a href="#/break/394" className="btn btn-primary btn-sm">Run break #394</a>
+    <div className="neo-dash">
+      <div className="neo-main">
+        <section
+          key={b.id}
+          className="neo-hero reveal-up"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+        >
+          <img className="neo-hero-img" src={h.img} alt="" />
+          <div className="neo-hero-tint" aria-hidden="true" />
+          <div className="neo-hero-body">
+            <div className="neo-pills">
+              <span className="neo-pill live"><i className="live-dot sm" /> {ready ? 'Sold out tonight' : 'Fillers open'}</span>
+              <span className="neo-pill">{b.format === 'random' ? 'Random team' : 'Pick your team'}</span>
+              <span className="neo-pill">{b.startsAt}</span>
             </div>
-          ) : (
-            <div className="ledger-list">
-              {recent.map((d) => (
-                <a key={d.id} href={`#/proof/${d.id}`} className="ledger-row">
-                  <span className={`lr-ic ${d.voided ? 'void' : d.revealed ? 'ok' : 'sealed'}`}><Icon name={d.voided ? 'x' : d.revealed ? 'seal' : 'lock'} size={17} /></span>
-                  <span className="lr-text"><b>{d.title}</b><span className="mono">{d.id} · {d.commitment.slice(0, 14)}…</span></span>
-                  <span className={`status ${d.voided ? 'void' : d.revealed ? 'ok' : 'sealed'}`}>{d.voided ? 'Voided' : d.revealed ? 'Verified' : 'Sealed'}</span>
-                </a>
+            <h1 className="neo-title">
+              <span className="neo-grad">{h.word}</span>
+              <span>{b.title}</span>
+            </h1>
+            <p className="neo-lede">
+              {b.format === 'random'
+                ? 'Import the buyers, seal the draw and roll live on stream. Every shuffle is verifiable afterwards.'
+                : `${of - sold} teams still open. A sealed filler draw lets 49 kr entries win the rest.`}
+            </p>
+            <div className="neo-actions">
+              <a href={`#/break/${b.id}`} className="btn-neon"><Icon name="play" size={16} weight="fill" /> {ready ? 'Run the draw' : 'Open team board'}</a>
+              <button className="btn-glass" onClick={openStreamWindow}><Icon name="live" size={17} /> Stream view</button>
+            </div>
+            <div className="neo-dots" role="tablist" aria-label="Featured break">
+              {BREAKS.map((x, k) => (
+                <button key={x.id} role="tab" aria-selected={k === i} aria-label={`Break #${x.number}`} className={k === i ? 'on' : ''} onClick={() => setI(k)}>
+                  {k === i && autoplay && <i style={{ animationDuration: `${SLIDE_MS}ms` }} />}
+                </button>
               ))}
             </div>
-          )}
+          </div>
+          <div className="neo-hero-art" aria-hidden="true">
+            <Art3D kind={h.art[0]} size={190} className="a1" />
+            <Art3D kind={h.art[1]} size={130} className="a2" />
+            <Art3D kind={h.art[2]} size={110} className="a3" />
+            <span className="spark s1" /><span className="spark s2" /><span className="spark s3" />
+          </div>
         </section>
 
-        <section className="panel">
+        <section className="neo-stats">
+          {[
+            { tone: 'lime', icon: 'users', v: buyers, label: 'Buyers tonight' },
+            { tone: 'violet', icon: 'ticket', v: spots, label: 'Spots sold' },
+            { tone: 'blue', icon: 'seal', v: draws.length, label: 'Draws sealed' },
+            { tone: 'orange', icon: 'box', v: boxValue, label: 'Box value (kr)' },
+          ].map((s, k) => (
+            <div key={s.label} className={`neo-stat t-${s.tone} reveal-up`} style={{ animationDelay: `${80 + k * 70}ms` }}>
+              <span className="ns-ic"><Icon name={s.icon} size={20} weight="duotone" /></span>
+              <span className="ns-txt"><b><CountUp value={s.v} /></b><span>{s.label}</span></span>
+            </div>
+          ))}
+        </section>
+
+        <section className="neo-rooms">
+          <div className="neo-rooms-head">
+            <div>
+              <span className="neo-kicker">Randomizers</span>
+              <h2 className="neo-h2">Game <span className="neo-grad">rooms</span></h2>
+            </div>
+            <div className="pager">
+              <button className="round-nav" aria-label="Scroll rooms left" onClick={() => scroll(-1)}><Icon name="back" size={16} /></button>
+              <button className="round-nav" aria-label="Scroll rooms right" onClick={() => scroll(1)}><Icon name="arrow" size={16} /></button>
+            </div>
+          </div>
+          <div className="room-row" ref={rowRef}>
+            {ROOMS.map((r, k) => (
+              <a key={r.title} href={r.href} className={`room t-${r.tone} reveal-up`} style={{ animationDelay: `${120 + k * 60}ms` }}>
+                <span className="room-badge">{r.badge}</span>
+                {'hot' in r && r.hot && <span className="room-hot"><Icon name="fire" size={12} weight="fill" /> Hot</span>}
+                <span className="room-art"><Art3D kind={r.art} size={128} /></span>
+                <b className="room-title">{r.title}</b>
+                <span className="room-meta">
+                  {r.meta.map(([k2, v]) => <span key={k2}><em>{k2}</em>{v}</span>)}
+                </span>
+                <span className="room-cta">{r.cta}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div className="neo-rooms-head">
+            <div>
+              <span className="neo-kicker">Tonight</span>
+              <h2 className="neo-h2">On the <span className="neo-grad">schedule</span></h2>
+            </div>
+            <a href="#/proofs" className="see-all">See all</a>
+          </div>
+          <div className="scroller">
+            {TONIGHT.map((t) => (
+              <a key={t.href} href={t.href} className="wide-card">
+                <img src={t.image} alt="" loading="lazy" />
+                <span className="wc-shade" />
+                <span className="wc-body">
+                  <b>{t.title}</b>
+                  <span className="wc-meta"><span>{t.left}</span><span>{t.right}</span></span>
+                  <span className="wc-bar"><i style={{ width: `${Math.max(t.progress, 0) * 100}%` }} /></span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="panel neo-preview">
           <div className="row-head">
             <h2>Stream preview</h2>
             <button className="see-all" onClick={openStreamWindow}>Pop out</button>
@@ -166,6 +179,42 @@ export default function Dashboard() {
           <div className="preview"><Showcase /></div>
         </section>
       </div>
+
+      <aside className="neo-live" aria-label="Live activity">
+        <div className="live-head">
+          <span className="row"><span className="live-ic"><Icon name="live" size={16} /></span><b>Live activity</b></span>
+          <span className="live-online"><i className="live-dot sm" /> <CountUp value={buyers * 7 + 3} /> watching</span>
+        </div>
+
+        <a href="#/wheel" className="promo-card">
+          <span className="promo-art"><Art3D kind="gift" size={96} /></span>
+          <span className="promo-txt">
+            <b>Rain of prizes</b>
+            <span>Every purchase tonight is a ticket in the giveaway wheel.</span>
+          </span>
+        </a>
+
+        <div className="feed-list">
+          {draws.slice(0, 3).map((d) => (
+            <a key={d.id} href={`#/proof/${d.id}`} className="feed-item proof">
+              <span className="fi-av" style={{ background: 'linear-gradient(135deg,#a6ff3d,#3dd6a0)' }}><Icon name="seal" size={15} weight="fill" /></span>
+              <span className="fi-txt"><b>{d.title}</b><span>{d.revealed ? 'Verified' : 'Sealed'} · {d.id}</span></span>
+            </a>
+          ))}
+          {FEED.map((f, k) => (
+            <div key={k} className="feed-item" style={{ animationDelay: `${200 + k * 60}ms` }}>
+              <span className="fi-av" style={{ background: AV[k % AV.length] }}>{f.who.slice(0, 1).toUpperCase()}</span>
+              <span className="fi-txt"><b>{f.who}</b><span>{f.what} · {f.where}</span></span>
+              <span className="fi-time">{f.mins}m</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="live-foot">
+          <span>Prize pool tonight</span>
+          <b className="neo-grad"><CountUp value={boxValue} format={(n) => kr(n)} /></b>
+        </div>
+      </aside>
     </div>
   );
 }

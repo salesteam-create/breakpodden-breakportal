@@ -89,7 +89,7 @@ export default function PytBreak() {
   return (
     <>
       <Hero
-        image={MEDIA.pitch}
+        image={MEDIA.studio}
        
         compact
         badge={{ icon: 'bolt', label: `Break #${brk.number}` }}
