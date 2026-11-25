@@ -1347,11 +1347,11 @@ h2, .panel-title { font-weight: 800; }
 :root, :root[data-theme="dark"] {
   --gold: #e2b84a; --gold-deep: #b08d2f; --gold-pale: #f6dc8c;
   --violet: var(--gold);
-  --teal: #2ed3c0; --blue: #4c8dff; --pink: #ff6b7a; --orange: #ff9f4a; --lime: var(--gold);
+  --teal: #2ed3c0; --blue: #ff2e3b; --pink: #ff6b7a; --orange: #ff9f4a; --lime: var(--gold);
   --accent: #e2b84a; --accent-ink: #1a1405; --accent-strong: #f0cd6a;
 }
 .ambient i:nth-child(1) { background: radial-gradient(closest-side, rgba(226, 184, 74, .16), transparent 72%); }
-.ambient i:nth-child(2) { background: radial-gradient(closest-side, rgba(76, 141, 255, .16), transparent 72%); }
+.ambient i:nth-child(2) { background: radial-gradient(closest-side, rgba(255, 46, 59, .16), transparent 72%); }
 .ambient i:nth-child(3) { background: radial-gradient(closest-side, rgba(46, 211, 192, .10), transparent 72%); }
 .btn-primary, .btn-neon { background: linear-gradient(180deg, #f6dc8c, #e2b84a 55%, #b08d2f); color: #1a1405; }
 .neo-grad { background-image: linear-gradient(90deg, #b08d2f, #e2b84a, #fff1c8, #e2b84a, #b08d2f, #e2b84a, #fff1c8, #b08d2f); }
@@ -1388,7 +1388,7 @@ h2, .panel-title { font-weight: 800; }
   --line: rgba(255, 255, 255, .06); --line-2: rgba(255, 255, 255, .1);
   --text: #f5f5f4; --muted: #9a9ca5; --dim: #6c6e78;
   --gold: #e2b84a; --gold-deep: #b08d2f; --gold-pale: #f6dc8c;
-  --tert: #3b82f6; --blue: #3b82f6; --teal: #3b82f6; --pink: #e2b84a; --orange: #e2b84a; --lime: #e2b84a; --violet: #e2b84a;
+  --tert: #ff2e3b; --blue: #ff2e3b; --teal: #ff2e3b; --pink: #e2b84a; --orange: #e2b84a; --lime: #e2b84a; --violet: #e2b84a;
   --accent: #e2b84a; --accent-ink: #17120a; --accent-strong: #f0cd6a; --accent-soft: rgba(226, 184, 74, .12); --accent-line: rgba(226, 184, 74, .4);
   --glass-bg: #16171c; --glass-edge: rgba(255, 255, 255, .06); --glass-chip: rgba(255, 255, 255, .04); --field: #101116;
 }
@@ -1398,7 +1398,7 @@ body::before, .ambient { display: none; }
 .card::before, .panel::before { display: none; }
 .sidebar { background: #13141a; }
 .topbar .search, .topbar .icon-btn:not(.ghost), :root[data-theme="dark"] .topbar .search, :root[data-theme="dark"] .topbar .icon-btn:not(.ghost) { background: #1a1b21; border-color: rgba(255, 255, 255, .06); }
-.search:focus-within { border-color: var(--tert); box-shadow: 0 0 0 3px rgba(59, 130, 246, .18); }
+.search:focus-within { border-color: var(--tert); box-shadow: 0 0 0 3px rgba(255, 46, 59, .18); }
 .brand-mark { background: #1c1d24; box-shadow: 0 0 0 1px rgba(226, 184, 74, .3); }
 .nav-item.active { background: #1f2027; box-shadow: inset 3px 0 0 var(--gold); }
 .nav-item.active svg { color: var(--gold); filter: none; }
@@ -1535,3 +1535,20 @@ body::before, .ambient { display: none; }
 .av.more { background: #2a2c34; color: #fff; }
 .hero-img { filter: saturate(.3) brightness(.85); }
 .icon-btn .pip { background: var(--gold); }
+/* Club crests replace initial avatars */
+.fi-av.crest-av, .av.crest-av { background: none !important; border-radius: 0; display: grid; place-items: center; }
+.avs .av.crest-av { width: 28px; height: 28px; border: 0; margin-left: -6px; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .6)); }
+.crest { display: block; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .35)); transition: transform .25s var(--ease); }
+.feed-item:hover .crest { transform: rotate(-6deg) scale(1.08); }
+/* Tertiary accent: red hot (replaces blue) */
+:root, :root[data-theme="dark"] { --tert: #ff2e3b; --blue: #ff2e3b; --teal: #ff2e3b; --red: #ff2e3b; }
+.feat.t-blue, .feat.t-red { --c: #ff2e3b; }
+.room.t-blue { --c: #ff2e3b; }
+.room-hot { background: linear-gradient(180deg, #ff5a52, #ff2e3b 55%, #c8102e); color: #fff; box-shadow: 0 0 14px rgba(255, 46, 59, .55); }
+.live-dot, .neo-pill.live .live-dot, .sb-live .live-dot, .icon-btn .pip { background: #ff2e3b; }
+.neo-pill.live { background: rgba(255, 46, 59, .12); border-color: rgba(255, 46, 59, .4); color: #ffd7d9; }
+.sb-tag .live-dot { background: #c8102e; }
+.see-all { color: #ff4d57; }
+.see-all:hover { color: #ff7a82; }
+.av.h1, .av.h4 { background: #ff2e3b; }
+.room.t-red { --c: #ff2e3b; }

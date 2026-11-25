@@ -5,6 +5,7 @@ import { MEDIA } from '../lib/media.ts';
 import Showcase from '../components/Showcase.tsx';
 import Icon from '../components/Icons.tsx';
 import CountUp from '../components/CountUp.tsx';
+import Crest from '../components/Crest.tsx';
 
 const SOLD: Record<string, [number, number]> = { '394': [18, 18], '403': [33, 43] };
 const HERO: Record<string, { img: string; word: string; photo: string; caption: string }> = {
@@ -14,14 +15,14 @@ const HERO: Record<string, { img: string; word: string; photo: string; caption: 
 
 const ROOMS = [
   { href: '#/wheel', img: MEDIA.roomWheel, tone: 'gold', hot: true, badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
-  { href: '#/duck', img: MEDIA.roomDuck, tone: 'blue', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
+  { href: '#/duck', img: MEDIA.roomDuck, tone: 'red', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
   { href: '#/checklists', img: MEDIA.roomCards, tone: 'gold', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
-  { href: '#/proofs', img: MEDIA.roomLock, tone: 'blue', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
+  { href: '#/proofs', img: MEDIA.roomLock, tone: 'red', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
 ] as const;
 
 const FEATURE = [
   { href: '#/break/394', tone: 'gold', img: MEDIA.featDice, title: 'Team draw', text: 'Break #394 · Topps Bundesliga Gold. Every team assigned by a sealed roll.' },
-  { href: '#/break/403', tone: 'blue', img: MEDIA.heroBall, title: 'Pick your team', text: 'Break #403 · Futera World. 10 teams still open, fillers from 49 kr.' },
+  { href: '#/break/403', tone: 'red', img: MEDIA.heroBall, title: 'Pick your team', text: 'Break #403 · Futera World. 10 teams still open, fillers from 49 kr.' },
 ];
 
 const TONIGHT = [
@@ -36,7 +37,6 @@ const FEED = [
   ...ORDERS_394.slice(-7).reverse().map((o, k) => ({ who: o.buyer, what: `bought ${o.qty} spot${o.qty > 1 ? 's' : ''}`, where: 'Break #394', mins: 2 + k * 3 })),
   ...initialPytSlots().filter((s) => s.owner).slice(0, 4).map((s, k) => ({ who: s.owner!, what: `took ${s.team}`, where: 'Break #403', mins: 24 + k * 5 })),
 ];
-const AV = ['#e2b84a', '#3b82f6', '#f6dc8c'];
 const SLIDE_MS = 6000;
 const repeat = (() => { const m = new Map<string, number>(); ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + 1)); return [...m.values()].filter((n) => n > 1).length; })();
 const totalSpots = Object.values(SOLD).reduce((a, [, of]) => a + of, 0);
@@ -237,13 +237,13 @@ export default function Dashboard() {
         <div className="feed-list">
           {draws.slice(0, 3).map((d) => (
             <a key={d.id} href={`#/proof/${d.id}`} className="feed-item proof">
-              <span className="fi-av" style={{ background: 'linear-gradient(135deg,#3b82f6,#2563eb)' }}><Icon name="seal" size={15} weight="fill" /></span>
+              <span className="fi-av" style={{ background: 'linear-gradient(135deg,#ff2e3b,#c8102e)' }}><Icon name="seal" size={15} weight="fill" /></span>
               <span className="fi-txt"><b>{d.title}</b><span>{d.revealed ? 'Verified' : 'Sealed'} · {d.id}</span></span>
             </a>
           ))}
           {FEED.map((f, k) => (
             <div key={k} className="feed-item" style={{ animationDelay: `${200 + k * 60}ms` }}>
-              <span className="fi-av" style={{ background: AV[k % AV.length] }}>{f.who.slice(0, 1).toUpperCase()}</span>
+              <span className="fi-av crest-av"><Crest name={f.who} /></span>
               <span className="fi-txt"><b>{f.who}</b><span>{f.what} · {f.where}</span></span>
               <span className="fi-time">{f.mins}m</span>
             </div>
