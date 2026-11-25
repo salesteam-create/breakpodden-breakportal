@@ -1552,3 +1552,5 @@ body::before, .ambient { display: none; }
 .see-all:hover { color: #ff7a82; }
 .av.h1, .av.h4 { background: #ff2e3b; }
 .room.t-red { --c: #ff2e3b; }
+/* Feature cards: no outline */
+.feat, .feat:hover { border: 0; box-shadow: none; }
