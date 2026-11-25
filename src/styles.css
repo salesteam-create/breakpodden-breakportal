@@ -1729,3 +1729,4 @@ body::before, .ambient { display: none; }
 .slim-row:hover .slim-ic svg { animation-duration: 1.4s; }
 @media (prefers-reduced-motion: reduce) { .slim-ic svg, .slim-ic::after { animation: none; } }
 .slim-row { border: 0; }
+.promo-art { border: 0; box-shadow: none; }
