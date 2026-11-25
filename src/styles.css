@@ -1584,3 +1584,5 @@ body::before, .ambient { display: none; }
 .wide-card:hover { border-color: rgba(255, 255, 255, .06); }
 .room-art { margin-bottom: -1px; transform: translateZ(0); }
 .room-art::after { bottom: -1px; }
+.room:hover { border-color: color-mix(in srgb, var(--c) 55%, transparent); }
+.wide-card:hover { border-color: rgba(226, 184, 74, .4); }
