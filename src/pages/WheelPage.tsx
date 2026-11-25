@@ -107,7 +107,8 @@ export default function WheelPage() {
   return (
     <>
       <Hero
-        image={MEDIA.party}
+        image={MEDIA.wheelHero}
+        vivid
        
         compact
         badge={{ icon: 'sparkle', label: 'Giveaway' }}

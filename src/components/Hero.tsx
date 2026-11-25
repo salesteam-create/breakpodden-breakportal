@@ -19,12 +19,14 @@ interface Props {
   compact?: boolean;
   /** Focal point of the photo, CSS object-position. */
   focus?: string;
+  /** Show the photo in full colour on the right, like the dashboard hero. */
+  vivid?: boolean;
   dots?: { index: number; total: number; onPick: (i: number) => void; label: string; /** Autoplay interval in ms; shows a progress fill on the active dot. */ duration?: number };
 }
 
-export default function Hero({ image, badge, chips, title, lede, stats, actions, aside, tabs, compact, focus, dots }: Props) {
+export default function Hero({ image, badge, chips, title, lede, stats, actions, aside, tabs, compact, focus, vivid, dots }: Props) {
   return (
-    <section className={`hero${compact ? ' compact' : ''}`}>
+    <section className={`hero${compact ? ' compact' : ''}${vivid ? ' vivid' : ''}`}>
       <img className="hero-img" src={image} alt="" style={focus ? { objectPosition: focus } : undefined} />
       <div className="hero-shade" aria-hidden="true" />
 

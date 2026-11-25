@@ -1571,3 +1571,9 @@ body::before, .ambient { display: none; }
   .neo-title .neo-grad { font-size: 40px; }
   .neo-title > span:last-child { font-size: 22px; }
 }
+/* Vivid page hero: full-colour photo on the right, fading into the dark */
+.hero.vivid .hero-img { left: auto; right: 0; width: 62%; filter: none; transform: none; object-position: 60% 45%;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 40%); mask-image: linear-gradient(90deg, transparent 0%, #000 40%); }
+.hero.vivid { background: radial-gradient(60% 120% at 85% 40%, rgba(226, 184, 74, .16), transparent 60%), #111216; }
+.hero.vivid .hero-shade { background: linear-gradient(90deg, rgba(14, 15, 19, .9) 0%, rgba(14, 15, 19, .5) 38%, transparent 60%); }
+@media (max-width: 720px) { .hero.vivid .hero-img { width: 100%; opacity: .45; -webkit-mask-image: none; mask-image: none; } }
