@@ -36,6 +36,19 @@ const FEED = [
 ];
 const AV = ['#a6ff3d', '#9b4dff', '#3d8bff', '#ffa53d', '#ff3d9a'];
 const SLIDE_MS = 6000;
+const repeat = (() => { const m = new Map<string, number>(); ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + 1)); return [...m.values()].filter((n) => n > 1).length; })();
+const totalSpots = Object.values(SOLD).reduce((a, [, of]) => a + of, 0);
+
+/** Split-flap number: each digit on its own tile, flipping in one after another. */
+function Flap({ value, pad = 1, suffix }: { value: number; pad?: number; suffix?: string }) {
+  const digits = String(value).padStart(pad, '0').split('');
+  return (
+    <span className="flap" aria-label={`${value}${suffix ?? ''}`}>
+      {digits.map((d, k) => <span key={k} className="flap-d" style={{ animationDelay: `${300 + k * 90}ms` }}>{d}</span>)}
+      {suffix && <span className="flap-sfx">{suffix}</span>}
+    </span>
+  );
+}
 
 export default function Dashboard() {
   const [i, setI] = useState(0);
@@ -107,18 +120,32 @@ export default function Dashboard() {
           </div>
         </section>
 
-        <section className="neo-stats">
-          {[
-            { tone: 'lime', icon: 'users', v: buyers, label: 'Buyers tonight' },
-            { tone: 'violet', icon: 'ticket', v: spots, label: 'Spots sold' },
-            { tone: 'blue', icon: 'seal', v: draws.length, label: 'Draws sealed' },
-            { tone: 'orange', icon: 'box', v: boxValue, label: 'Box value (kr)' },
-          ].map((s, k) => (
-            <div key={s.label} className={`neo-stat t-${s.tone} reveal-up`} style={{ animationDelay: `${80 + k * 70}ms` }}>
-              <span className="ns-ic"><Icon name={s.icon} size={20} weight="duotone" /></span>
-              <span className="ns-txt"><b><CountUp value={s.v} /></b><span>{s.label}</span></span>
-            </div>
-          ))}
+        <section className="scoreboard reveal-up" aria-label="Tonight in numbers">
+          <div className="sb-tag">
+            <span className="sb-live"><i className="live-dot sm" /> Live</span>
+            <b>Tonight</b>
+            <span className="sb-sub">Breaks from 20:00</span>
+          </div>
+          <div className="sb-cell">
+            <span className="sb-label">Buyers</span>
+            <Flap value={buyers} />
+            <span className="sb-ctx"><em>{repeat}</em> came back for more</span>
+          </div>
+          <div className="sb-cell">
+            <span className="sb-label">Spots sold</span>
+            <Flap value={spots} suffix={`/${totalSpots}`} />
+            <span className="sb-meter" aria-hidden="true">{Array.from({ length: 20 }, (_, k) => <i key={k} className={k < Math.round((spots / totalSpots) * 20) ? 'on' : ''} />)}</span>
+          </div>
+          <div className="sb-cell">
+            <span className="sb-label">Draws sealed</span>
+            <Flap value={draws.length} pad={2} />
+            <span className="sb-ctx">{draws.length ? <><em>{draws.filter((d) => d.revealed).length}</em> already verified</> : <>Next: <em>#394</em> at 20:00</>}</span>
+          </div>
+          <div className="sb-cell">
+            <span className="sb-label">On the table</span>
+            <Flap value={boxValue} suffix=" kr" />
+            <span className="sb-ctx"><em>{BREAKS.length}</em> boxes to open</span>
+          </div>
         </section>
 
         <section className="neo-rooms">
