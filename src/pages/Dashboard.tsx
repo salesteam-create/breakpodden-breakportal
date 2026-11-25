@@ -33,7 +33,7 @@ const FEED = [
   ...ORDERS_394.slice(-7).reverse().map((o, k) => ({ who: o.buyer, what: `bought ${o.qty} spot${o.qty > 1 ? 's' : ''}`, where: 'Break #394', mins: 2 + k * 3 })),
   ...initialPytSlots().filter((s) => s.owner).slice(0, 4).map((s, k) => ({ who: s.owner!, what: `took ${s.team}`, where: 'Break #403', mins: 24 + k * 5 })),
 ];
-const AV = ['#a6ff3d', '#9b4dff', '#3d8bff', '#ffa53d', '#ff3d9a'];
+const AV = ['#e2b84a', '#2ed3c0', '#4c8dff', '#ff9f4a', '#ff6b7a'];
 const SLIDE_MS = 6000;
 const repeat = (() => { const m = new Map<string, number>(); ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + 1)); return [...m.values()].filter((n) => n > 1).length; })();
 const totalSpots = Object.values(SOLD).reduce((a, [, of]) => a + of, 0);
@@ -224,7 +224,7 @@ export default function Dashboard() {
         <div className="feed-list">
           {draws.slice(0, 3).map((d) => (
             <a key={d.id} href={`#/proof/${d.id}`} className="feed-item proof">
-              <span className="fi-av" style={{ background: 'linear-gradient(135deg,#a6ff3d,#3dd6a0)' }}><Icon name="seal" size={15} weight="fill" /></span>
+              <span className="fi-av" style={{ background: 'linear-gradient(135deg,#2ed3c0,#1fa392)' }}><Icon name="seal" size={15} weight="fill" /></span>
               <span className="fi-txt"><b>{d.title}</b><span>{d.revealed ? 'Verified' : 'Sealed'} · {d.id}</span></span>
             </a>
           ))}

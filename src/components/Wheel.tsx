@@ -6,9 +6,9 @@
 import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import { WORKSPACE } from '../lib/workspace.ts';
 
-// Gold, midnight, violet, deep navy, cream, magenta.
-const COLORS = ['#9b4dff', '#141739', '#3d8bff', '#ff3d9a', '#a6ff3d', '#ffa53d'];
-const INK = ['#ffffff', '#a6ff3d', '#ffffff', '#ffffff', '#0c1600', '#1b1003'];
+// Brand gold, navy, blue, coral, teal, pale gold.
+const COLORS = ['#e2b84a', '#1b1c38', '#4c8dff', '#ff6b7a', '#2ed3c0', '#f6dc8c'];
+const INK = ['#1a1405', '#e2b84a', '#ffffff', '#ffffff', '#062a26', '#1a1405'];
 const STUDS = 32;
 const PARTICLES = 22;
 
