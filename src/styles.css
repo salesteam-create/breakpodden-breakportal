@@ -1597,3 +1597,13 @@ body::before, .ambient { display: none; }
 .avs .av.crest-av { background: #23252d !important; border-radius: 50%; border: 2px solid #16171c; }
 .avs .av.crest-av .team-logo { width: 18px; height: 18px; }
 .fi-av.proof-av { background: #23252d; color: #f5f5f4; }
+/* Live activity icon: on-air pulse with radiating rings */
+.live-ic { position: relative; overflow: visible; }
+.live-ic svg { animation: onAir 1.6s ease-in-out infinite; }
+.live-ic::before, .live-ic::after { content: ''; position: absolute; inset: 0; border-radius: inherit; border: 1.5px solid var(--gold); opacity: 0; pointer-events: none; animation: airRing 2.4s cubic-bezier(.2, .6, .3, 1) infinite; }
+.live-ic::after { animation-delay: 1.2s; }
+@keyframes onAir { 0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 0 rgba(226, 184, 74, 0)); } 50% { opacity: .55; transform: scale(.88); filter: drop-shadow(0 0 6px rgba(226, 184, 74, .8)); } }
+@keyframes airRing { 0% { opacity: .7; transform: scale(1); } 100% { opacity: 0; transform: scale(1.7); } }
+@media (prefers-reduced-motion: reduce) { .live-ic svg, .live-ic::before, .live-ic::after { animation: none; } }
+/* Proof rows: make the seal icon visible on the dark tile */
+.fi-av.proof-av svg { color: var(--gold); }
