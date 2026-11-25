@@ -1586,3 +1586,7 @@ body::before, .ambient { display: none; }
 .room-art::after { bottom: -1px; }
 .room:hover { border-color: color-mix(in srgb, var(--c) 55%, transparent); }
 .wide-card:hover { border-color: rgba(226, 184, 74, .4); }
+/* Taller room cards */
+.room-art { height: 185px; }
+.room { padding-bottom: 20px; gap: 14px; }
+@media (max-width: 720px) { .room-art { height: 150px; } }
