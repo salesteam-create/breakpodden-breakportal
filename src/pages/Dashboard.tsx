@@ -15,9 +15,9 @@ const HERO: Record<string, { img: string; word: string; photo: string; caption: 
 
 const ROOMS = [
   { href: '#/wheel', img: MEDIA.roomWheel, tone: 'gold', hot: true, badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
-  { href: '#/duck', img: MEDIA.roomDuck, tone: 'red', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
-  { href: '#/checklists', img: MEDIA.roomCards, tone: 'gold', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
-  { href: '#/proofs', img: MEDIA.roomLock, tone: 'red', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
+  { href: '#/duck', img: MEDIA.roomDuck2, tone: 'red', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
+  { href: '#/checklists', img: MEDIA.roomBox, tone: 'gold', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
+  { href: '#/proofs', img: MEDIA.roomShield, tone: 'red', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
 ] as const;
 
 const FEATURE = [
@@ -29,7 +29,7 @@ const TONIGHT = [
   { href: '#/break/394', title: 'Break #394 · Topps Bundesliga', image: MEDIA.arena, left: 'Random team', right: '18/18 sold', progress: 1 },
   { href: '#/break/403', title: 'Break #403 · Futera World', image: MEDIA.studio, left: 'Pick your team', right: '33/43 sold', progress: 33 / 43 },
   { href: '#/wheel', title: 'Wheel of fortune', image: MEDIA.wheelCard, left: 'Giveaway', right: `${giveawayEntries().length} entries`, progress: 0 },
-  { href: '#/duck', title: 'Duck race', image: MEDIA.ducks, left: 'Giveaway', right: `${uniqueEntrants().length} ducks`, progress: 0 },
+  { href: '#/duck', title: 'Duck race', image: MEDIA.duckCard, left: 'Giveaway', right: `${uniqueEntrants().length} ducks`, progress: 0 },
 ];
 
 /** Live feed: recent purchases, newest first, with relative times. */

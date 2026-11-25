@@ -27,9 +27,16 @@ import heroKick from '../assets/stock/hero-kick.webp';
 import heroTrophy from '../assets/stock/hero-trophy.webp';
 import wheelHero from '../assets/stock/wheel-hero.webp';
 import wheelCard from '../assets/stock/wheel-card.webp';
+import roomDuck2 from '../assets/stock/room-duck2.webp';
+import roomBox from '../assets/stock/room-box2.webp';
+import roomShield from '../assets/stock/room-shield2.webp';
+import duckHero from '../assets/stock/duck-hero.webp';
+import boxHero from '../assets/stock/box-hero.webp';
+import shieldHero from '../assets/stock/shield-hero.webp';
+import duckCard from '../assets/stock/duck-card.webp';
 import promo from '../assets/stock/promo-confetti.webp';
 
-export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, featDice, heroKick, heroTrophy, wheelHero, wheelCard, promo };
+export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, featDice, heroKick, heroTrophy, wheelHero, wheelCard, roomDuck2, roomBox, roomShield, duckHero, boxHero, shieldHero, duckCard, promo };
 
 /** Credits, kept with the images. Chosen for one calm subject and empty space for text. */
 export const CREDITS = [

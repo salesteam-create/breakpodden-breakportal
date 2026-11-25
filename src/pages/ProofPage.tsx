@@ -210,7 +210,9 @@ export default function ProofPage({ id }: { id?: string }) {
   return (
     <>
       <Hero
-        image={MEDIA.abstract}
+        image={MEDIA.shieldHero}
+        focus="55% 30%"
+        vivid
        
         compact
         badge={{ icon: 'eye', label: 'Public record' }}
