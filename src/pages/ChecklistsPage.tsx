@@ -169,8 +169,8 @@ export default function ChecklistsPage() {
                   </div>
                 ))}
                 <div className="row" style={{ marginTop: 10 }}>
-                  <input type="text" placeholder="Add a team" value={newTeam} onChange={(e) => setNewTeam(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTeam()} style={{ flex: 1 }} />
-                  <button className="btn btn-sm btn-primary" onClick={addTeam} disabled={!newTeam.trim()}><Icon name="plus" size={15} /> Add team</button>
+                  <input type="text" placeholder="Add a team" value={newTeam} onChange={(e) => setNewTeam(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addTeam()} style={{ flex: 1, minWidth: 0 }} />
+                  <button className="btn btn-sm btn-primary" onClick={addTeam} disabled={!newTeam.trim()} aria-label="Add team"><Icon name="plus" size={15} /> <span className="hide-sm">Add team</span></button>
                 </div>
               </div>
             )}

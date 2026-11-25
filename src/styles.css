@@ -1730,3 +1730,50 @@ body::before, .ambient { display: none; }
 @media (prefers-reduced-motion: reduce) { .slim-ic svg, .slim-ic::after { animation: none; } }
 .slim-row { border: 0; }
 .promo-art { border: 0; box-shadow: none; }
+
+/* ---------- Responsive pass ---------- */
+.see-all { white-space: nowrap; flex: none; }
+/* Carousel dots: same look, 24px tall tap area */
+.neo-dots button { overflow: visible; }
+.neo-dots button::before { content: ''; position: absolute; inset: -10px -4px; }
+.neo-dots button i { border-radius: inherit; }
+/* Duck race: keep the Finish label inside the pond on narrow screens */
+.pond-head span:last-child { white-space: nowrap; overflow: visible; }
+@media (max-width: 560px) {
+  .pond-head { font-size: 9px; letter-spacing: .06em; }
+  .pond-head span:not(:first-child):not(:last-child) { visibility: hidden; }
+  .pond-head span:last-child { padding-right: 0; transform: translateX(-6px); }
+}
+/* Forms never wider than their card */
+.row > input, .row > select, .field input, .field select { min-width: 0; }
+/* Tablet: two-column feature cards and taller hero */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .neo-hero { min-height: 340px; padding: 28px; }
+  .neo-hero-img { width: 55%; }
+}
+/* Very small phones */
+@media (max-width: 360px) {
+  .page { padding-left: 10px; padding-right: 10px; }
+  .neo-title .neo-grad { font-size: 30px; }
+  .neo-title > span:last-child { font-size: 18px; }
+  .vault-num { font-size: 28px; }
+  .vault-ring { width: 70px; height: 70px; }
+  .feat { padding: 18px; min-height: 130px; }
+  .feat-txt b { font-size: 17px; }
+}
+/* Grids and the top bar may shrink below their content's natural width */
+.topbar .search { min-width: 0; flex: 1 1 auto; }
+.topbar .search input { min-width: 0; width: 100%; }
+.workspace, .workspace > *, .main, .page { min-width: 0; }
+.workspace > * > * { max-width: 100%; }
+@media (max-width: 380px) { .topbar { gap: 6px; } .topbar .search input::placeholder { font-size: 12.5px; } }
+.topbar { overflow-x: clip; }
+.side .row, .side .panel-head, .side .row-head { flex-wrap: wrap; row-gap: 8px; }
+.side .btn { max-width: 100%; }
+/* Phones: hero photo spans the full width under the buttons */
+@media (max-width: 720px) { .neo-hero .neo-hero-img { width: 100% !important; left: 0; right: 0; } }
+/* Tablets: product shots step back behind the title */
+@media (min-width: 721px) and (max-width: 1100px) {
+  .hero.vivid.product .hero-img { opacity: .4; right: 0; }
+  .hero.vivid.product .hero-shade { background: linear-gradient(90deg, rgba(14, 15, 19, .92) 0%, rgba(14, 15, 19, .6) 55%, rgba(14, 15, 19, .2) 100%); }
+}
