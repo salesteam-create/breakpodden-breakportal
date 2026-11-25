@@ -23,9 +23,10 @@ import roomDuck from '../assets/stock/room-duck.webp';
 import roomCards from '../assets/stock/room-cards.webp';
 import roomLock from '../assets/stock/room-lock.webp';
 import featDice from '../assets/stock/feat-dice.webp';
+import heroKick from '../assets/stock/hero-kick.webp';
 import promo from '../assets/stock/promo-confetti.webp';
 
-export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, featDice, promo };
+export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, featDice, heroKick, promo };
 
 /** Credits, kept with the images. Chosen for one calm subject and empty space for text. */
 export const CREDITS = [

@@ -1554,3 +1554,4 @@ body::before, .ambient { display: none; }
 .room.t-red { --c: #ff2e3b; }
 /* Feature cards: no outline */
 .feat, .feat:hover { border: 0; box-shadow: none; }
+.neo-lede { max-width: 420px; }
