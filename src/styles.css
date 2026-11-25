@@ -1720,3 +1720,12 @@ body::before, .ambient { display: none; }
 .promo-card:hover .promo-art .prize-tile img { transform: none; }
 .promo-art .prize-tile { padding: 0; display: grid; place-items: center; }
 .promo-art .prize-tile img { width: auto; height: 52px; max-width: none; }
+/* Fairness row icon: no disc, larger gold shield with a scan + glint loop */
+.slim-ic { position: relative; width: 40px; height: 40px; border-radius: 0; background: none; color: var(--gold); overflow: visible; }
+.slim-ic svg { width: 34px; height: 34px; filter: drop-shadow(0 0 6px rgba(226, 184, 74, .45)); animation: shieldBeat 2.8s ease-in-out infinite; transform-origin: 50% 60%; }
+.slim-ic::after { content: ''; position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; border: 1.5px solid rgba(226, 184, 74, .55); opacity: 0; animation: shieldRing 2.8s ease-out infinite; pointer-events: none; }
+@keyframes shieldBeat { 0%, 100% { transform: scale(1) rotate(0deg); } 12% { transform: scale(1.14) rotate(-6deg); } 24% { transform: scale(.98) rotate(3deg); } 36% { transform: scale(1) rotate(0deg); } }
+@keyframes shieldRing { 0%, 8% { opacity: 0; transform: scale(.6); } 14% { opacity: .9; } 60%, 100% { opacity: 0; transform: scale(1.35); } }
+.slim-row:hover .slim-ic svg { animation-duration: 1.4s; }
+@media (prefers-reduced-motion: reduce) { .slim-ic svg, .slim-ic::after { animation: none; } }
+.slim-row { border: 0; }

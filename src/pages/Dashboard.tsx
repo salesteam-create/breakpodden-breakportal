@@ -118,7 +118,7 @@ export default function Dashboard() {
         </section>
 
         <a href="#/proofs" className="slim-row">
-          <span className="slim-ic"><Icon name="shield" size={18} weight="fill" /></span>
+          <span className="slim-ic"><Icon name="shield" size={34} weight="fill" /></span>
           <b>Fairness proofs</b>
           <span className="slim-txt">Every draw is sealed with a SHA-256 fingerprint before the roll. Anyone can verify it afterwards.</span>
           <Icon name="arrow" size={16} />
