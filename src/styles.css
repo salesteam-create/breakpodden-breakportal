@@ -1557,3 +1557,17 @@ body::before, .ambient { display: none; }
 .neo-lede { max-width: 420px; }
 .neo-hero-img { object-position: right 12%; }
 @media (max-width: 720px) { .neo-hero-img { object-position: 55% 8%; } }
+/* Keep the photo clear of the headline */
+@media (min-width: 721px) { .neo-hero-img { width: 60%; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 35%); mask-image: linear-gradient(90deg, transparent 0%, #000 35%); } }
+@media (min-width: 721px) {
+  .neo-hero-body { max-width: min(520px, 50%); }
+  .neo-hero-tint { background: linear-gradient(90deg, rgba(14, 15, 19, .85) 0%, rgba(14, 15, 19, .55) 38%, transparent 58%), linear-gradient(0deg, rgba(14, 15, 19, .65), transparent 40%); }
+}
+/* Size the hero against its own width, not the viewport */
+.neo-hero { container-type: inline-size; }
+@media (min-width: 721px) { .neo-hero-body { max-width: min(520px, 62%); } }
+@container (max-width: 860px) {
+  .neo-hero-img { width: 50%; }
+  .neo-title .neo-grad { font-size: 40px; }
+  .neo-title > span:last-child { font-size: 22px; }
+}
