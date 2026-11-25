@@ -1701,3 +1701,22 @@ body::before, .ambient { display: none; }
 @media (prefers-reduced-motion: reduce) { .vault::after, .vault-ring .arc { animation: none; } }
 .feat img { object-position: center; }
 .feat img { width: 56%; -webkit-mask-image: linear-gradient(90deg, transparent, #000 35%); mask-image: linear-gradient(90deg, transparent, #000 35%); }
+/* Real gift box cutout in the Rain of prizes tile */
+.promo-art { background: radial-gradient(circle at 50% 48%, rgba(255, 196, 80, .45), rgba(226, 184, 74, .08) 45%, #1c1d24 72%); }
+.prize-tile { width: 100%; height: 100%; padding: 6px; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .55)) drop-shadow(0 0 12px rgba(255, 190, 70, .45)); }
+.prize-tile img { width: 100%; height: 100%; object-fit: contain; }
+/* Product banners: whole box visible, smaller, sitting on the right */
+.hero.vivid.product .hero-img { top: 0; bottom: 0; right: 3%; left: auto; width: auto; height: 100%; aspect-ratio: 3 / 2; object-fit: contain; object-position: center;
+  -webkit-mask-image: radial-gradient(75% 85% at 55% 50%, #000 55%, transparent 100%); mask-image: radial-gradient(75% 85% at 55% 50%, #000 55%, transparent 100%); }
+.hero.vivid.product .hero-shade { background: linear-gradient(90deg, rgba(14, 15, 19, .9) 0%, rgba(14, 15, 19, .4) 45%, transparent 65%); }
+@media (max-width: 720px) { .hero.vivid.product .hero-img { right: -10%; opacity: .4; } }
+/* Carousel dots aligned with the hero text */
+.neo-dots { align-self: flex-start; justify-content: flex-start; margin-top: 14px; }
+@media (max-width: 720px) { .neo-dots { left: 20px; right: auto; justify-content: flex-start; } }
+.vault-rule { background: none; }
+.hero.vivid.product .hero-img { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 30%, #000 80%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 30%, #000 80%, transparent 100%); }
+.promo-art .prize-tile { width: 100%; height: 100%; padding: 6px 10px; box-sizing: border-box; }
+.promo-art .prize-tile img { width: 100%; height: 100%; object-fit: contain; transform: none; }
+.promo-card:hover .promo-art .prize-tile img { transform: none; }
+.promo-art .prize-tile { padding: 0; display: grid; place-items: center; }
+.promo-art .prize-tile img { width: auto; height: 52px; max-width: none; }

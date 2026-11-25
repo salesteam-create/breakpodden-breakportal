@@ -149,6 +149,7 @@ export default function RandomBreak() {
       <Hero
         image={MEDIA.toppsHero}
         vivid
+        product
        
         compact
         badge={{ icon: 'fire', label: `Break #${brk.number}` }}

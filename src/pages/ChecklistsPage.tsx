@@ -63,6 +63,7 @@ export default function ChecklistsPage() {
       <Hero
         image={MEDIA.boxHero}
         vivid
+        product
        
         compact
         badge={{ icon: 'cards', label: 'Library' }}

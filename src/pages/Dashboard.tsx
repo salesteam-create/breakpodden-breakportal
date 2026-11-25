@@ -160,9 +160,6 @@ export default function Dashboard() {
             <div className="vault-cell vault-pool">
               <span className="vault-label">On the table</span>
               <b className="vault-num vault-gold"><CountUp value={boxValue} /><small> kr</small></b>
-              <span className="vault-boxes" aria-hidden="true">
-                <img src={MEDIA.toppsCard} alt="" /><img src={MEDIA.futeraCard} alt="" />
-              </span>
               <span className="vault-ctx"><em>{BREAKS.length}</em> boxes to open</span>
             </div>
           </div>

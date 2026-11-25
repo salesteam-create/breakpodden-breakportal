@@ -1,3 +1,4 @@
+import giftCutout from '../assets/stock/gift-cutout.webp';
 /**
  * "Rain of prizes": a gold gift in the tile, and every few seconds a short
  * shower of small gift boxes falls across the promo card. Decorative only.
@@ -36,7 +37,7 @@ export function PrizeShower() {
 export function PrizeTile() {
   return (
     <span className="prize-tile" aria-hidden="true">
-      <Gift body="#e2b84a" ribbon="#ff2e3b" size={40} />
+      <img src={giftCutout} alt="" />
     </span>
   );
 }

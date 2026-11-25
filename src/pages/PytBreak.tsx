@@ -91,6 +91,7 @@ export default function PytBreak() {
       <Hero
         image={MEDIA.futeraHero}
         vivid
+        product
        
         compact
         badge={{ icon: 'bolt', label: `Break #${brk.number}` }}
