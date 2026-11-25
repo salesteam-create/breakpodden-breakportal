@@ -35,9 +35,10 @@ import boxHero from '../assets/stock/box-hero.webp';
 import shieldHero from '../assets/stock/shield-hero.webp';
 import duckCard from '../assets/stock/duck-card.webp';
 import futeraCard from '../assets/stock/futera-card.webp';
+import toppsCard from '../assets/stock/topps-card.webp';
 import promo from '../assets/stock/promo-confetti.webp';
 
-export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, featDice, heroKick, heroTrophy, wheelHero, wheelCard, roomDuck2, roomBox, roomShield, duckHero, boxHero, shieldHero, duckCard, futeraCard, promo };
+export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, featDice, heroKick, heroTrophy, wheelHero, wheelCard, roomDuck2, roomBox, roomShield, duckHero, boxHero, shieldHero, duckCard, futeraCard, toppsCard, promo };
 
 /** Credits, kept with the images. Chosen for one calm subject and empty space for text. */
 export const CREDITS = [
