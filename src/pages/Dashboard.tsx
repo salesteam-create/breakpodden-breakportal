@@ -4,22 +4,21 @@ import { listDraws, openStreamWindow } from '../lib/store.ts';
 import { MEDIA } from '../lib/media.ts';
 import Showcase from '../components/Showcase.tsx';
 import Icon from '../components/Icons.tsx';
-import Art3D from '../components/Art3D.tsx';
 import CountUp from '../components/CountUp.tsx';
 
 const SOLD: Record<string, [number, number]> = { '394': [18, 18], '403': [33, 43] };
-const HERO: Record<string, { img: string; word: string; art: ('gift' | 'dice' | 'trophy' | 'cards' | 'ticket')[] }> = {
-  '394': { img: MEDIA.arena, word: 'Draw night', art: ['dice', 'trophy', 'cards'] },
-  '403': { img: MEDIA.studio, word: 'Pick & win', art: ['ticket', 'gift', 'cards'] },
+const HERO: Record<string, { img: string; word: string; photo: string; caption: string }> = {
+  '394': { img: MEDIA.arena, word: 'Draw night', photo: MEDIA.heroDice, caption: 'Every team, one fair roll' },
+  '403': { img: MEDIA.studio, word: 'Pick & win', photo: MEDIA.heroBall, caption: 'Your club, your spot' },
 };
 
 const ROOMS = [
-  { href: '#/break/394', art: 'dice', tone: 'gold', badge: 'Break #394', title: 'Team draw', meta: [['spots', '18'], ['price', '199 kr']], cta: 'Play', hot: true },
-  { href: '#/break/403', art: 'ticket', tone: 'blue', badge: 'Break #403', title: 'Filler draw', meta: [['open', '10'], ['entry', '49 kr']], cta: 'Play' },
-  { href: '#/wheel', art: 'wheel', tone: 'pink', badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
-  { href: '#/duck', art: 'duck', tone: 'lime', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
-  { href: '#/checklists', art: 'cards', tone: 'violet', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
-  { href: '#/proofs', art: 'shield', tone: 'lime', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
+  { href: '#/break/394', img: MEDIA.roomDice, tone: 'gold', badge: 'Break #394', title: 'Team draw', meta: [['spots', '18'], ['price', '199 kr']], cta: 'Play', hot: true },
+  { href: '#/break/403', img: MEDIA.roomBall, tone: 'blue', badge: 'Break #403', title: 'Filler draw', meta: [['open', '10'], ['entry', '49 kr']], cta: 'Play' },
+  { href: '#/wheel', img: MEDIA.roomWheel, tone: 'pink', badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
+  { href: '#/duck', img: MEDIA.roomDuck, tone: 'lime', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
+  { href: '#/checklists', img: MEDIA.roomCards, tone: 'violet', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
+  { href: '#/proofs', img: MEDIA.roomLock, tone: 'lime', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
 ] as const;
 
 const TONIGHT = [
@@ -113,10 +112,11 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="neo-hero-art" aria-hidden="true">
-            <Art3D kind={h.art[0]} size={190} className="a1" />
-            <Art3D kind={h.art[1]} size={130} className="a2" />
-            <Art3D kind={h.art[2]} size={110} className="a3" />
-            <span className="spark s1" /><span className="spark s2" /><span className="spark s3" />
+            <figure className="hero-shot">
+              <img src={h.photo} alt="" />
+              <figcaption><i className="live-dot sm" /> {h.caption}</figcaption>
+            </figure>
+            <span className="spark s1" /><span className="spark s3" />
           </div>
         </section>
 
@@ -164,7 +164,7 @@ export default function Dashboard() {
               <a key={r.title} href={r.href} className={`room t-${r.tone} reveal-up`} style={{ animationDelay: `${120 + k * 60}ms` }}>
                 <span className="room-badge">{r.badge}</span>
                 {'hot' in r && r.hot && <span className="room-hot"><Icon name="fire" size={12} weight="fill" /> Hot</span>}
-                <span className="room-art"><Art3D kind={r.art} size={128} /></span>
+                <span className="room-art"><img src={r.img} alt="" loading="lazy" /></span>
                 <b className="room-title">{r.title}</b>
                 <span className="room-meta">
                   {r.meta.map(([k2, v]) => <span key={k2}><em>{k2}</em>{v}</span>)}
@@ -214,7 +214,7 @@ export default function Dashboard() {
         </div>
 
         <a href="#/wheel" className="promo-card">
-          <span className="promo-art"><Art3D kind="gift" size={96} /></span>
+          <span className="promo-art"><img src={MEDIA.promo} alt="" /></span>
           <span className="promo-txt">
             <b>Rain of prizes</b>
             <span>Every purchase tonight is a ticket in the giveaway wheel.</span>

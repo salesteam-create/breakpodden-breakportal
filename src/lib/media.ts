@@ -14,8 +14,17 @@ import avatar from '../assets/stock/avatar.webp';
 import arena from '../assets/stock/arena.webp';
 import studio from '../assets/stock/studio.webp';
 import party from '../assets/stock/party.webp';
+import heroDice from '../assets/stock/hero-dice.webp';
+import heroBall from '../assets/stock/hero-ball.webp';
+import roomDice from '../assets/stock/room-dice.webp';
+import roomBall from '../assets/stock/room-ball.webp';
+import roomWheel from '../assets/stock/room-wheel.webp';
+import roomDuck from '../assets/stock/room-duck.webp';
+import roomCards from '../assets/stock/room-cards.webp';
+import roomLock from '../assets/stock/room-lock.webp';
+import promo from '../assets/stock/promo-confetti.webp';
 
-export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party };
+export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, promo };
 
 /** Credits, kept with the images. Chosen for one calm subject and empty space for text. */
 export const CREDITS = [
@@ -30,5 +39,10 @@ export const CREDITS = [
   { key: 'arena', by: 'Karsten Winegeart', url: 'https://unsplash.com/photos/DtjUdpHuc-I' },
   { key: 'studio', by: 'Danny Pérez', url: 'https://unsplash.com/photos/yjlTDZdsvak' },
   { key: 'party', by: 'Aaron Paul', url: 'https://unsplash.com/photos/JMpnwlDTSBM' },
+  { key: 'heroDice', by: 'Eyestetix Studio', url: 'https://unsplash.com/photos/m0EzHtexapU' },
+  { key: 'heroBall', by: 'Konstantin Evdokimov', url: 'https://unsplash.com/photos/JP0qiWQzjrg' },
+  { key: 'roomWheel', by: 'Luka Savcic', url: 'https://unsplash.com/photos/VQbfXnLyYWA' },
+  { key: 'roomDuck', by: 'Pavol Tančibok', url: 'https://unsplash.com/photos/GIf0v_8iU2o' },
+  { key: 'roomLock', by: 'FlyD', url: 'https://unsplash.com/photos/C5pXRFEjq3w' },
   { key: 'avatar', by: 'SABBIR BHUIYAN', url: 'https://unsplash.com/photos/DDqybibS980' },
 ];
