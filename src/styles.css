@@ -1607,3 +1607,7 @@ body::before, .ambient { display: none; }
 @media (prefers-reduced-motion: reduce) { .live-ic svg, .live-ic::before, .live-ic::after { animation: none; } }
 /* Proof rows: make the seal icon visible on the dark tile */
 .fi-av.proof-av svg { color: var(--gold); }
+/* Live activity icon in red-hot */
+.live-ic { color: #ff2e3b; background: rgba(255, 46, 59, .12); }
+.live-ic::before, .live-ic::after { border-color: #ff2e3b; }
+@keyframes onAir { 0%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 0 rgba(255, 46, 59, 0)); } 50% { opacity: .55; transform: scale(.88); filter: drop-shadow(0 0 6px rgba(255, 46, 59, .85)); } }
