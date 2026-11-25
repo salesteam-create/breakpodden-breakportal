@@ -1225,3 +1225,13 @@ h2, .panel-title { font-weight: 800; }
 .pager { display: inline-flex; flex-direction: row; align-items: center; gap: 10px; flex: none; }
 .neo-rooms-head { align-items: center; }
 .round-nav:disabled { opacity: .35; cursor: default; transform: none; box-shadow: none; background: rgba(255, 255, 255, .06); }
+
+/* Flowing gradient text: colours travel through the letters in a seamless loop */
+.neo-grad {
+  background-image: linear-gradient(90deg, #c6ff6b, #a6ff3d, #3dffc8, #3d8bff, #9b4dff, #3dffc8, #a6ff3d, #c6ff6b);
+  background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: gradFlow 6s linear infinite;
+}
+@keyframes gradFlow { from { background-position: 0% 50%; } to { background-position: 150% 50%; } }
+@media (prefers-reduced-motion: reduce) { .neo-grad { animation: none; } }
