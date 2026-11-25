@@ -1220,3 +1220,8 @@ h2, .panel-title { font-weight: 800; }
 .sc-card .n { color: var(--lime); }
 .showcase-dots button i { background: var(--lime); }
 .wheel-wrap::before { background: radial-gradient(closest-side, rgba(155, 77, 255, .45), rgba(61, 139, 255, .2) 50%, transparent 72%); }
+
+/* Carousel arrows: side by side, aligned with the section title */
+.pager { display: inline-flex; flex-direction: row; align-items: center; gap: 10px; flex: none; }
+.neo-rooms-head { align-items: center; }
+.round-nav:disabled { opacity: .35; cursor: default; transform: none; box-shadow: none; background: rgba(255, 255, 255, .06); }
