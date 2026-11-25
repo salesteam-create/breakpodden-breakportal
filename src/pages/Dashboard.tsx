@@ -27,7 +27,7 @@ const FEATURE = [
 
 const TONIGHT = [
   { href: '#/break/394', title: 'Break #394 · Topps Bundesliga', image: MEDIA.arena, left: 'Random team', right: '18/18 sold', progress: 1 },
-  { href: '#/break/403', title: 'Break #403 · Futera World', image: MEDIA.studio, left: 'Pick your team', right: '33/43 sold', progress: 33 / 43 },
+  { href: '#/break/403', title: 'Break #403 · Futera World', image: MEDIA.futeraCard, left: 'Pick your team', right: '33/43 sold', progress: 33 / 43 },
   { href: '#/wheel', title: 'Wheel of fortune', image: MEDIA.wheelCard, left: 'Giveaway', right: `${giveawayEntries().length} entries`, progress: 0 },
   { href: '#/duck', title: 'Duck race', image: MEDIA.duckCard, left: 'Giveaway', right: `${uniqueEntrants().length} ducks`, progress: 0 },
 ];
