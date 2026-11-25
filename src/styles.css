@@ -993,3 +993,7 @@ input[type=text], input[type=number], textarea, select,
 /* Calmer water: one faint layer, slow drift. */
 .water { opacity: .28; animation-duration: 40s; }
 .water::after { content: none; }
+
+/* Stream overlay wheel: no extra stage padding so the footer always stays in frame. */
+.stream-wheel .wheel-stage { padding: 0; }
+.stream-root .stream-foot { flex: none; }

@@ -83,9 +83,10 @@ export default function StreamView() {
     subtitle = s.subtitle;
     commitment = s.commitment;
     body = (
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 560px', gap: 40, alignItems: 'center', flex: 1 }}>
-        <div style={{ display: 'grid', placeItems: 'center' }}>
-          <Wheel entries={s.entries} rotation={s.rotation} size={720} spinning={s.spinning} />
+      <div className="stream-wheel" style={{ display: 'grid', gridTemplateColumns: '1fr 560px', gap: 40, alignItems: 'center', flex: 1, minHeight: 0 }}>
+        <div style={{ display: 'grid', placeItems: 'center', minHeight: 0 }}>
+          {/* Sized to the space between header and footer of the 1920x1080 frame. */}
+          <Wheel entries={s.entries} rotation={s.rotation} size={620} spinning={s.spinning} />
         </div>
         <div>
           {s.winner ? (
