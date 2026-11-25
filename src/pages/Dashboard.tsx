@@ -42,16 +42,6 @@ const SLIDE_MS = 6000;
 const repeat = (() => { const m = new Map<string, number>(); ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + 1)); return [...m.values()].filter((n) => n > 1).length; })();
 const totalSpots = Object.values(SOLD).reduce((a, [, of]) => a + of, 0);
 
-/** Split-flap number: each digit on its own tile, flipping in one after another. */
-function Flap({ value, pad = 1, suffix }: { value: number; pad?: number; suffix?: string }) {
-  const digits = String(value).padStart(pad, '0').split('');
-  return (
-    <span className="flap" aria-label={`${value}${suffix ?? ''}`}>
-      {digits.map((d, k) => <span key={k} className="flap-d" style={{ animationDelay: `${300 + k * 90}ms` }}>{d}</span>)}
-      {suffix && <span className="flap-sfx">{suffix}</span>}
-    </span>
-  );
-}
 
 export default function Dashboard() {
   const [i, setI] = useState(0);
@@ -134,31 +124,47 @@ export default function Dashboard() {
           <Icon name="arrow" size={16} />
         </a>
 
-        <section className="scoreboard reveal-up" aria-label="Tonight in numbers">
-          <div className="sb-tag">
-            <span className="sb-live"><i className="live-dot sm" /> Live</span>
-            <b>Tonight</b>
-            <span className="sb-sub">Breaks from 20:00</span>
-          </div>
-          <div className="sb-cell">
-            <span className="sb-label">Buyers</span>
-            <Flap value={buyers} />
-            <span className="sb-ctx"><em>{repeat}</em> came back for more</span>
-          </div>
-          <div className="sb-cell">
-            <span className="sb-label">Spots sold</span>
-            <Flap value={spots} suffix={`/${totalSpots}`} />
-            <span className="sb-meter" aria-hidden="true">{Array.from({ length: 20 }, (_, k) => <i key={k} className={k < Math.round((spots / totalSpots) * 20) ? 'on' : ''} />)}</span>
-          </div>
-          <div className="sb-cell">
-            <span className="sb-label">Draws sealed</span>
-            <Flap value={draws.length} pad={2} />
-            <span className="sb-ctx">{draws.length ? <><em>{draws.filter((d) => d.revealed).length}</em> already verified</> : <>Next: <em>#394</em> at 20:00</>}</span>
-          </div>
-          <div className="sb-cell">
-            <span className="sb-label">On the table</span>
-            <Flap value={boxValue} suffix=" kr" />
-            <span className="sb-ctx"><em>{BREAKS.length}</em> boxes to open</span>
+        <section className="vault reveal-up" aria-label="Tonight in numbers">
+          <header className="vault-head">
+            <span className="vault-live"><i className="live-dot sm" /> Live tonight</span>
+            <span className="vault-rule" aria-hidden="true" />
+            <span className="vault-time">Breaks from <b>20:00</b></span>
+          </header>
+          <div className="vault-grid">
+            <div className="vault-cell">
+              <span className="vault-label">Buyers</span>
+              <b className="vault-num"><CountUp value={buyers} /></b>
+              <span className="vault-crests" aria-hidden="true">
+                {[...new Set(ORDERS_394.map((o) => o.buyer))].slice(0, 5).map((n) => <span key={n}><TeamLogo name={n} size={18} /></span>)}
+                <em>+{Math.max(buyers - 5, 0)}</em>
+              </span>
+              <span className="vault-ctx"><em>{repeat}</em> came back for more</span>
+            </div>
+            <div className="vault-cell vault-ring-cell">
+              <span className="vault-ring" style={{ ['--p' as string]: `${(spots / totalSpots) * 100}` }} aria-hidden="true">
+                <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" className="track" /><circle cx="50" cy="50" r="42" className="arc" pathLength={100} /></svg>
+                <b>{Math.round((spots / totalSpots) * 100)}<small>%</small></b>
+              </span>
+              <span className="vault-stack">
+                <span className="vault-label">Spots sold</span>
+                <b className="vault-num"><CountUp value={spots} /><small>/{totalSpots}</small></b>
+                <span className="vault-ctx"><em>{totalSpots - spots}</em> spots left</span>
+              </span>
+            </div>
+            <div className="vault-cell">
+              <span className="vault-label">Draws sealed</span>
+              <b className="vault-num"><CountUp value={draws.length} format={(n) => String(n).padStart(2, '0')} /></b>
+              <span className="vault-seal" aria-hidden="true"><Icon name="seal" size={14} weight="fill" /> SHA-256 sealed</span>
+              <span className="vault-ctx">{draws.length ? <><em>{draws.filter((d) => d.revealed).length}</em> already verified</> : <>Next: <em>#394</em> at 20:00</>}</span>
+            </div>
+            <div className="vault-cell vault-pool">
+              <span className="vault-label">On the table</span>
+              <b className="vault-num vault-gold"><CountUp value={boxValue} /><small> kr</small></b>
+              <span className="vault-boxes" aria-hidden="true">
+                <img src={MEDIA.toppsCard} alt="" /><img src={MEDIA.futeraCard} alt="" />
+              </span>
+              <span className="vault-ctx"><em>{BREAKS.length}</em> boxes to open</span>
+            </div>
           </div>
         </section>
 
