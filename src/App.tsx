@@ -188,7 +188,7 @@ export default function App() {
 
         <footer className="app-footer">
           <span>{PRODUCT} · {WORKSPACE.domain} · Shopify connected</span>
-          <span>Prototype · sample buyers are invented · photos from Unsplash</span>
+          <span>Prototype · sample buyers are invented · club crests shown for demo only (trademarks of their owners)</span>
         </footer>
       </div>
     </div>

@@ -1590,3 +1590,10 @@ body::before, .ambient { display: none; }
 .room-art { height: 185px; }
 .room { padding-bottom: 20px; gap: 14px; }
 @media (max-width: 720px) { .room-art { height: 150px; } }
+/* Real crests in the feed and buyer stacks */
+.team-logo { display: block; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .4)); }
+.fi-av.crest-av { background: #23252d !important; border-radius: 10px; }
+.fi-av.crest-av .team-logo { width: 26px; height: 26px; }
+.avs .av.crest-av { background: #23252d !important; border-radius: 50%; border: 2px solid #16171c; }
+.avs .av.crest-av .team-logo { width: 18px; height: 18px; }
+.fi-av.proof-av { background: #23252d; color: #f5f5f4; }

@@ -2,7 +2,7 @@
 // a status pill, outlined chips, title, one primary action and slide dots.
 import type { ReactNode } from 'react';
 import Icon from './Icons.tsx';
-import Crest from './Crest.tsx';
+import TeamLogo from './TeamLogo.tsx';
 
 interface Fact { icon?: string; label: string; value: ReactNode }
 
@@ -67,7 +67,7 @@ export function AvatarStack({ names, max = 4, label }: { names: string[]; max?: 
     <div className="avatar-stack" aria-label={label ? `${uniq.length} ${label}` : `${uniq.length} people`}>
       <span className="avs">
         {uniq.slice(0, max).map((n) => (
-          <span key={n} className="av crest-av" title={n}><Crest name={n} size={24} /></span>
+          <span key={n} className="av crest-av" title={n}><TeamLogo name={n} size={24} /></span>
         ))}
         {uniq.length > max && <span className="av more">+{uniq.length - max}</span>}
       </span>

@@ -5,7 +5,7 @@ import { MEDIA } from '../lib/media.ts';
 import Showcase from '../components/Showcase.tsx';
 import Icon from '../components/Icons.tsx';
 import CountUp from '../components/CountUp.tsx';
-import Crest from '../components/Crest.tsx';
+import TeamLogo from '../components/TeamLogo.tsx';
 
 const SOLD: Record<string, [number, number]> = { '394': [18, 18], '403': [33, 43] };
 const HERO: Record<string, { img: string; word: string; photo: string; caption: string }> = {
@@ -34,8 +34,8 @@ const TONIGHT = [
 
 /** Live feed: recent purchases, newest first, with relative times. */
 const FEED = [
-  ...ORDERS_394.slice(-7).reverse().map((o, k) => ({ who: o.buyer, what: `bought ${o.qty} spot${o.qty > 1 ? 's' : ''}`, where: 'Break #394', mins: 2 + k * 3 })),
-  ...initialPytSlots().filter((s) => s.owner).slice(0, 4).map((s, k) => ({ who: s.owner!, what: `took ${s.team}`, where: 'Break #403', mins: 24 + k * 5 })),
+  ...ORDERS_394.slice(-7).reverse().map((o, k) => ({ who: o.buyer, what: `bought ${o.qty} spot${o.qty > 1 ? 's' : ''}`, where: 'Break #394', team: undefined as string | undefined, mins: 2 + k * 3 })),
+  ...initialPytSlots().filter((s) => s.owner).slice(0, 4).map((s, k) => ({ who: s.owner!, what: `took ${s.team}`, where: 'Break #403', team: s.team as string | undefined, mins: 24 + k * 5 })),
 ];
 const SLIDE_MS = 6000;
 const repeat = (() => { const m = new Map<string, number>(); ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + 1)); return [...m.values()].filter((n) => n > 1).length; })();
@@ -237,13 +237,13 @@ export default function Dashboard() {
         <div className="feed-list">
           {draws.slice(0, 3).map((d) => (
             <a key={d.id} href={`#/proof/${d.id}`} className="feed-item proof">
-              <span className="fi-av" style={{ background: 'linear-gradient(135deg,#ff2e3b,#c8102e)' }}><Icon name="seal" size={15} weight="fill" /></span>
+              <span className="fi-av proof-av"><Icon name="seal" size={15} weight="fill" /></span>
               <span className="fi-txt"><b>{d.title}</b><span>{d.revealed ? 'Verified' : 'Sealed'} · {d.id}</span></span>
             </a>
           ))}
           {FEED.map((f, k) => (
             <div key={k} className="feed-item" style={{ animationDelay: `${200 + k * 60}ms` }}>
-              <span className="fi-av crest-av"><Crest name={f.who} /></span>
+              <span className="fi-av crest-av"><TeamLogo name={f.who} team={f.team} /></span>
               <span className="fi-txt"><b>{f.who}</b><span>{f.what} · {f.where}</span></span>
               <span className="fi-time">{f.mins}m</span>
             </div>
