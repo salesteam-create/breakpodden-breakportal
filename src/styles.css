@@ -1879,3 +1879,19 @@ body::before, .ambient { display: none; }
   .tk-stub { height: 64px; padding-top: 0; padding-bottom: 0; }
   .ticket::before, .ticket::after { bottom: 64px; }
 }
+/* Feature cards: looping video on the right, blended into the card */
+.feat video { position: absolute; right: 0; top: 0; height: 100%; width: auto; aspect-ratio: 16 / 9; max-width: 66%; object-fit: cover; object-position: 60% 50%; pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 35%); mask-image: linear-gradient(90deg, transparent, #000 35%); }
+.feat.t-red video { object-position: 70% 40%; }
+@media (max-width: 560px) { .feat video { max-width: 70%; } }
+.feat video { mix-blend-mode: lighten; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%); mask-image: linear-gradient(90deg, transparent 0%, #000 45%); }
+.feat.t-red video { transform: scale(1.35); transform-origin: 80% 55%; }
+@media (max-width: 560px) {
+  .feat video { max-width: 52%; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 55%); mask-image: linear-gradient(90deg, transparent 0%, #000 55%); }
+  .feat-txt { max-width: 58%; }
+}
+/* Video cards: card fades into the footage's own black; accent lives in a thin glow line */
+.feat { background: linear-gradient(100deg, #17181e 28%, #000 62%); }
+.feat.t-red { background: linear-gradient(100deg, #17181e 28%, #0b0b0b 62%); }
+.feat video { mix-blend-mode: normal; }
+.feat::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; pointer-events: none; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--c) 85%, transparent) 60%, transparent); opacity: .8; }
