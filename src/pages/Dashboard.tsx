@@ -39,7 +39,6 @@ const FEED = [
   ...initialPytSlots().filter((s) => s.owner).slice(0, 4).map((s, k) => ({ who: s.owner!, what: `took ${s.team}`, where: 'Break #403', team: s.team as string | undefined, mins: 24 + k * 5 })),
 ];
 const SLIDE_MS = 6000;
-const repeat = (() => { const m = new Map<string, number>(); ORDERS_394.forEach((o) => m.set(o.buyer, (m.get(o.buyer) ?? 0) + 1)); return [...m.values()].filter((n) => n > 1).length; })();
 const totalSpots = Object.values(SOLD).reduce((a, [, of]) => a + of, 0);
 
 
@@ -134,11 +133,6 @@ export default function Dashboard() {
             <div className="vault-cell">
               <span className="vault-label">Buyers</span>
               <b className="vault-num"><CountUp value={buyers} /></b>
-              <span className="vault-crests" aria-hidden="true">
-                {[...new Set(ORDERS_394.map((o) => o.buyer))].slice(0, 5).map((n) => <span key={n}><TeamLogo name={n} size={18} /></span>)}
-                <em>+{Math.max(buyers - 5, 0)}</em>
-              </span>
-              <span className="vault-ctx"><em>{repeat}</em> came back for more</span>
             </div>
             <div className="vault-cell vault-ring-cell">
               <span className="vault-ring" style={{ ['--p' as string]: `${(spots / totalSpots) * 100}` }} aria-hidden="true">
@@ -154,7 +148,6 @@ export default function Dashboard() {
             <div className="vault-cell">
               <span className="vault-label">Draws sealed</span>
               <b className="vault-num"><CountUp value={draws.length} format={(n) => String(n).padStart(2, '0')} /></b>
-              <span className="vault-seal" aria-hidden="true"><Icon name="seal" size={14} weight="fill" /> SHA-256 sealed</span>
               <span className="vault-ctx">{draws.length ? <><em>{draws.filter((d) => d.revealed).length}</em> already verified</> : <>Next: <em>#394</em> at 20:00</>}</span>
             </div>
             <div className="vault-cell vault-pool">
