@@ -5,6 +5,7 @@ import { MEDIA } from '../lib/media.ts';
 import Showcase from '../components/Showcase.tsx';
 import Icon from '../components/Icons.tsx';
 import CountUp from '../components/CountUp.tsx';
+import HoverVideo from '../components/HoverVideo.tsx';
 import TeamLogo from '../components/TeamLogo.tsx';
 import { PrizeShower, PrizeTile } from '../components/PrizeRain.tsx';
 
@@ -22,8 +23,8 @@ const ROOMS = [
 ] as const;
 
 const FEATURE = [
-  { href: '#/break/394', tone: 'gold', img: MEDIA.featDicePoster, video: MEDIA.featDiceVid, title: 'Team draw', text: 'Break #394 · Topps Bundesliga Gold. Every team assigned by a sealed roll.' },
-  { href: '#/break/403', tone: 'red', img: MEDIA.featBallPoster, video: MEDIA.featBallVid, title: 'Pick your team', text: 'Break #403 · Futera World. 10 teams still open, fillers from 49 kr.' },
+  { href: '#/break/394', tone: 'gold', img: MEDIA.featDicePoster, video: MEDIA.featDiceVid, still: 1.2, title: 'Team draw', text: 'Break #394 · Topps Bundesliga Gold. Every team assigned by a sealed roll.' },
+  { href: '#/break/403', tone: 'red', img: MEDIA.featBallPoster, video: MEDIA.featBallVid, still: 4.8, title: 'Pick your team', text: 'Break #403 · Futera World. 10 teams still open, fillers from 49 kr.' },
 ];
 
 const TONIGHT = [
@@ -111,7 +112,7 @@ export default function Dashboard() {
           {FEATURE.map((f) => (
             <a key={f.href} href={f.href} className={`feat t-${f.tone}`}>
               <span className="feat-txt"><b>{f.title}</b><span>{f.text}</span></span>
-              {reduced ? <img src={f.img} alt="" loading="lazy" /> : <video src={f.video} poster={f.img} autoPlay muted loop playsInline preload="auto" aria-hidden="true" />}
+              {reduced ? <img src={f.img} alt="" loading="lazy" /> : <HoverVideo src={f.video} poster={f.img} still={f.still} />}
             </a>
           ))}
         </section>
