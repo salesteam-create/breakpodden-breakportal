@@ -123,38 +123,30 @@ export default function Dashboard() {
           <Icon name="arrow" size={16} />
         </a>
 
-        <section className="vault reveal-up" aria-label="Tonight in numbers">
-          <header className="vault-head">
-            <span className="vault-live"><i className="live-dot sm" /> Live tonight</span>
-            <span className="vault-rule" aria-hidden="true" />
-            <span className="vault-time">Breaks from <b>20:00</b></span>
-          </header>
-          <div className="vault-grid">
-            <div className="vault-cell">
-              <span className="vault-label">Buyers</span>
-              <b className="vault-num"><CountUp value={buyers} /></b>
+        <section className="tally reveal-up" aria-label="Tonight in numbers">
+          <div className="tally-main">
+            <div className="tally-top">
+              <span className="tally-live"><i className="live-dot sm" /> Live tonight</span>
+              <span className="tally-time">From <b>20:00</b></span>
             </div>
-            <div className="vault-cell vault-ring-cell">
-              <span className="vault-ring" style={{ ['--p' as string]: `${(spots / totalSpots) * 100}` }} aria-hidden="true">
-                <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" className="track" /><circle cx="50" cy="50" r="42" className="arc" pathLength={100} /></svg>
-                <b>{Math.round((spots / totalSpots) * 100)}<small>%</small></b>
-              </span>
-              <span className="vault-stack">
-                <span className="vault-label">Spots sold</span>
-                <b className="vault-num"><CountUp value={spots} /><small>/{totalSpots}</small></b>
-                <span className="vault-ctx"><em>{totalSpots - spots}</em> spots left</span>
-              </span>
-            </div>
-            <div className="vault-cell">
-              <span className="vault-label">Draws sealed</span>
-              <b className="vault-num"><CountUp value={draws.length} format={(n) => String(n).padStart(2, '0')} /></b>
-              <span className="vault-ctx">{draws.length ? <><em>{draws.filter((d) => d.revealed).length}</em> already verified</> : <>Next: <em>#394</em> at 20:00</>}</span>
-            </div>
-            <div className="vault-cell vault-pool">
-              <span className="vault-label">On the table</span>
-              <b className="vault-num vault-gold"><CountUp value={boxValue} /><small> kr</small></b>
-              <span className="vault-ctx"><em>{BREAKS.length}</em> boxes to open</span>
-            </div>
+            <span className="tally-label">On the table</span>
+            <b className="tally-big"><CountUp value={boxValue} /><small>kr</small></b>
+            <span className="tally-note">{BREAKS.length} boxes to open tonight</span>
+          </div>
+          <div className="tally-cell">
+            <span className="tally-label">Buyers</span>
+            <b className="tally-num"><CountUp value={buyers} /></b>
+            <span className="tally-note">Across {BREAKS.length} breaks</span>
+          </div>
+          <div className="tally-cell">
+            <span className="tally-label">Spots sold</span>
+            <b className="tally-num"><CountUp value={spots} /><small>/{totalSpots}</small></b>
+            <span className="tally-bar" aria-hidden="true"><i style={{ width: `${(spots / totalSpots) * 100}%` }} /></span>
+          </div>
+          <div className="tally-cell">
+            <span className="tally-label">Draws sealed</span>
+            <b className="tally-num"><CountUp value={draws.length} /></b>
+            <span className="tally-note">{draws.length ? `${draws.filter((d) => d.revealed).length} verified` : 'Next at 20:00'}</span>
           </div>
         </section>
 
