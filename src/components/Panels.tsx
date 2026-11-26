@@ -133,11 +133,13 @@ export function RevealGrid({ pairs }: { pairs: { who: string; what: string; n: n
   return (
     <div className="reveal" aria-live="polite">
       {pairs.map((p, i) => (
-        <div key={i} className={`rcard${i < shown ? ' flipped' : ''}`} aria-label={`#${p.n} ${p.what}: ${p.who}`}>
+        <div key={i} className={`rcard${i < shown ? ' flipped' : ''}`} aria-label={`#${p.n} ${p.what}: ${p.who}`} data-tilt>
           <div className="rcard-inner">
             <div className="rcard-face rcard-back" aria-hidden="true"><img src={markLogo} alt="" /></div>
             <div className="rcard-face rcard-front">
               <div className="rc-in">
+                <span className="rc-foil" aria-hidden="true" />
+                <span className="rc-glare" aria-hidden="true" />
                 <div className="rc-top">
                   <span className="rc-num">#{String(p.n).padStart(2, '0')}</span>
                   <img className="rc-brand" src={markLogo} alt="" />

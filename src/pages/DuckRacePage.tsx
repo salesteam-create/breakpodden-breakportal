@@ -92,7 +92,7 @@ export default function DuckRacePage() {
         Up to {MAX_DUCKS} ducks. The finishing order is drawn and sealed before the start; the race plays it out.
       </PageHeader>
 
-      <div className="workspace">
+      <div className="workspace ws-wide">
         <div className="card">
           <div className="action-bar" key={`${!!record}-${startedAt !== null}-${finished}-${revealed}`}>
             {!record && (
@@ -101,13 +101,13 @@ export default function DuckRacePage() {
                   <label htmlFor="race-length">Race length: <span className="tnum">{duration}</span> s</label>
                   <input id="race-length" type="range" min={5} max={30} value={duration} onChange={(e) => setDuration(Number(e.target.value))} />
                 </div>
-                <button className="btn btn-gold btn-lg" onClick={seal} disabled={ducks.length < 2}><Icon name="lock" size={18} /> Seal race</button>
+                <button className="btn btn-gold btn-lg" data-magnetic onClick={seal} disabled={ducks.length < 2}><Icon name="lock" size={18} /> Seal race</button>
                 <span className="hint">{ducks.length} ducks ready.</span>
               </>
             )}
             {record && startedAt === null && (
               <>
-                <button className="btn btn-gold btn-lg" onClick={start}><Icon name="flag" size={18} /> Start the race</button>
+                <button className="btn btn-gold btn-lg" data-magnetic onClick={start}><Icon name="flag" size={18} /> Start the race</button>
                 <span className="hint">{ducks.length} ducks, {duration} seconds. Commitment is on stream.</span>
               </>
             )}

@@ -69,7 +69,7 @@ export default function RandomBreak() {
   if (step === 0)
     action = (
       <>
-        <button className="btn btn-gold btn-lg" onClick={importOrders} disabled={importing}>
+        <button className="btn btn-gold btn-lg" data-magnetic onClick={importOrders} disabled={importing}>
           {importing ? <><span className="spinner" /> Importing {imported}/{slots.length}…</> : <><Icon name="cart" size={18} /> Import buyers from Shopify</>}
         </button>
         <span className="hint">Pulls every paid order for this break product. One row per spot bought.</span>
@@ -86,7 +86,7 @@ export default function RandomBreak() {
             ))}
           </select>
         </div>
-        <button className="btn btn-gold btn-lg" onClick={loadChecklist}><Icon name="list" size={18} /> Load checklist</button>
+        <button className="btn btn-gold btn-lg" data-magnetic onClick={loadChecklist}><Icon name="list" size={18} /> Load checklist</button>
         <a className="hint" href="#/checklists">Edit checklists →</a>
       </>
     );
@@ -99,7 +99,7 @@ export default function RandomBreak() {
     ) : (
       <>
         <ShuffleModeControl value={fixed} onChange={setFixed} />
-        <button className="btn btn-gold btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the draw</button>
+        <button className="btn btn-gold btn-lg" data-magnetic onClick={draw.seal}><Icon name="lock" size={18} /> Seal the draw</button>
         <span className="hint">Locks both lists, the shuffle setting and a secret seed.</span>
       </>
     );
@@ -108,7 +108,7 @@ export default function RandomBreak() {
       <>
         <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
         {phase === 'sealed' && (
-          <button className="btn btn-gold btn-lg" onClick={draw.roll}>{fixed ? <><Icon name="shuffle" size={18} /> Start shuffling</> : <><Icon name="dice" size={18} /> Roll the dice</>}</button>
+          <button className="btn btn-gold btn-lg" data-magnetic onClick={draw.roll}>{fixed ? <><Icon name="shuffle" size={18} /> Start shuffling</> : <><Icon name="dice" size={18} /> Roll the dice</>}</button>
         )}
         {phase === 'sealed' && <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={draw.voidDraw} /></span>}
       </>
@@ -117,7 +117,7 @@ export default function RandomBreak() {
     action = (
       <>
         <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
-        <button className="btn btn-gold btn-lg" onClick={draw.reveal}><Icon name="sparkle" size={18} /> Reveal results</button>
+        <button className="btn btn-gold btn-lg" data-magnetic onClick={draw.reveal}><Icon name="sparkle" size={18} /> Reveal results</button>
         <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={draw.voidDraw} /></span>
       </>
     );
@@ -146,7 +146,7 @@ export default function RandomBreak() {
   return (
     <>
       <div className="break-head">
-        <div className="thumb"><img src={brk.image} alt="" /></div>
+        <div className="thumb"><img src={brk.image} alt="" style={{ viewTransitionName: `art-${brk.id}` }} /></div>
         <div>
           <div className="eyebrow">Break #{brk.number} · Random team</div>
           <h1>{brk.title}</h1>
@@ -163,7 +163,7 @@ export default function RandomBreak() {
         </div>
       </div>
 
-      <div className="workspace">
+      <div className={`workspace${phase === 'rolling' || phase === 'shuffling' ? ' ws-focus' : ''}`}>
         <div className="card">
           <Steps labels={STEPS} current={step} />
           <div className="action-bar" key={step}>{action}</div>

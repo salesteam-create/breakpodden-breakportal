@@ -73,7 +73,7 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
 
   return (
     <div className="wheel-stage">
-      <div className={`wheel-wrap${spinning ? ' is-spinning' : ''}`} style={{ width: size, maxWidth: '100%' }}>
+      <div className={`wheel-wrap${spinning ? ' is-spinning' : ''}${!spinning && winner !== null && winner >= 0 ? ' has-winner' : ''}`} style={{ width: size, maxWidth: '100%' }}>
         <div ref={pointerRef} className="wheel-pointer" style={{ width: size * 0.09, height: size * 0.13 }}>
           <svg viewBox="0 0 40 58" width="100%" height="100%">
             <defs>

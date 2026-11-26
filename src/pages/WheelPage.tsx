@@ -6,6 +6,7 @@ import Wheel, { landingRotation } from '../components/Wheel.tsx';
 import { FairnessPanel, LogPanel } from '../components/Panels.tsx';
 import PageHeader from '../components/PageHeader.tsx';
 import Icon from '../components/Icon.tsx';
+import { Sparks } from '../components/Art.tsx';
 
 const SPIN_MS = 6400;
 
@@ -118,7 +119,7 @@ export default function WheelPage() {
           <div className="action-bar" key={`${!!record}-${revealed}`}>
             {!record && (
               <>
-                <button className="btn btn-gold btn-lg" onClick={seal}><Icon name="lock" size={18} /> Seal giveaway</button>
+                <button className="btn btn-gold btn-lg" data-magnetic onClick={seal}><Icon name="lock" size={18} /> Seal giveaway</button>
                 <span className="hint">Locks the {entries.length} entries and a secret seed before the first spin.</span>
               </>
             )}
@@ -128,7 +129,7 @@ export default function WheelPage() {
                   <label htmlFor="wheel-prize">Prize for this spin</label>
                   <input id="wheel-prize" type="text" value={prize} onChange={(e) => setPrize(e.target.value)} />
                 </div>
-                <button className="btn btn-gold btn-lg" onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
+                <button className="btn btn-gold btn-lg" data-magnetic onClick={spin} disabled={spinning || remaining.length - (pending ? 1 : 0) === 0}>
                   {spinning ? <><span className="spinner" /> Spinning…</> : <><Icon name="wheel" size={18} /> {allWinners.length ? 'Spin again' : 'Spin the wheel'}</>}
                 </button>
                 <button className="btn btn-lg" onClick={finish} disabled={spinning || allWinners.length === 0}><Icon name="shield" size={18} /> Close and reveal</button>
@@ -151,6 +152,7 @@ export default function WheelPage() {
           {latest && !spinning && (
             <div style={{ padding: '0 20px 20px' }} aria-live="polite">
               <div className="winner-banner" key={latest.index}>
+                <Sparks />
                 <span className="eyebrow">Winner · {latest.prize}</span>
                 <b>{latest.name}</b>
               </div>

@@ -77,7 +77,7 @@ export default function PytBreak() {
   return (
     <>
       <div className="break-head">
-        <div className="thumb"><img src={brk.image} alt="" /></div>
+        <div className="thumb"><img src={brk.image} alt="" style={{ viewTransitionName: `art-${brk.id}` }} /></div>
         <div>
           <div className="eyebrow">Break #{brk.number} · Pick your team</div>
           <h1>{brk.title}</h1>
@@ -106,7 +106,7 @@ export default function PytBreak() {
             </div>
             <div className="team-grid">
               {slots.map((s) => (
-                <div key={s.team} className={`tile${s.owner ? (s.viaFiller ? ' filled' : '') : ' open'}`}>
+                <div key={s.team} className={`tile${s.owner ? (s.viaFiller ? ' filled' : '') : ' open'}`} data-tilt="soft">
                   <span className="t">{s.team}</span>
                   <span className="o">
                     <span>{s.owner ? (s.viaFiller ? `★ ${s.owner}` : s.owner) : 'Open'}</span>
@@ -139,7 +139,7 @@ export default function PytBreak() {
           </div>
         </div>
       ) : (
-        <div className="workspace">
+        <div className={`workspace${phase === 'rolling' || phase === 'shuffling' ? ' ws-focus' : ''}`}>
           <div className="card">
             <Steps labels={STEPS} current={step} />
             <div className="action-bar" key={`${phase}-${picking}-${done}`} style={{ flexWrap: 'wrap' }}>
@@ -152,7 +152,7 @@ export default function PytBreak() {
                     </div>
                     <ShuffleModeControl value={fixed} onChange={setFixed} />
                   </div>
-                  <button className="btn btn-gold btn-lg" onClick={draw.seal}><Icon name="lock" size={18} /> Seal the filler draw</button>
+                  <button className="btn btn-gold btn-lg" data-magnetic onClick={draw.seal}><Icon name="lock" size={18} /> Seal the filler draw</button>
                   <span className="hint" style={{ maxWidth: 320 }}>
                     {assign === 'draw'
                       ? `Top ${openTeams.length} entries are paired with the open teams in list order.`
@@ -165,7 +165,7 @@ export default function PytBreak() {
                   <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
                   {phase === 'sealed' && (
                     <>
-                      <button className="btn btn-gold btn-lg" onClick={draw.roll}>{fixed ? <><Icon name="shuffle" size={18} /> Start shuffling</> : <><Icon name="dice" size={18} /> Roll the dice</>}</button>
+                      <button className="btn btn-gold btn-lg" data-magnetic onClick={draw.roll}>{fixed ? <><Icon name="shuffle" size={18} /> Start shuffling</> : <><Icon name="dice" size={18} /> Roll the dice</>}</button>
                       <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={voidDraw} /></span>
                     </>
                   )}
@@ -174,7 +174,7 @@ export default function PytBreak() {
               {phase === 'shuffled' && (
                 <>
                   <RollProgress phase={phase} dice={draw.dice} rollId={draw.rollId} round={draw.round} total={draw.totalRounds} fixed={fixed} />
-                  <button className="btn btn-gold btn-lg" onClick={reveal}><Icon name="sparkle" size={18} /> Reveal winners</button>
+                  <button className="btn btn-gold btn-lg" data-magnetic onClick={reveal}><Icon name="sparkle" size={18} /> Reveal winners</button>
                   <span style={{ marginLeft: 'auto' }}><VoidButton onVoid={voidDraw} /></span>
                 </>
               )}

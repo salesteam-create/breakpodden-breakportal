@@ -38,7 +38,9 @@ export function RollProgress({
       {fixed ? (
         <div className="dice-total">{fixed}<small>fixed shuffles</small></div>
       ) : (
-        <Dice values={dice} rollId={rollId} showTotal={phase === 'shuffling' || phase === 'shuffled' || phase === 'revealed'} />
+        <div className={`dice-stage${phase === 'rolling' ? ' is-live' : ''}${phase === 'shuffling' ? ' is-settled' : ''}`}>
+          <Dice values={dice} rollId={rollId} showTotal={phase === 'shuffling' || phase === 'shuffled' || phase === 'revealed'} />
+        </div>
       )}
       {(phase === 'rolling' || phase === 'shuffling') && (
         <div className="round" aria-live="polite">

@@ -7,6 +7,9 @@ import Dice from '../components/Dice.tsx';
 import Wheel from '../components/Wheel.tsx';
 import DuckRace from '../components/DuckRace.tsx';
 import Icon from '../components/Icon.tsx';
+import { Sparks } from '../components/Art.tsx';
+import { BREAKS } from '../lib/data.ts';
+import markLogo from '../assets/logo-mark.svg';
 
 const MAX_ROWS = 18;
 
@@ -30,6 +33,7 @@ export default function StreamView() {
   }, [diceKey]);
 
   let body;
+  let scene = 'idle';
   let title = 'Break Portal';
   let subtitle = 'Waiting for the next draw';
   let commitment = '';
@@ -41,7 +45,45 @@ export default function StreamView() {
     const rows = Math.min(Math.max(s.left.length, s.order.length), MAX_ROWS);
     const rowH = Math.min(52, (720 - 8 * (rows - 1)) / rows);
     const pad = (n: number) => String(n).padStart(2, '0');
-    body = (
+    // Product art for the pre-draw showcase, matched from the break number in the published title.
+    const brk = BREAKS.find((b) => s.title.includes(`#${b.number}`));
+    const filler = s.highlightTop !== undefined;
+    // Final cards straight from the published state: team draw = buyer gets team; filler = open team goes to entry.
+    const cards = (filler ? s.order.slice(0, s.highlightTop) : s.order)
+      .slice(0, MAX_ROWS)
+      .map((o, i) => (filler ? { what: s.left[i], who: o } : { what: o, who: s.left[i] }));
+    const cols = cards.length <= 6 ? Math.max(cards.length, 3) : 6;
+    scene = s.phase === 'ready' || s.phase === 'sealed' ? 'showcase' : s.phase === 'revealed' ? 'results' : 'draw';
+    if (scene === 'showcase') body = (
+      <div className="stream-showcase">
+        <div className="ss-art">{brk && <img src={brk.image} alt="" />}</div>
+        <div className="ss-copy">
+          <span className="ss-tag">{s.phase === 'sealed' ? <><Icon name="lock" size={24} /> Sealed · rolling next</> : 'Preparing the draw'}</span>
+          <h2>{brk ? brk.title : s.title}</h2>
+          <p>{s.left.length} {filler ? 'open teams' : 'spots'} · {s.order.length} {filler ? 'filler entries' : 'teams'}{s.totalRounds ? ` · ${s.totalRounds} shuffles set by host` : ''}</p>
+        </div>
+      </div>
+    );
+    else if (scene === 'results') body = (
+      <div className="stream-cards" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+        {cards.map((c, i) => (
+          <div key={i} className="rcard flipped" style={{ animation: `riseIn .6s var(--ease-reveal) ${Math.min(i * 40, 700)}ms both` }}>
+            <div className="rcard-inner">
+              <div className="rcard-face rcard-front">
+                <div className="rc-in">
+                  <span className="rc-foil" aria-hidden="true" />
+                  <div className="rc-top"><span className="rc-num">#{pad(i + 1)}</span><img className="rc-brand" src={markLogo} alt="" /></div>
+                  <span className="rc-team" style={{ marginTop: 'auto' }}>{c.what}</span>
+                  <span className="rc-rule" />
+                  <span className="rc-buyer">{c.who}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+    else body = (
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 520px', gap: 56, flex: 1, minHeight: 0 }}>
         <div style={{ overflow: 'hidden' }}>
           <ShuffleBoard
@@ -87,8 +129,9 @@ export default function StreamView() {
     title = s.title;
     subtitle = s.subtitle;
     commitment = s.commitment;
+    scene = s.winner ? 'wheel-win' : 'wheel';
     body = (
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 560px', gap: 40, alignItems: 'center', flex: 1 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 600px', gap: 40, alignItems: 'center', flex: 1 }}>
         <div style={{ display: 'grid', placeItems: 'center' }}>
           <Wheel entries={s.entries} rotation={s.rotation} size={720} spinning={s.spinning} />
         </div>
@@ -97,6 +140,7 @@ export default function StreamView() {
             <div className="winner-banner" key={s.winner} style={{ padding: '48px 40px 52px' }}>
               <span className="eyebrow" style={{ fontSize: 24, lineHeight: '30px' }}>Winner</span>
               <b style={{ fontSize: 96, lineHeight: '96px', marginTop: 14 }}>{s.winner}</b>
+              <Sparks n={26} />
             </div>
           ) : (
             <h2 style={{ fontSize: 72, color: 'var(--text-secondary)' }}>{s.spinning ? 'Spinning…' : 'Get ready'}</h2>
@@ -108,6 +152,7 @@ export default function StreamView() {
     title = s.title;
     subtitle = s.subtitle;
     commitment = s.commitment;
+    scene = 'duck';
     body = (
       <div style={{ flex: 1, minHeight: 0 }}>
         <DuckRace ducks={s.ducks} order={s.order} duration={s.duration} startedAt={s.startedAt} height={690} fontScale={1.4} />
@@ -149,7 +194,7 @@ export default function StreamView() {
             </div>
             {status && <span className={`live-badge${status.active ? '' : ' quiet'}`}>{status.active && <span className="live-dot" />}{status.label}</span>}
           </div>
-          {body}
+          <div className="scene" key={scene}>{body}</div>
           <div className="stream-foot">
             <span><Icon name="shield" size={24} />Provably fair{commitment && <> · commitment <span className="mono gold">{commitment.slice(0, 16)}…</span></>}</span>
             <span>breakpodden.com</span>
