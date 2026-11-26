@@ -1915,3 +1915,23 @@ body::before, .ambient { display: none; }
 .btn-primary:disabled::after { display: none; }
 @media (prefers-reduced-motion: reduce) { .btn-neon::after, .btn-primary::after { animation: none; display: none; } }
 .btn-neon::after, .btn-primary::after { z-index: -1; }
+
+/* ---------- Luxury wheel ---------- */
+.wheel-wrap { filter: drop-shadow(0 30px 50px rgba(0, 0, 0, .6)) drop-shadow(0 0 40px rgba(226, 184, 74, .18)); }
+.wheel-wrap::before { inset: -14%; background: radial-gradient(closest-side, rgba(226, 184, 74, .28), rgba(179, 18, 31, .12) 55%, transparent 75%); opacity: 1; }
+.wheel-rays { position: absolute; inset: -22%; border-radius: 50%; pointer-events: none; z-index: -1;
+  background: repeating-conic-gradient(from 0deg, rgba(246, 220, 140, .13) 0deg 5deg, transparent 5deg 15deg);
+  -webkit-mask-image: radial-gradient(closest-side, #000 35%, transparent 100%); mask-image: radial-gradient(closest-side, #000 35%, transparent 100%);
+  animation: raysTurn 60s linear infinite; }
+.wheel-wrap.is-spinning .wheel-rays { animation-duration: 8s; }
+@keyframes raysTurn { to { transform: rotate(360deg); } }
+.wheel-wrap .stud { display: none; }
+.bulb-halo { opacity: .35; transition: opacity .2s; }
+.bulb-core { filter: brightness(.75); }
+.wheel-wrap:not(.is-spinning) .b-even .bulb-halo, .wheel-wrap:not(.is-spinning) .b-even .bulb-core { animation: bulbBlink 1.6s steps(1) infinite; }
+.wheel-wrap:not(.is-spinning) .b-odd .bulb-halo, .wheel-wrap:not(.is-spinning) .b-odd .bulb-core { animation: bulbBlink 1.6s steps(1) .8s infinite; }
+.wheel-wrap.is-spinning .b-even .bulb-halo, .wheel-wrap.is-spinning .b-even .bulb-core { animation: bulbBlink .24s steps(1) infinite; }
+.wheel-wrap.is-spinning .b-odd .bulb-halo, .wheel-wrap.is-spinning .b-odd .bulb-core { animation: bulbBlink .24s steps(1) .12s infinite; }
+@keyframes bulbBlink { 0% { opacity: 1; filter: brightness(1.25); } 50% { opacity: .3; filter: brightness(.7); } }
+.wheel-pointer { filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .5)) drop-shadow(0 0 10px rgba(255, 60, 70, .45)); }
+@media (prefers-reduced-motion: reduce) { .wheel-rays, .bulb-halo, .bulb-core { animation: none !important; } }

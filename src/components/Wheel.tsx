@@ -6,10 +6,14 @@
 import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import { WORKSPACE } from '../lib/workspace.ts';
 
-// Brand gold, navy, blue, coral, teal, pale gold.
-const COLORS = ['#e2b84a', '#1b1c38', '#ff2e3b', '#ff6b7a', '#2ed3c0', '#f6dc8c'];
-const INK = ['#1a1405', '#e2b84a', '#ffffff', '#ffffff', '#062a26', '#1a1405'];
-const STUDS = 32;
+// Luxury palette: onyx, crimson, gold, charcoal. Each segment shades darker toward the hub.
+const TONES = [
+  { id: 'onyx', inner: '#050506', outer: '#1d1e24', ink: '#e9c766' },
+  { id: 'crimson', inner: '#3d040b', outer: '#b3121f', ink: '#ffe7a8' },
+  { id: 'gold', inner: '#7a5a14', outer: '#f1cf6e', ink: '#1a1203' },
+  { id: 'char', inner: '#101014', outer: '#34353d', ink: '#f6dc8c' },
+];
+const STUDS = 36;
 const PARTICLES = 22;
 
 const pt = (cx: number, cy: number, r: number, deg: number) => {
@@ -46,7 +50,7 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
   const c = size / 2;
   const rim = size * 0.055;
   const r = c - rim - 3;
-  const fontSize = Math.max(8, Math.min(15, (seg / 360) * 2 * Math.PI * r * 0.55));
+  const fontSize = Math.max(8, Math.min(14, (seg / 360) * 2 * Math.PI * r * 0.5));
 
   // Pointer flicks each time a segment boundary passes under it, in sync with the real rotation.
   useEffect(() => {
@@ -74,6 +78,7 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
   return (
     <div className="wheel-stage">
       <div className={`wheel-wrap${spinning ? ' is-spinning' : ''}`} style={{ width: size, maxWidth: '100%' }}>
+        <div className="wheel-rays" aria-hidden="true" />
         <div ref={pointerRef} className="wheel-pointer" style={{ width: size * 0.09, height: size * 0.13 }}>
           <svg viewBox="0 0 40 58" width="100%" height="100%">
             <defs>
@@ -84,7 +89,8 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
               </linearGradient>
             </defs>
             <path d="M20 57 L3 18 A17 17 0 1 1 37 18 Z" fill={`url(#pf-${uid})`} stroke="#2a2210" strokeWidth="1.5" />
-            <circle cx="20" cy="17" r="7" fill="#1c1c20" stroke="#f3e6c0" strokeWidth="2" />
+            <circle cx="20" cy="17" r="7.5" fill="#b3121f" stroke="#f3e6c0" strokeWidth="2" />
+            <circle cx="20" cy="17" r="4" fill="#ff4b57" opacity=".7" />
             <circle cx="17.5" cy="14.5" r="2" fill="#fff" opacity=".7" />
           </svg>
         </div>
@@ -101,6 +107,12 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
               <stop offset=".7" stopColor="#000" stopOpacity="0" />
               <stop offset="1" stopColor="#000" stopOpacity=".45" />
             </radialGradient>
+            {TONES.map((t) => (
+              <radialGradient key={t.id} id={`seg-${t.id}-${uid}`} cx={c} cy={c} r={r} gradientUnits="userSpaceOnUse">
+                <stop offset=".18" stopColor={t.inner} />
+                <stop offset="1" stopColor={t.outer} />
+              </radialGradient>
+            ))}
             <filter id={`gl-${uid}`} x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="4" />
             </filter>
@@ -110,22 +122,23 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
             const [x0, y0] = pt(c, c, r, a0);
             const [x1, y1] = pt(c, c, r, a0 + seg);
             const mid = a0 + seg / 2;
-            const k = n % COLORS.length === 1 && i === n - 1 ? 2 : i % COLORS.length;
+            const k = n % TONES.length === 1 && i === n - 1 ? 1 : i % TONES.length;
             const d = n === 1 ? `M${c} ${c - r}A${r} ${r} 0 1 1 ${c - 0.01} ${c - r}Z` : `M${c} ${c}L${x0} ${y0}A${r} ${r} 0 ${seg > 180 ? 1 : 0} 1 ${x1} ${y1}Z`;
             return (
               <g key={i}>
-                <path d={d} fill={COLORS[k]} stroke="#ffffff" strokeOpacity=".16" strokeWidth="1" />
+                <path d={d} fill={`url(#seg-${TONES[k].id}-${uid})`} stroke="#d9b65a" strokeOpacity=".55" strokeWidth="1.1" />
                 <text
                   x={c}
-                  y={c - r + 16}
-                  transform={`rotate(${mid} ${c} ${c}) rotate(90 ${c} ${c - r + 16})`}
-                  fill={INK[k]}
+                  y={c - r + 20}
+                  transform={`rotate(${mid} ${c} ${c}) rotate(90 ${c} ${c - r + 20})`}
+                  fill={TONES[k].ink}
                   fontSize={fontSize}
                   fontFamily="Manrope, sans-serif"
-                  fontWeight="600"
+                  fontWeight="700"
+                  letterSpacing=".02em"
                   dominantBaseline="middle"
                 >
-                  {name.length > 16 ? `${name.slice(0, 15)}…` : name}
+                  {name.length > 14 ? `${name.slice(0, 13)}…` : name}
                 </text>
               </g>
             );
@@ -154,20 +167,43 @@ export default function Wheel({ entries, rotation, size = 520, instant, spinning
               <stop offset=".75" stopColor="#6e561a" />
               <stop offset="1" stopColor="#d4b25a" />
             </linearGradient>
+            <radialGradient id={`bulb-${uid}`} cx="40%" cy="35%" r="65%">
+              <stop offset="0" stopColor="#ffffff" />
+              <stop offset=".45" stopColor="#ffe9a8" />
+              <stop offset="1" stopColor="#d79a1e" />
+            </radialGradient>
+            <radialGradient id={`halo-${uid}`}>
+              <stop offset="0" stopColor="#ffd970" stopOpacity=".85" />
+              <stop offset="1" stopColor="#ffb31a" stopOpacity="0" />
+            </radialGradient>
             <radialGradient id={`hub-${uid}`} cx="40%" cy="35%" r="70%">
-              <stop offset="0" stopColor="#2c2c31" />
-              <stop offset="1" stopColor="#0c0c0e" />
+              <stop offset="0" stopColor="#34343b" />
+              <stop offset=".6" stopColor="#111114" />
+              <stop offset="1" stopColor="#050506" />
             </radialGradient>
           </defs>
+          {/* bevelled gold rim */}
           <circle cx={c} cy={c} r={c - 2 - rim / 2} fill="none" stroke={`url(#rim-${uid})`} strokeWidth={rim} />
-          <circle cx={c} cy={c} r={c - 2} fill="none" stroke="#2a2210" strokeWidth="2" />
-          <circle cx={c} cy={c} r={c - rim - 2} fill="none" stroke="#2a2210" strokeWidth="2" />
+          <circle cx={c} cy={c} r={c - 2 - rim / 2} fill="none" stroke="#120d04" strokeOpacity=".55" strokeWidth={rim * 0.42} />
+          <circle cx={c} cy={c} r={c - 2.5} fill="none" stroke="#fff3cf" strokeOpacity=".55" strokeWidth="1.2" />
+          <circle cx={c} cy={c} r={c - rim - 2} fill="none" stroke="#1b1407" strokeWidth="3" />
+          <circle cx={c} cy={c} r={c - rim - 4.5} fill="none" stroke="#f1d27a" strokeOpacity=".8" strokeWidth="1.2" />
+          {/* marquee bulbs */}
           {Array.from({ length: STUDS }, (_, i) => {
             const [x, y] = pt(c, c, c - 2 - rim / 2, (360 / STUDS) * i);
-            return <circle key={i} className="stud" cx={x} cy={y} r={rim * 0.2} style={{ animationDelay: `${(i % 8) * 0.07}s` }} />;
+            return (
+              <g key={i} className={`bulb ${i % 2 ? 'b-odd' : 'b-even'}`}>
+                <circle cx={x} cy={y} r={rim * 0.34} fill={`url(#halo-${uid})`} className="bulb-halo" />
+                <circle cx={x} cy={y} r={rim * 0.17} fill={`url(#bulb-${uid})`} className="bulb-core" />
+              </g>
+            );
           })}
-          <ellipse cx={c} cy={c * 0.55} rx={r * 0.78} ry={r * 0.4} fill="#fff" opacity=".05" />
-          <circle cx={c} cy={c} r={size * 0.11} fill={`url(#hub-${uid})`} stroke={`url(#rim-${uid})`} strokeWidth={size * 0.014} />
+          {/* glass gloss */}
+          <path d={`M ${c - r * 0.92} ${c - r * 0.1} A ${r * 0.95} ${r * 0.95} 0 0 1 ${c + r * 0.92} ${c - r * 0.1} A ${r * 1.4} ${r * 0.9} 0 0 0 ${c - r * 0.92} ${c - r * 0.1} Z`} fill="#fff" opacity=".07" />
+          {/* jewelled hub */}
+          <circle cx={c} cy={c} r={size * 0.135} fill="#0a0a0c" opacity=".55" />
+          <circle cx={c} cy={c} r={size * 0.118} fill={`url(#hub-${uid})`} stroke={`url(#rim-${uid})`} strokeWidth={size * 0.016} />
+          <circle cx={c} cy={c} r={size * 0.096} fill="none" stroke="#f1d27a" strokeOpacity=".45" strokeWidth="1" strokeDasharray="2 4" />
           <image href={WORKSPACE.logoMark} x={c - size * 0.07} y={c - size * 0.068} width={size * 0.14} height={size * 0.13} />
         </svg>
 
