@@ -1897,3 +1897,8 @@ body::before, .ambient { display: none; }
 .feat::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; pointer-events: none; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--c) 85%, transparent) 60%, transparent); opacity: .8; }
 .feat.t-red video { transform: scale(1.9); transform-origin: 78% 62%; }
 .feat.t-red video { transform-origin: 78% 92%; }
+/* Footer credit, centred on its own line */
+.app-footer { flex-wrap: wrap; }
+.app-footer .powered { flex: 1 0 100%; text-align: center; margin-top: 10px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, .05); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--dim); }
+.app-footer .powered b { color: var(--gold); font-weight: 800; letter-spacing: .2em; }
+@media (max-width: 760px) { .app-footer .powered { flex: none; width: 100%; margin-top: 8px; } }
