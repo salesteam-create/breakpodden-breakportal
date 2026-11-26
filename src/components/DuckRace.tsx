@@ -136,6 +136,7 @@ export default function DuckRace({ ducks, order, duration, startedAt, height = 5
             const moving = racing && !done;
             return (
               <div key={d} className="lane" style={{ height: laneH }}>
+                <span className="lane-plate" style={{ fontSize: Math.max(8, Math.min(11, laneH * 0.3)) * fontScale }}>{String(lane + 1).padStart(2, '0')}</span>
                 <div
                   className={`duck${moving ? ' swimming' : ''}${isWinner ? ' champ' : ''}`}
                   style={{ left: `calc(var(--track-start) + ${x} * (100% - var(--track-start) - var(--track-end)))`, '--bob': `${(lane % 7) * 0.11}s` } as CSSProperties}

@@ -1935,3 +1935,99 @@ body::before, .ambient { display: none; }
 @keyframes bulbBlink { 0% { opacity: 1; filter: brightness(1.25); } 50% { opacity: .3; filter: brightness(.7); } }
 .wheel-pointer { filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .5)) drop-shadow(0 0 10px rgba(255, 60, 70, .45)); }
 @media (prefers-reduced-motion: reduce) { .wheel-rays, .bulb-halo, .bulb-core { animation: none !important; } }
+
+/* Winners list: #1 gets a glowing gold medal and a lit row */
+.winner-row:first-child { position: relative; margin: 0 -10px; padding: 10px; border-radius: 12px; border-bottom-color: transparent;
+  background: linear-gradient(90deg, rgba(226, 184, 74, .16), rgba(226, 184, 74, .02) 70%); box-shadow: inset 0 0 0 1px rgba(226, 184, 74, .28); }
+.winner-row:first-child .place { position: relative; color: #1a1203; background: radial-gradient(circle at 35% 30%, #fff4cc, #f1cf6e 45%, #b8892a);
+  box-shadow: 0 0 0 2px rgba(246, 220, 140, .35), 0 0 14px rgba(255, 205, 90, .8), 0 0 28px rgba(255, 190, 60, .45); animation: medalGlow 2s ease-in-out infinite; }
+.winner-row:first-child .place::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1.5px solid rgba(255, 215, 110, .7); animation: medalRing 2s ease-out infinite; }
+.winner-row:first-child b { color: var(--gold-pale); }
+@keyframes medalGlow { 50% { box-shadow: 0 0 0 2px rgba(246, 220, 140, .5), 0 0 22px rgba(255, 205, 90, 1), 0 0 42px rgba(255, 190, 60, .6); } }
+@keyframes medalRing { from { transform: scale(.9); opacity: .9; } to { transform: scale(1.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .winner-row:first-child .place, .winner-row:first-child .place::after { animation: none; } }
+
+/* =====================================================================
+   Duck race: NIGHT RACE. Midnight water, gold reflections, floodlights,
+   gold/red lane ropes, numbered lane plates and a glowing gold finish gate.
+   ===================================================================== */
+.pond {
+  --track-start: 170px; --track-end: 60px;
+  border-radius: 20px; border: 0;
+  background:
+    radial-gradient(70% 60% at 50% -10%, rgba(255, 214, 120, .16), transparent 70%),
+    radial-gradient(40% 80% at 100% 50%, rgba(226, 184, 74, .12), transparent 70%),
+    linear-gradient(180deg, #0b1418 0%, #070c0f 55%, #040607 100%);
+  box-shadow: inset 0 0 0 1px rgba(226, 184, 74, .28), inset 0 30px 60px rgba(0, 0, 0, .5), 0 24px 50px rgba(0, 0, 0, .5);
+}
+/* floodlight beams */
+.pond::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    conic-gradient(from 160deg at 18% -8%, transparent 0deg, rgba(255, 230, 160, .08) 12deg, transparent 26deg),
+    conic-gradient(from 175deg at 62% -8%, transparent 0deg, rgba(255, 230, 160, .07) 10deg, transparent 22deg),
+    conic-gradient(from 190deg at 95% -8%, transparent 0deg, rgba(255, 230, 160, .06) 12deg, transparent 24deg);
+  animation: floodSway 9s ease-in-out infinite alternate; }
+@keyframes floodSway { to { transform: translateX(14px); } }
+/* gold ripples on dark water */
+.water { opacity: .9; mix-blend-mode: screen;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='200'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .09' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .82 0 0 0 0 .45 0 0 0 1.4 -.95'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),
+    radial-gradient(70px 8px at 30% 40%, rgba(255, 215, 120, .14), transparent 70%),
+    radial-gradient(90px 10px at 75% 70%, rgba(255, 215, 120, .1), transparent 70%);
+  background-size: 420px 200px, 260px 90px, 340px 120px; }
+.pond-head { height: 38px; color: rgba(246, 220, 140, .7); letter-spacing: .22em; font-size: 10px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .65), rgba(0, 0, 0, .25)); border-bottom: 1px solid rgba(226, 184, 74, .25); backdrop-filter: none; position: relative; z-index: 2; }
+.pond-head .gold { color: var(--gold); text-shadow: 0 0 10px rgba(226, 184, 74, .6); }
+/* start dock: dark lacquer with a gold edge */
+.lanes::before {
+  background:
+    repeating-linear-gradient(180deg, rgba(226, 184, 74, .12) 0 1px, transparent 1px 100%),
+    linear-gradient(90deg, #0d0e12, #15161b 85%, #1d1a12);
+  box-shadow: 1px 0 0 rgba(226, 184, 74, .55), 8px 0 22px rgba(0, 0, 0, .55); }
+.lane:nth-child(odd) { background: rgba(255, 255, 255, .012); }
+/* lane ropes: alternating gold and red floats */
+.lane::after {
+  background:
+    radial-gradient(circle at 50% 45%, #fff1c0 0 1.4px, #e2b84a 2px 3.2px, transparent 3.8px) 0 0 / 22px 8px repeat-x,
+    radial-gradient(circle at 50% 45%, #ff8a92 0 1.4px, #c8102e 2px 3.2px, transparent 3.8px) 11px 0 / 22px 8px repeat-x,
+    linear-gradient(transparent 3.5px, rgba(226, 184, 74, .35) 3.5px 4.5px, transparent 4.5px);
+  filter: drop-shadow(0 0 3px rgba(226, 184, 74, .35)); }
+/* lane number plates */
+.lane-plate { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 2; min-width: 24px; padding: 2px 5px; border-radius: 5px; text-align: center;
+  font-family: var(--mono, monospace); font-weight: 800; letter-spacing: .04em; color: #1a1203;
+  background: linear-gradient(180deg, #f6dc8c, #c99a2e); box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset, 0 2px 6px rgba(0, 0, 0, .5); }
+/* start line + distance buoys */
+.startline { width: 3px; background: linear-gradient(180deg, #fff1c0, #e2b84a); box-shadow: 0 0 12px rgba(226, 184, 74, .7); }
+.marker { background: repeating-linear-gradient(180deg, rgba(226, 184, 74, .28) 0 5px, transparent 5px 14px); }
+.marker::before { background: radial-gradient(circle at 35% 30%, #ff9aa1, #c8102e 60%, #6d0614); box-shadow: 0 0 8px rgba(200, 16, 46, .7); }
+/* finish gate: gold/black checker that pulses */
+.finishline { width: 16px; background: repeating-conic-gradient(#f1cf6e 0 25%, #0b0b0d 0 50%) 0 0 / 16px 16px;
+  box-shadow: 0 0 0 1px rgba(255, 230, 160, .5), 0 0 26px rgba(226, 184, 74, .55), 0 0 60px rgba(226, 184, 74, .25); animation: gatePulse 2.2s ease-in-out infinite; }
+.finishline::before, .finishline::after { background: #fff1c0; box-shadow: 0 0 12px #ffd76a, 0 0 24px #e2b84a; }
+.finishline span { color: var(--gold); text-shadow: 0 0 10px rgba(226, 184, 74, .7); }
+@keyframes gatePulse { 50% { box-shadow: 0 0 0 1px rgba(255, 230, 160, .8), 0 0 36px rgba(226, 184, 74, .85), 0 0 80px rgba(226, 184, 74, .4); } }
+/* name tags: dark glass with gold text */
+.duck .label { background: rgba(12, 12, 15, .82); color: #f6dc8c; font-weight: 700; border: 1px solid rgba(226, 184, 74, .35); box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+  max-width: calc(var(--track-start) - 96px); }
+.duck.champ .label { background: linear-gradient(180deg, #fff1c0, #e2b84a); color: #1a1203; border-color: transparent; box-shadow: 0 0 16px rgba(255, 210, 100, .8); }
+/* glowing wake trail behind swimming ducks */
+.duck.swimming .duck-body::before { content: ''; position: absolute; right: 70%; top: 50%; width: 90px; height: 4px; margin-top: 2px; border-radius: 4px; z-index: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 225, 150, .55)); filter: blur(1.5px); }
+.duck-body::after { background: radial-gradient(closest-side, rgba(255, 215, 120, .25), transparent); }
+.race-overlay { background: rgba(0, 0, 0, .55); }
+.race-overlay .count { color: #fff1c0; text-shadow: 0 0 40px rgba(226, 184, 74, .8); }
+.standings { background: #121318; box-shadow: inset 0 0 0 1px rgba(226, 184, 74, .18); }
+@media (max-width: 760px) { .pond { --track-start: 130px; } .duck .label { max-width: calc(var(--track-start) - 90px); } }
+@media (max-width: 560px) { .pond { --track-start: 44px; --track-end: 40px; } .lane-plate { left: 6px; min-width: 20px; padding: 1px 3px; } }
+@media (prefers-reduced-motion: reduce) { .pond::before, .finishline { animation: none; } }
+.lane::after { content: ''; }
+.lane:last-child::after { content: none; }
+.finishline span { display: none; }
+.lane::after { opacity: .55; }
+@media (max-width: 560px) {
+  .lane-plate { display: none; }
+  .pond-head { padding-left: 8px; padding-right: 8px; }
+  .pond-head span:first-child { visibility: visible; text-align: left; padding: 0; }
+}
+.pond .callout { top: 48px !important; bottom: auto !important; left: 50% !important; transform: translateX(-50%); z-index: 6;
+  background: linear-gradient(180deg, #fff1c0, #e2b84a); color: #1a1203; font-weight: 800; border: 0; box-shadow: 0 0 24px rgba(226, 184, 74, .6), 0 8px 20px rgba(0, 0, 0, .5); }
