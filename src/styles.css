@@ -1777,3 +1777,5 @@ body::before, .ambient { display: none; }
   .hero.vivid.product .hero-img { opacity: .4; right: 0; }
   .hero.vivid.product .hero-shade { background: linear-gradient(90deg, rgba(14, 15, 19, .92) 0%, rgba(14, 15, 19, .6) 55%, rgba(14, 15, 19, .2) 100%); }
 }
+.feat.t-red img { object-position: 60% 50%; }
+.feat img { width: auto; height: 100%; aspect-ratio: 1.6; max-width: 62%; object-fit: cover; }

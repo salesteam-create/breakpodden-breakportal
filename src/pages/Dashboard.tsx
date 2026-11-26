@@ -23,7 +23,7 @@ const ROOMS = [
 
 const FEATURE = [
   { href: '#/break/394', tone: 'gold', img: MEDIA.featDice, title: 'Team draw', text: 'Break #394 · Topps Bundesliga Gold. Every team assigned by a sealed roll.' },
-  { href: '#/break/403', tone: 'red', img: MEDIA.heroBall, title: 'Pick your team', text: 'Break #403 · Futera World. 10 teams still open, fillers from 49 kr.' },
+  { href: '#/break/403', tone: 'red', img: MEDIA.featBall, title: 'Pick your team', text: 'Break #403 · Futera World. 10 teams still open, fillers from 49 kr.' },
 ];
 
 const TONIGHT = [
