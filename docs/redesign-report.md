@@ -41,7 +41,7 @@
 | Double-click on a step does not trigger the next step | Pass |
 | Resize during shuffle, leaving mid-draw, keyboard focus ring, 50-duck race | Pass |
 | Horizontal overflow at 1920, 1440, 1366, 1024, 768, 430, 390 and 320 px, all routes | None. At 320 px the hero ring extends past the edge but is clipped by its container. |
-| Production build | Pass: single file, about 540 KB (190 KB gzipped) |
+| Production build | Pass: single file, 565 KB (200 KB gzipped) |
 
 ## Performance (headless Chromium, software rendering, no GPU)
 
