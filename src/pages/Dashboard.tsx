@@ -123,30 +123,36 @@ export default function Dashboard() {
           <Icon name="arrow" size={16} />
         </a>
 
-        <section className="tally reveal-up" aria-label="Tonight in numbers">
-          <div className="tally-main">
-            <div className="tally-top">
-              <span className="tally-live"><i className="live-dot sm" /> Live tonight</span>
-              <span className="tally-time">From <b>20:00</b></span>
+        <section className="ticket reveal-up" aria-label="Tonight in numbers">
+          <div className="tk-face">
+            <div className="tk-top">
+              <span className="tk-live"><i className="live-dot sm" /> Live tonight</span>
+              <span className="tk-admit">Admit all · Doors 20:00</span>
             </div>
-            <span className="tally-label">On the table</span>
-            <b className="tally-big"><CountUp value={boxValue} /><small>kr</small></b>
-            <span className="tally-note">{BREAKS.length} boxes to open tonight</span>
+            <div className="tk-body">
+              <div className="tk-pool">
+                <span className="tk-label">Prize pool on the table</span>
+                <b className="tk-big"><CountUp value={boxValue} /><small>kr</small></b>
+              </div>
+              <div className="tk-seats" aria-label={`${spots} of ${totalSpots} spots sold`}>
+                <span className="tk-label">Seats taken <em>{spots}/{totalSpots}</em></span>
+                <span className="tk-dots" aria-hidden="true">
+                  {Array.from({ length: totalSpots }, (_, k) => <i key={k} className={k < spots ? 'on' : ''} style={{ animationDelay: `${k * 14}ms` }} />)}
+                </span>
+              </div>
+            </div>
+            <div className="tk-foot">
+              <span><b><CountUp value={buyers} /></b> buyers</span>
+              <span className="tk-sep" aria-hidden="true">✦</span>
+              <span><b>{BREAKS.length}</b> boxes</span>
+              <span className="tk-sep" aria-hidden="true">✦</span>
+              <span><b><CountUp value={draws.length} /></b> draws sealed</span>
+            </div>
           </div>
-          <div className="tally-cell">
-            <span className="tally-label">Buyers</span>
-            <b className="tally-num"><CountUp value={buyers} /></b>
-            <span className="tally-note">Across {BREAKS.length} breaks</span>
-          </div>
-          <div className="tally-cell">
-            <span className="tally-label">Spots sold</span>
-            <b className="tally-num"><CountUp value={spots} /><small>/{totalSpots}</small></b>
-            <span className="tally-bar" aria-hidden="true"><i style={{ width: `${(spots / totalSpots) * 100}%` }} /></span>
-          </div>
-          <div className="tally-cell">
-            <span className="tally-label">Draws sealed</span>
-            <b className="tally-num"><CountUp value={draws.length} /></b>
-            <span className="tally-note">{draws.length ? `${draws.filter((d) => d.revealed).length} verified` : 'Next at 20:00'}</span>
+          <div className="tk-stub" aria-hidden="true">
+            <span className="tk-stub-no">{BREAKS.map((b) => `#${b.number}`).join(' · ')}</span>
+            <span className="tk-code">{[3,1,2,1,3,2,1,1,2,3,1,2,1,1,3,1,2,2,1,3,1,1,2,1,3,2,1,2].map((w, k) => <i key={k} style={{ width: w }} />)}</span>
+            <span className="tk-stub-time">20:00</span>
           </div>
         </section>
 
