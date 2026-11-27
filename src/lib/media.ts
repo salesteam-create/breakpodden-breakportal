@@ -43,9 +43,15 @@ import featDiceVid from '../assets/stock/feat-dice.mp4';
 import featBallVid from '../assets/stock/feat-ball.mp4';
 import featDicePoster from '../assets/stock/feat-dice-poster.webp';
 import featBallPoster from '../assets/stock/feat-ball-poster.webp';
+import roomWheelVid from '../assets/stock/room-wheel-vid.mp4';
+import roomWheelPoster from '../assets/stock/room-wheel-vid-poster.webp';
+import roomDuckVid from '../assets/stock/room-duck-vid.mp4';
+import roomDuckPoster from '../assets/stock/room-duck-vid-poster.webp';
+import roomBoxVid from '../assets/stock/room-box-vid.mp4';
+import roomBoxPoster from '../assets/stock/room-box-vid-poster.webp';
 import promo from '../assets/stock/promo-confetti.webp';
 
-export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, featDice, heroKick, heroTrophy, wheelHero, wheelCard, roomDuck2, roomBox, roomShield, duckHero, boxHero, shieldHero, duckCard, futeraCard, toppsCard, toppsHero, futeraHero, featBall, featDiceVid, featBallVid, featDicePoster, featBallPoster, promo };
+export const MEDIA = { cards, pitch, dice, confetti, ducks, stream, abstract, cardwall, avatar, arena, studio, party, heroDice, heroBall, roomDice, roomBall, roomWheel, roomDuck, roomCards, roomLock, featDice, heroKick, heroTrophy, wheelHero, wheelCard, roomDuck2, roomBox, roomShield, duckHero, boxHero, shieldHero, duckCard, futeraCard, toppsCard, toppsHero, futeraHero, featBall, featDiceVid, featBallVid, featDicePoster, featBallPoster, roomWheelVid, roomWheelPoster, roomDuckVid, roomDuckPoster, roomBoxVid, roomBoxPoster, promo };
 
 /** Credits, kept with the images. Chosen for one calm subject and empty space for text. */
 export const CREDITS = [

@@ -2031,3 +2031,5 @@ body::before, .ambient { display: none; }
 }
 .pond .callout { top: 48px !important; bottom: auto !important; left: 50% !important; transform: translateX(-50%); z-index: 6;
   background: linear-gradient(180deg, #fff1c0, #e2b84a); color: #1a1203; font-weight: 800; border: 0; box-shadow: 0 0 24px rgba(226, 184, 74, .6), 0 8px 20px rgba(0, 0, 0, .5); }
+/* Room card videos fill the art area like the photos did */
+.room-art video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }

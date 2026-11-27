@@ -16,10 +16,10 @@ const HERO: Record<string, { img: string; word: string; photo: string; caption: 
 };
 
 const ROOMS = [
-  { href: '#/wheel', img: MEDIA.roomWheel, tone: 'gold', hot: true, badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
-  { href: '#/duck', img: MEDIA.roomDuck2, tone: 'red', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
-  { href: '#/checklists', img: MEDIA.roomBox, tone: 'gold', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
-  { href: '#/proofs', img: MEDIA.roomShield, tone: 'red', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
+  { href: '#/wheel', img: MEDIA.roomWheelPoster, video: MEDIA.roomWheelVid, still: 0.4, tone: 'gold', hot: true, badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
+  { href: '#/duck', img: MEDIA.roomDuckPoster, video: MEDIA.roomDuckVid, still: 0.6, tone: 'red', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
+  { href: '#/checklists', img: MEDIA.roomBoxPoster, video: MEDIA.roomBoxVid, still: 4.2, tone: 'gold', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
+  { href: '#/proofs', img: MEDIA.roomShield, video: undefined as string | undefined, still: 0, tone: 'red', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
 ] as const;
 
 const FEATURE = [
@@ -173,7 +173,7 @@ export default function Dashboard() {
               <a key={r.title} href={r.href} className={`room t-${r.tone} reveal-up`} style={{ animationDelay: `${120 + k * 60}ms` }}>
                 <span className="room-badge">{r.badge}</span>
                 {'hot' in r && r.hot && <span className="room-hot"><Icon name="fire" size={12} weight="fill" /> Hot</span>}
-                <span className="room-art"><img src={r.img} alt="" loading="lazy" /></span>
+                <span className="room-art">{r.video && !reduced ? <HoverVideo src={r.video} poster={r.img} still={r.still} /> : <img src={r.img} alt="" loading="lazy" />}</span>
                 <b className="room-title">{r.title}</b>
                 <span className="room-meta">
                   {r.meta.map(([k2, v]) => <span key={k2}><em>{k2}</em>{v}</span>)}
