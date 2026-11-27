@@ -29,12 +29,13 @@ export default function ShuffleBoard({
   const font = { fontSize: 14 * scale };
 
   return (
-    <div className="board" style={{ gridTemplateColumns: `${44 * scale}px 1fr 1fr`, columnGap: 14 * scale }}>
+    <div className="board-x">
+    <div className="board" style={{ gridTemplateColumns: `${44 * scale}px 1fr 1fr`, columnGap: 14 * scale, ['--lw' as string]: `${Math.max(12, ...left.map((x) => x.length)) * 0.62 + 4}em`, ['--rw' as string]: `${Math.max(14, ...order.map((x) => x.length)) * 0.62 + 3}em` }}>
       <div className="board-label" style={{ fontSize: 11 * scale }}>#</div>
       <div className="board-label" style={{ fontSize: 11 * scale }}>{leftLabel}</div>
       <div className="board-label" style={{ fontSize: 11 * scale }}>{rightLabel}</div>
 
-      <div className="col" style={{ height }}>
+      <div className="col col-idx" style={{ height }}>
         {Array.from({ length: rows }, (_, i) => (
           <div key={i} className="cell idx" style={{ top: i * step, height: h, fontSize: 12 * scale }}>{i + 1}</div>
         ))}
@@ -72,6 +73,7 @@ export default function ShuffleBoard({
         ))}
         {winTop !== undefined && <div className="cut-line" style={{ top: winTop * step - gap / 2, left: 0 }} />}
       </div>
+    </div>
     </div>
   );
 }
