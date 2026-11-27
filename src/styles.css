@@ -2073,3 +2073,13 @@ body::before, .ambient { display: none; }
   .board .col-idx { position: sticky; left: 0; z-index: 2; background: var(--glass-bg, #16171c); }
   .board .board-label:first-child { position: sticky; left: 0; z-index: 2; background: var(--glass-bg, #16171c); }
 }
+/* Mobile product heroes: the whole image, edge to edge, no padding or bands */
+@media (max-width: 720px) {
+  .hero.vivid.product { padding-top: 0 !important; }
+  .hero.vivid.product .hero-img { position: relative !important; display: block; inset: auto !important; z-index: 0;
+    width: calc(100% + 36px) !important; max-width: none; height: auto !important; aspect-ratio: auto !important;
+    margin: 0 -18px 4px; padding: 0 !important; object-fit: cover !important; filter: brightness(1.08) !important;
+    -webkit-mask-image: linear-gradient(180deg, #000 78%, transparent 100%) !important; mask-image: linear-gradient(180deg, #000 78%, transparent 100%) !important; }
+  .hero.vivid.product .hero-shade { display: none; }
+  .hero.vivid.product .hero-body { position: relative; z-index: 1; margin-top: -14px; }
+}
