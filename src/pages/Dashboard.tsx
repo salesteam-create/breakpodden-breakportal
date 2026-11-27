@@ -19,7 +19,7 @@ const ROOMS = [
   { href: '#/wheel', img: MEDIA.roomWheelPoster, video: MEDIA.roomWheelVid, still: 0.4, tone: 'gold', hot: true, badge: 'Giveaway', title: 'Wheel of fortune', meta: [['entries', String(giveawayEntries().length)], ['spins', '∞']], cta: 'Spin' },
   { href: '#/duck', img: MEDIA.roomDuckPoster, video: MEDIA.roomDuckVid, still: 0.6, tone: 'red', badge: 'Giveaway', title: 'Duck race', meta: [['ducks', String(uniqueEntrants().length)], ['length', '10 s']], cta: 'Race' },
   { href: '#/checklists', img: MEDIA.roomBoxPoster, video: MEDIA.roomBoxVid, still: 4.2, tone: 'gold', badge: 'Library', title: 'Box checklists', meta: [['boxes', '2'], ['teams', '61']], cta: 'Open' },
-  { href: '#/proofs', img: MEDIA.roomShield, video: undefined as string | undefined, still: 0, tone: 'red', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
+  { href: '#/proofs', img: MEDIA.roomShieldPoster, video: MEDIA.roomShieldVid, still: 1, tone: 'red', badge: 'Public', title: 'Fairness proofs', meta: [['hash', 'SHA-256'], ['open', 'yes']], cta: 'Verify' },
 ] as const;
 
 const FEATURE = [
