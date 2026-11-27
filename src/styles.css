@@ -2043,3 +2043,19 @@ body::before, .ambient { display: none; }
   .neo-hero-body { max-width: none !important; }
   .neo-dots { bottom: 18px !important; }
 }
+/* Stream preview wheel: give the scene a real width so the wheel can't collapse on phones */
+.sc-wheel, .sc-wheel .wheel-stage { width: 100%; }
+.sc-wheel .wheel-stage > .wheel-wrap { width: min(290px, 78vw, 100%) !important; }
+
+/* Mobile page heroes: photo on top, all text and actions below (matches the dashboard) */
+@media (max-width: 720px) {
+  .hero, .hero.compact { display: block; min-height: 0; padding: 226px 18px 22px !important; }
+  .hero .hero-img, .hero.vivid .hero-img, .hero.vivid.product .hero-img {
+    top: 0 !important; bottom: auto !important; left: 0 !important; right: 0 !important; width: 100% !important; height: 230px !important;
+    aspect-ratio: auto !important; opacity: 1 !important; transform: none !important; object-fit: cover !important; object-position: center 40%;
+    filter: brightness(1.15) saturate(1.05) !important;
+    -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent 100%) !important; mask-image: linear-gradient(180deg, #000 62%, transparent 100%) !important; }
+  .hero.vivid.product .hero-img { object-fit: contain !important; object-position: center !important; padding: 10px 0 0; box-sizing: border-box; }
+  .hero .hero-shade, .hero.vivid .hero-shade, .hero.vivid.product .hero-shade { background: linear-gradient(180deg, transparent 0 170px, rgba(14, 15, 19, .92) 232px, #111216 100%) !important; }
+  .hero-body { max-width: none !important; }
+}
